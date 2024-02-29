@@ -23,7 +23,7 @@ class TrainingsController extends Controller
     private $c_names = 'Entrenamientos';
 	private $list_tbl_fsc = ['name' => 'Nombre','status' => 'Estado'];
 	private $o_model = Trainings::class;
-	
+
 	private function gdata($t = 'Lista de')
     {
         $data['menu'] = $this->r_name;
@@ -208,7 +208,7 @@ class TrainingsController extends Controller
 		}
 		echo $out;
     }
-	
+
 	public function resendpbr($id)
     {
 		if(empty($id)){
