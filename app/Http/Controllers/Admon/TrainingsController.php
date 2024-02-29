@@ -227,7 +227,7 @@ class TrainingsController extends Controller
 			$ids = Trainingsroles::where(['trainings_id' => $o->id])->pluck('roles_id')->toArray();
 			$o_all = User::where(['company' => Auth::user()->company,'status' => 'active'])->whereIn('role',$ids)->orderBy('id', 'asc')->get();
 		} else if($o->directed_to == 'Users'){
-			$ids = Trainingsusers::where(['trainings_id' => $o->id])->pluck('users_id')->toArray();
+			$ids = Trainingsusers::where(['trainings_id' => $o->id])->pluck('user_id')->toArray();
 			$o_all = User::where(['company' => Auth::user()->company,'status' => 'active'])->whereIn('id',$ids)->orderBy('id', 'asc')->get();
 		}
 		foreach($o_all as $key => $row){
