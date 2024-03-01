@@ -19,7 +19,7 @@
 <div class="column is-6">
     <div class="field">
         <div class="control">
-            <?php $t_att = 'name'; ?>
+            <?php $t_att = 'companies_name'; ?>
             <?php $n_att = 'Nombre de la empresa'; ?>
 			<label><?= $n_att ?></label>
 			<input name="{{$t_att}}" type="text" class="input" placeholder="<?= $n_att ?>" value="{{ isset($o->$t_att)?$o->$t_att:old($t_att) }}" <?= $modo=='detalles'?'readonly disabled':'required' ?> />
@@ -39,19 +39,32 @@
 </div>
 <!--Field-->
 <div class="column is-6">
+
     <div class="field">
         <div class="control">
-			<label>Logo</label>
-			<div class="file has-name is-fullwidth">
-				<label class="file-label">
-					<input name="logo" class="file-input" type="file">
-					<span class="file-cta is-fullwidth">
-						<span class="file-icon"><i class="fas fa-cloud-upload-alt"></i></span>
-						<span class="file-label">Seleccione un logo…</span>
-					</span>
-				</label>
-			</div>
+			<div class="file">
+                <label class="file-label">
+                    <input name="logo" class="file-input" type="file" accept="image/*">
+                  <span class="file-cta">
+                    <span class="file-icon">
+                      <i class="fas fa-upload"></i>
+                    </span>
+                    <span class="file-label">
+                        Seleccione un logo…
+                    </span>
+                  </span>
+                </label>
+              </div>
 		</div>
+    </div>
+</div>
+<div class="column is-12">
+    <div class="control has-switch">
+        <span>Activar doble factor de autenticación</span>
+        <label class="form-switch ml-auto">
+            <input name="twofa" type="checkbox" id="signup-toggle" class="is-switch" value="yes">
+            <i></i>
+        </label>
     </div>
 </div>
 <!--Field-->
@@ -82,7 +95,7 @@
 <div class="column is-6">
     <div class="field">
         <div class="control">
-            <?php $t_att = 'email'; ?>
+            <?php $t_att = 'company_email'; ?>
             <?php $n_att = 'Correo de Empresa'; ?>
 			<label><?= $n_att ?></label>
 			<input name="{{$t_att}}" type="email" class="input" placeholder="<?= $n_att ?>" value="{{ isset($o->$t_att)?$o->$t_att:old($t_att) }}" <?= $modo=='detalles'?'readonly disabled':'required' ?> />
@@ -93,7 +106,7 @@
 <div class="column is-6">
     <div class="field">
         <div class="control">
-            <?php $t_att = 'contact_phone'; ?>
+            <?php $t_att = 'company_phone'; ?>
             <?php $n_att = 'Teléfono'; ?>
 			<label><?= $n_att ?></label>
 			<input name="{{$t_att}}" type="text" class="input" placeholder="<?= $n_att ?>" value="{{ isset($o->$t_att)?$o->$t_att:old($t_att) }}" <?= $modo=='detalles'?'readonly disabled':'required' ?> />

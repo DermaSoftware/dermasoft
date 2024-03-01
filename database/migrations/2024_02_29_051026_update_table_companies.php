@@ -21,6 +21,7 @@ class UpdateTableCompanies extends Migration
 			$table->integer('time_consultation')->default(1);//Tiempo de duración de consulta
 			$table->string('time_consultation_text')->default('20 minutos');//Tiempo de duración de consulta
 			$table->integer('hours_ntf')->default(1);//Cantidad de horas antes para notificar recordatorio de cita por whatsapp, correo electrónico y mini mensaje de texto
+            $table->foreign('membership')->references('id')->on('memberships');
         });
     }
 
