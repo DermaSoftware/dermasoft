@@ -762,6 +762,7 @@ class ComposerStaticInit7f6626274ca7ebdb9d1907bc906bd0c4
         'App\\Http\\Middleware\\TrustHosts' => __DIR__ . '/../..' . '/app/Http/Middleware/TrustHosts.php',
         'App\\Http\\Middleware\\TrustProxies' => __DIR__ . '/../..' . '/app/Http/Middleware/TrustProxies.php',
         'App\\Http\\Middleware\\VerifyCsrfToken' => __DIR__ . '/../..' . '/app/Http/Middleware/VerifyCsrfToken.php',
+        'App\\Http\\Requests\\CreateCompanyRequest' => __DIR__ . '/../..' . '/app/Http/Requests/CreateCompanyRequest.php',
         'App\\Imports\\DiagnosesImport' => __DIR__ . '/../..' . '/app/Imports/DiagnosesImport.php',
         'App\\Imports\\LaboratoryexamsImport' => __DIR__ . '/../..' . '/app/Imports/LaboratoryexamsImport.php',
         'App\\Imports\\MedicinesImport' => __DIR__ . '/../..' . '/app/Imports/MedicinesImport.php',

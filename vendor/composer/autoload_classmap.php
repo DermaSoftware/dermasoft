@@ -107,6 +107,7 @@ return array(
     'App\\Http\\Middleware\\TrustHosts' => $baseDir . '/app/Http/Middleware/TrustHosts.php',
     'App\\Http\\Middleware\\TrustProxies' => $baseDir . '/app/Http/Middleware/TrustProxies.php',
     'App\\Http\\Middleware\\VerifyCsrfToken' => $baseDir . '/app/Http/Middleware/VerifyCsrfToken.php',
+    'App\\Http\\Requests\\CreateCompanyRequest' => $baseDir . '/app/Http/Requests/CreateCompanyRequest.php',
     'App\\Imports\\DiagnosesImport' => $baseDir . '/app/Imports/DiagnosesImport.php',
     'App\\Imports\\LaboratoryexamsImport' => $baseDir . '/app/Imports/LaboratoryexamsImport.php',
     'App\\Imports\\MedicinesImport' => $baseDir . '/app/Imports/MedicinesImport.php',

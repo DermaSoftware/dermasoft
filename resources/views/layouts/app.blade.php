@@ -12,12 +12,13 @@
     <link rel="icon" type="image/png" href="<?= asset('assets/img/favicon.png') ?>" />
     <link rel="stylesheet" href="<?= asset('assets/css/app.css') ?>">
     <link rel="stylesheet" href="<?= asset('assets/css/main.css') ?>">
+    <link rel="stylesheet" href="<?= asset('assets/css/mycss.css') ?>">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,700" rel="stylesheet">
 	<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 	<link href="//cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css" rel="stylesheet" />
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css" integrity="sha512-q3eWabyZPc1XTCmF+8/LuE1ozpg5xxn7iO89yfSOd5/oKvyqLngoNGsx8jq92Y8eXJ/IRxQbEC+FGSYxtk2oiw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-	
+
 	<style>
 	.is-fullwidth {
 		width: 100%;
@@ -69,12 +70,12 @@
 		color: #7a7a7a;
 		box-shadow: none;
 	}
-	
+
 	.profile-wrapper .profile-body .settings-section .settings-box .icon-wrap img {
 		display: block;
 		max-width: 50px;
 	}
-	
+
 	</style>
 </head>
 <body class="opened">
@@ -931,7 +932,7 @@
         <!--Huro Scripts-->
         <!--Load Mapbox-->
         <!-- Concatenated plugins -->
-		
+
         <script src="<?= asset('assets') ?>/js/app.js"></script>
         <!-- Huro js -->
         <script src="<?= asset('assets') ?>/js/functions.js"></script>
@@ -944,13 +945,13 @@
         <!--<script src="<?= asset('assets') ?>/js/lifestyle-3.js" async></script>-->
         <script src="<?= asset('assets') ?>/js/card-grid.js" async></script>
         <script src="<?= asset('assets') ?>/js/syntax.js" async></script>
-		
+
 		<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 		<script src="{{ asset('assets/js/fsc.js') }}"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/2.1.25/daterangepicker.min.js"></script>
-		
-		
+
+
 		<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 		<script src="//cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
@@ -1031,7 +1032,7 @@
 					});
 				}
 			}
-			
+
 			if ($('.filter_table_fsc').length) {
 				$('.filter_table_fsc').DataTable({
 					"language": {
@@ -1046,7 +1047,7 @@
 					paging: false
 				});
 			}
-			
+
 			if ($('.o_stable_fsc').length) {
 				var stable_fsc = $('.o_stable_fsc').DataTable({
 					"aLengthMenu": [[5, 10, 25, 50, 100, -1], [5, 10, 25, 50, 100, "Todos"]],
@@ -1153,7 +1154,7 @@
 					});
 				});
 			}
-			
+
 			if($('#start-camera').length){
 				let link_button = document.querySelector("#link_download_capture");
 				let camera_button = document.querySelector("#start-camera");
@@ -1183,7 +1184,7 @@
 					$('.form_save_add_sign').submit();
 				});
 			}
-			
+
 			if($('.btn_save_add_sign').length){
 				$('.btn_save_add_sign').on('click', () => {
 					//activamos el campo hidden y enviamos el formulario
@@ -1384,11 +1385,11 @@
 					base += '<label>Calibre</label>';
 					base += '<input name="caliber[]" type="text" class="input" placeholder="Calibre" />';
 					base += '</div></div></div>';
-					
+
 					$('.box_suture_caliber .box_suture_caliber_inner').append(base);
 				});
 			}
-			
+
 			if($('.btn_add_lesion_fsc').length){
 				$('.btn_add_lesion_fsc').on('click', function(e){
 					e.preventDefault();
@@ -1397,7 +1398,7 @@
 					}
 					var base = '<div class="columns is-multiline">';
 					base += '<div class="column is-12"><hr></div>';
-					
+
 					base += '<div class="column is-6">';
 					base += '<div class="field"><div class="control"><label>Área corporal</label>';
 					base += '<select name="body_area[]" class="input">';
@@ -1405,7 +1406,7 @@
 					base += '<option value="Frente">Frente</option>';
 					base += '<option value="Espalda">Espalda</option>';
 					base += '</select></div></div></div>';
-					
+
 					base += '<div class="column is-6">';
 					base += '<div class="field"><div class="control"><label>Ubicación de la lesión</label>';
 					base += '<select name="lesion[]" class="input">';
@@ -1415,7 +1416,7 @@
 						base += '<option value="'+item+'">'+item+'</option>';
 					});
 					base += '</select></div></div></div>';
-					
+
 					base += '<div class="column is-3">';
 					base += '<div class="field"><div class="control"><label>Desinfección</label>';
 					base += '<select name="disinfection[]" class="input">';
@@ -1430,7 +1431,7 @@
 					base += '<label>Cual antiséptico?</label>';
 					base += '<input name="antiseptic[]" type="text" class="input" placeholder="Cual antiséptico?" />';
 					base += '</div></div></div>';
-					
+
 					base += '<div class="column is-1">';
 					base += '<div class="field"><div class="control"><label>Anestésia</label>';
 					base += '<select name="anesthesia[]" class="input">';
@@ -1438,7 +1439,7 @@
 					base += '<option value="Si">Si</option>';
 					base += '<option value="No">No</option>';
 					base += '</select></div></div></div>';
-					
+
 					base += '<div class="column is-3">';
 					base += '<div class="field"><div class="control"><label>Tipo de anestésia</label>';
 					base += '<select name="type_anesthesia[]" class="input">';
@@ -1448,32 +1449,32 @@
 						base += '<option value="'+item+'">'+item+'</option>';
 					});
 					base += '</select></div></div></div>';
-					
+
 					base += '<div class="column is-2"><div class="field"><div class="control">';
 					base += '<label>Cual?</label>';
 					base += '<input name="other_anesthesia[]" type="text" class="input" placeholder="Cual?" />';
 					base += '</div></div></div>';
-					
+
 					base += '<div class="column is-3"><div class="field"><div class="control">';
 					base += '<label>Tiempo 1 de congelación</label>';
 					base += '<input name="freeze_time_1[]" type="text" class="input" placeholder="Tiempo 1 de congelación" />';
 					base += '</div></div></div>';
-					
+
 					base += '<div class="column is-3"><div class="field"><div class="control">';
 					base += '<label>Tiempo 2 de congelación</label>';
 					base += '<input name="freeze_time_2[]" type="text" class="input" placeholder="Tiempo 2 de congelación" />';
 					base += '</div></div></div>';
-					
+
 					base += '<div class="column is-3"><div class="field"><div class="control">';
 					base += '<label>Tiempo 1 de descongelación</label>';
 					base += '<input name="defrost_time_1[]" type="text" class="input" placeholder="Tiempo 1 de descongelación" />';
 					base += '</div></div></div>';
-					
+
 					base += '<div class="column is-3"><div class="field"><div class="control">';
 					base += '<label>Tiempo 2 de descongelación</label>';
 					base += '<input name="defrost_time_2[]" type="text" class="input" placeholder="Tiempo 2 de descongelación" />';
 					base += '</div></div></div>';
-					
+
 					base += '<div class="column is-3">';
 					base += '<div class="field"><div class="control"><label>Tiempos</label>';
 					base += '<select name="timex[]" class="input">';
@@ -1481,7 +1482,7 @@
 					base += '<option value="1 Ciclo">1 Ciclo</option>';
 					base += '<option value="2 Ciclo">2 Ciclo</option>';
 					base += '</select></div></div></div>';
-					
+
 					base += '<div class="column is-3">';
 					base += '<div class="field"><div class="control"><label>Técnica</label>';
 					base += '<select name="technique[]" class="input">';
@@ -1491,18 +1492,18 @@
 						base += '<option value="'+item+'">'+item+'</option>';
 					});
 					base += '</select></div></div></div>';
-					
+
 					base += '<div class="column is-6"><div class="field"><div class="control">';
 					base += '<label>Cual?</label>';
 					base += '<input name="other_technique[]" type="text" class="input" placeholder="Cual?" />';
 					base += '</div></div></div>';
-					
+
 					base += '</div>';
-					
+
 					$('.box_lesion').append(base);
 				});
 			}
-			
+
 			if($('.btn_add_treatment_fsc').length){
 				$('.btn_add_treatment_fsc').on('click', function(e){
 					e.preventDefault();
@@ -1511,7 +1512,7 @@
 					}
 					var base = '<div class="columns is-multiline">';
 					base += '<div class="column is-12"><hr></div>';
-					
+
 					base += '<div class="column is-6">';
 					base += '<div class="field"><div class="control"><label>Músculo</label>';
 					base += '<select name="muscle[]" class="input">';
@@ -1526,13 +1527,13 @@
 					base += '<label>Unidades administradas</label>';
 					base += '<input name="units[]" type="number" class="input" placeholder="Unidades administradas" />';
 					base += '</div></div></div>';
-					
+
 					base += '</div>';
-					
+
 					$('.box_treatment').append(base);
 				});
 			}
-			
+
 			if($('.btn_add_surgical').length){
 				$('.btn_add_surgical').on('click', function(e){
 					e.preventDefault();
@@ -1540,7 +1541,7 @@
 						$('.box_surgical').removeClass('is-hidden');
 					}
 					var base = '<div class="columns is-multiline">';
-					
+
 					base += '<div class="column is-2">';
 					base += '<div class="field"><div class="control"><label>Tumores</label>';
 					base += '<select name="tumors[]" class="input">';
@@ -1568,20 +1569,20 @@
 					base += '<label>Observaciones</label>';
 					base += '<input name="observations[]" type="text" class="input" placeholder="Observaciones" />';
 					base += '</div></div></div>';
-					
+
 					base += '</div>';
-					
+
 					$('.box_surgical').append(base);
 				});
 			}
-			
+
 			if($('.sel_consent_x').length){
 				$('.sel_consent_x').on('change', function() {
 					const consent = $('.sel_consent_x option:selected').data('val');
 					$('.txt_note_consent').val(consent);
 				});
 			}
-			
+
 			if($('input[name="patient_authorization"]').length){
 				$('input[name="patient_authorization"]').on('change', function() {
 					const ax = $('input[name="patient_authorization"]:checked').val();
@@ -1594,8 +1595,8 @@
 					}
 				});
 			}
-			
-			
+
+
 			//add mp prescription to table
 			if($('.btn_add_pm').length){
 				$('.btn_add_pm').on('click', () => {
@@ -1628,7 +1629,7 @@
 					});
 				}
 			}
-			
+
 			if($('.btn_diagnoses_eo').length){
 				$('.btn_diagnoses_eo').each(function(i,v){
 					var btn = $(this);
@@ -1738,7 +1739,7 @@
 				}
 			}
 			//END
-			
+
 			if($('.sel_parent_hid').length){
 				$('.sel_parent_hid').each(function(i,v) {
 					var item = $(this);
@@ -1759,7 +1760,7 @@
 					});
 				});
 			}
-			
+
 			if($('.sel_parent_vis').length){
 				$('.sel_parent_vis').each(function(i,v) {
 					var item = $(this);
@@ -1780,7 +1781,7 @@
 					});
 				});
 			}
-			
+
 			if($('.sel_hid_directed_to').length){
 				$('.sel_hid_directed_to').on('change',function(){
 					load_directed_to();
@@ -1805,11 +1806,11 @@
 						  placeholder: $('.sel_hid_directed_to').val(),
 						});
 					}, "html");
-					
+
 				}
 				load_directed_to();
 			}
-			
+
 			if($('.btn_next_tab_fsc').length){
 				$('.btn_next_tab_fsc').each(function(i,v){
 					var btn = $(this);
@@ -1868,7 +1869,7 @@
 				}
 				load_countries_fn();
 			}
-			
+
 			if ($(".select2_fsc").length) {
 				$('.select2_fsc').each(function(){
 					$(this).select2({
@@ -1876,7 +1877,7 @@
 					});
 				});
 			}
-			
+
 			if ($("#pickaday-datepicker-fsc1").length) {
 				var picker = new Pikaday({
 					field: document.getElementById('pickaday-datepicker-fsc1'),
@@ -1885,7 +1886,7 @@
 					}
 				});
 			}
-			
+
 			if ($("#pickaday-datepicker-fsc2").length) {
 				var picker = new Pikaday({
 					field: document.getElementById('pickaday-datepicker-fsc2'),
@@ -1894,19 +1895,19 @@
 					}
 				});
 			}
-			
+
 			if ($("#bulma-datepicker-time-fsc1").length) {
 				bulmaCalendar.attach('#bulma-datepicker-time-fsc1', {
 					lang: 'es'
 				});
 			}
-			
+
 			if ($("#bulma-datepicker-time-fsc2").length) {
 				bulmaCalendar.attach('#bulma-datepicker-time-fsc2', {
 					lang: 'es'
 				});
 			}
-			
+
 			if ($(".datepicker-fsc").length) {
 				$('.datepicker-fsc').each(function(){
 					$(this).daterangepicker({
@@ -1965,7 +1966,7 @@
 			}
 		});
 		</script>
-		
+
         <script>
 		if($('.btn_plan_price_free').length){
 			$('.btn_plan_price_free').each(function(i,v){
@@ -1997,7 +1998,7 @@
 				});
 			});
 		}
-		
+
 		if($('#calendar_doctor').length){
 			document.addEventListener('DOMContentLoaded', function() {
 			var calendarEl = document.getElementById('calendar_doctor');
@@ -2025,7 +2026,7 @@
 			calendar.render();
 		  });
 		}
-		
+
 		if($('#calendar_pct').length){
 			document.addEventListener('DOMContentLoaded', function() {
 			var calendarEl = document.getElementById('calendar_pct');
@@ -2051,7 +2052,7 @@
 			calendar.render();
 		  });
 		}
-		
+
 		if($('#sun-editorx').length){
 			const editor = SUNEDITOR.create((document.getElementById('sun-editorx') || 'sun-editorx'), {
 				width: '100%',
@@ -2113,8 +2114,8 @@
 				}
 			});
 		}
-		
-		
+
+
 		if($('.btn_plan_price_epayco').length){
 			$('.btn_plan_price_epayco').on('click',function(e){
 				e.preventDefault();
@@ -2122,20 +2123,20 @@
 				btn_item.parent().parent().find('.epayco-button-render').click();
 			});
 		}
-		
+
 		if($('.money_to_fsc').length){
 			$('.money_to_fsc').each(function(){
 				var item = $(this);
 				item.html(moneycop(item.html()));
 			});
 		}
-		
+
 		function moneycop(v){
 			const options2 = { style: 'currency', currency: 'COP' };
 			const numberFormat2 = new Intl.NumberFormat('es-CO', options2);
 			return numberFormat2.format(v);
 		}
-		
+
 		$('#photo_profile_img').on('click',function(){
 			$('#photo_profile_acc').click();
 		});
