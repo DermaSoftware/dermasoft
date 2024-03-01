@@ -8,3 +8,7 @@ body.is-dark .s-card label,body.is-dark .s-card .dataTables_info{
 body.is-dark table th{
     color: #a2a5b9 !important;
 }
+
+body.is-dark form div.control label{
+    color: #a2a5b9 !important;
+}
