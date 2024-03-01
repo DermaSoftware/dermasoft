@@ -9,6 +9,6 @@ body.is-dark table th{
     color: #a2a5b9 !important;
 }
 
-body.is-dark form div.control label{
+body.is-dark form div.control label,body.is-dark form h4,body.is-dark form h2,body.is-dark form small{
     color: #a2a5b9 !important;
 }

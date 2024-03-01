@@ -58,15 +58,6 @@
 		</div>
     </div>
 </div>
-<div class="column is-12">
-    <div class="control has-switch">
-        <span>Activar doble factor de autenticación</span>
-        <label class="form-switch ml-auto">
-            <input name="twofa" type="checkbox" id="signup-toggle" class="is-switch" value="yes">
-            <i></i>
-        </label>
-    </div>
-</div>
 <!--Field-->
 <div class="column is-6">
     <div class="field">
@@ -89,8 +80,6 @@
         </div>
     </div>
 </div>
-
-
 <!--Field-->
 <div class="column is-6">
     <div class="field">
@@ -111,6 +100,16 @@
 			<label><?= $n_att ?></label>
 			<input name="{{$t_att}}" type="text" class="input" placeholder="<?= $n_att ?>" value="{{ isset($o->$t_att)?$o->$t_att:old($t_att) }}" <?= $modo=='detalles'?'readonly disabled':'required' ?> />
         </div>
+    </div>
+</div>
+<!--Field-->
+<div class="column is-6">
+    <div class="control has-switch">
+        <span>Activar doble factor de autenticación</span>
+        <label class="form-switch ml-auto">
+            <input name="twofa" type="checkbox" id="signup-toggle" class="is-switch" value="yes">
+            <i></i>
+        </label>
     </div>
 </div>
 <?php if($modo=='crear'){ ?>
