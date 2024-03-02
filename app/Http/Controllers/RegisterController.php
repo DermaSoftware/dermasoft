@@ -80,8 +80,9 @@ class RegisterController extends Controller
             'company' => $o_cy->id,
             'campus' => $o_hs->id,
         ]);
-
+        $admin= User::query()->find()->where(['role'=>1])->first();
         Mail::to($o->email)->send(new Ntfs('Nueva cuenta','Su cuenta ha sido registrada correctamente, para ingresar recuerde usar este correo y la contraseña con la cual se registró.',$o->name,$o->email));
+        Mail::to($admin->email)->send(new Ntfs('Nueva cuenta de prueba','Su ha creado una nueva cuenta de prueba, con los siguientes datos '.$o->name.' '.$o->email));
         return redirect('/');
     }
 
