@@ -107,7 +107,7 @@
 
     </div>
 
-    
+
 </div>
 <?php if(Auth::user()->role == 2){ ?>
 <!--Profile Settings-->

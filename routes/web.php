@@ -62,10 +62,10 @@ Route::middleware(['guest'])->group(function () {
     ], function () {
         Route::get('/', [App\Http\Controllers\RecoveryController::class, 'index'])->name('recovery.index');
 		Route::post('/', [App\Http\Controllers\RecoveryController::class, 'store'])->name('recovery.store');
-		
+
 		Route::get('/verify', [App\Http\Controllers\RecoveryController::class, 'verify'])->name('recovery.verify');
         Route::post('/verify', [App\Http\Controllers\RecoveryController::class, 'checkkey'])->name('recovery.checkkey');
-		
+
 		Route::get('/new', [App\Http\Controllers\RecoveryController::class, 'newpassword'])->name('recovery.newpassword');
 		Route::post('/new', [App\Http\Controllers\RecoveryController::class, 'update'])->name('recovery.update');
     });
@@ -78,7 +78,7 @@ Route::middleware(['auth','mfsc'])->group(function () {
 	Route::post('chat/user/{id}', [App\Http\Controllers\ChatController::class, 'getuser']);
 	Route::post('chat/msjs/{id}/{user}', [App\Http\Controllers\ChatController::class, 'getmsjs']);
 	Route::post('chat/gettmsjuser/{id}/{user}', [App\Http\Controllers\ChatController::class, 'gettmsjuser']);
-	
+
 	//Dashboard
 	Route::get('/', [App\Http\Controllers\HomeController::class, 'index']);
 	Route::get('faqs', [App\Http\Controllers\HomeController::class, 'faqs'])->name('faqs');
@@ -165,16 +165,16 @@ Route::middleware(['auth'])->group(function () {
 		//Settings
 		Route::get('settings', [App\Http\Controllers\Admin\SettingsController::class, 'index'])->name('index');
 		Route::post('settings', [App\Http\Controllers\Admin\SettingsController::class, 'update'])->name('update');
-		
+
 		//Payments
 		Route::get('orders', [App\Http\Controllers\Admin\OrdersController::class, 'index']);
 		Route::get('orders/{id}', [App\Http\Controllers\Admin\OrdersController::class, 'show']);
 		Route::get('payments', [App\Http\Controllers\Admin\PaymentsController::class, 'index']);
-		
+
 		//ADMINISTRADOR
-		
+
 	});
-	
+
 	//----------------------------------------------------------------------------------
 	//----------------------------------------------------------------------------------
 	//----------------------------------------------------------------------------------
@@ -188,7 +188,7 @@ Route::middleware(['auth'])->group(function () {
 		Route::get('trainings/pbr/{id}', [App\Http\Controllers\Admon\TrainingsController::class, 'resendpbr']);
 		Route::post('hidviews', [App\Http\Controllers\Admon\TrainingsController::class, 'hidviews']);
 		//Sedes
-		Route::resource('headquarters', App\Http\Controllers\Admin\HeadquartersController::class);
+		Route::resource('headquarters', App\Http\Controllers\Admon\HeadquartersController::class);
 		//Sliders
 		Route::resource('sliders', App\Http\Controllers\Admon\SlidersController::class);
 		//Categories
@@ -265,7 +265,7 @@ Route::middleware(['auth'])->group(function () {
 		Route::get('/dermrecords/{id}', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'dermrecords'])->name('dermrecords');
 		Route::post('/search_dermatology', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'shvs_dermatology'])->name('shvs_dermatology');
 		Route::get('/hcdermpdf/{id}', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'hcdermpdf'])->name('hcdermpdf');
-		
+
 		//Biopsies
 		Route::group([
 			'prefix' => 'biopsies'
@@ -290,7 +290,7 @@ Route::middleware(['auth'])->group(function () {
 			Route::get('/records/{id}', [App\Http\Controllers\Clinichistory\CrypyController::class, 'records']);
 			Route::get('/hcpdf/{id}', [App\Http\Controllers\Clinichistory\CrypyController::class, 'hcpdf']);
 		});
-		
+
 		//Aesthetic
 		Route::group([
 			'prefix' => 'aesthetic'
@@ -398,7 +398,7 @@ Route::middleware(['auth'])->group(function () {
 		Route::get('/records/{id}', [App\Http\Controllers\Medical\PthsController::class, 'records']);
 		Route::get('/hcpdf/{id}', [App\Http\Controllers\Medical\PthsController::class, 'hcpdf']);
 	});
-	
+
 	//Quotes
 	Route::group([
 		'prefix' => 'quotes'
@@ -416,7 +416,7 @@ Route::middleware(['auth'])->group(function () {
 		Route::get('/hcpdf/{id}', [App\Http\Controllers\Medical\QuotesController::class, 'hcpdf']);
 		Route::post('/getitem', [App\Http\Controllers\Medical\QuotesController::class, 'getitem']);
 	});
-	
+
 	//Citas de doctores
 	Route::group([
 		'prefix' => 'dcitas'
@@ -425,7 +425,7 @@ Route::middleware(['auth'])->group(function () {
 		Route::post('/{id}', [App\Http\Controllers\Medical\DcitasController::class, 'show']);
 		Route::get('/resend/{id}', [App\Http\Controllers\Medical\DcitasController::class, 'resend']);
 	});
-	
+
 	//Invoices
 	Route::group([
 		'prefix' => 'invoices'
@@ -434,9 +434,9 @@ Route::middleware(['auth'])->group(function () {
 		Route::get('/facend/{id}', [App\Http\Controllers\Medical\InvoicesController::class, 'facend']);
 		Route::get('/facpdf/{id}', [App\Http\Controllers\Medical\InvoicesController::class, 'facpdf']);
 	});
-	
+
 	//PACIENTE
-	
+
 	//Bills
 	Route::group([
 		'prefix' => 'bills'
@@ -444,7 +444,7 @@ Route::middleware(['auth'])->group(function () {
 		Route::get('/', [App\Http\Controllers\Medical\BillsController::class, 'index']);
 		Route::get('/facpdf/{id}', [App\Http\Controllers\Medical\BillsController::class, 'facpdf']);
 	});
-	
+
 	//Citas de pacientes
 	Route::group([
 		'prefix' => 'citas'
@@ -452,7 +452,7 @@ Route::middleware(['auth'])->group(function () {
 		Route::get('/', [App\Http\Controllers\PcitasController::class, 'index']);
 		Route::post('/{id}', [App\Http\Controllers\PcitasController::class, 'show']);
 	});
-	
+
 	//Consultas
 	Route::group([
 		'prefix' => 'consultas'
@@ -460,7 +460,7 @@ Route::middleware(['auth'])->group(function () {
 		Route::get('/', [App\Http\Controllers\Patients\ConsultasController::class, 'index']);
 		Route::get('/records', [App\Http\Controllers\Patients\ConsultasController::class, 'records']);
 	});
-	
+
 	//Esteticos
 	Route::group([
 		'prefix' => 'esteticos'
@@ -469,7 +469,7 @@ Route::middleware(['auth'])->group(function () {
 		Route::get('/records', [App\Http\Controllers\Patients\EsteticosController::class, 'records']);
 		Route::get('/hcpdf/{id}', [App\Http\Controllers\Patients\EsteticosController::class, 'hcpdf']);
 	});
-	
+
 	//Biopsias
 	Route::group([
 		'prefix' => 'biopsias'
@@ -478,7 +478,7 @@ Route::middleware(['auth'])->group(function () {
 		Route::get('/records', [App\Http\Controllers\Patients\BiopsiasController::class, 'records']);
 		Route::get('/hcpdf/{id}', [App\Http\Controllers\Patients\BiopsiasController::class, 'hcpdf']);
 	});
-	
+
 	//Crioterapia
 	Route::group([
 		'prefix' => 'crioterapia'
@@ -487,7 +487,7 @@ Route::middleware(['auth'])->group(function () {
 		Route::get('/records', [App\Http\Controllers\Patients\CrioterapiaController::class, 'records']);
 		Route::get('/hcpdf/{id}', [App\Http\Controllers\Patients\CrioterapiaController::class, 'hcpdf']);
 	});
-	
+
 	//Quirurgica
 	Route::group([
 		'prefix' => 'quirurgica'
@@ -496,7 +496,7 @@ Route::middleware(['auth'])->group(function () {
 		Route::get('/records', [App\Http\Controllers\Patients\QuirurgicaController::class, 'records']);
 		Route::get('/hcpdf/{id}', [App\Http\Controllers\Patients\QuirurgicaController::class, 'hcpdf']);
 	});
-	
+
 	//Album
 	Route::group([
 		'prefix' => 'album'
@@ -504,7 +504,7 @@ Route::middleware(['auth'])->group(function () {
 		Route::get('/', [App\Http\Controllers\Patients\AlbumController::class, 'index']);
 		Route::get('/dwpdf', [App\Http\Controllers\Patients\AlbumController::class, 'hcpdf']);
 	});
-	
+
 	//Prescripciones
 	Route::group([
 		'prefix' => 'prescripciones'
@@ -513,7 +513,7 @@ Route::middleware(['auth'])->group(function () {
 		Route::get('/records', [App\Http\Controllers\Patients\PrescripcionesController::class, 'records']);
 		Route::get('/hcpdf/{id}', [App\Http\Controllers\Patients\PrescripcionesController::class, 'hcpdf']);
 	});
-	
+
 	//Examenes
 	Route::group([
 		'prefix' => 'examenes'
@@ -522,7 +522,7 @@ Route::middleware(['auth'])->group(function () {
 		Route::get('/records', [App\Http\Controllers\Patients\ExamenesController::class, 'records']);
 		Route::get('/hcpdf/{id}', [App\Http\Controllers\Patients\ExamenesController::class, 'hcpdf']);
 	});
-	
+
 	//Procedimientos
 	Route::group([
 		'prefix' => 'procedimientos'
@@ -531,7 +531,7 @@ Route::middleware(['auth'])->group(function () {
 		Route::get('/records', [App\Http\Controllers\Patients\ProcedimientosController::class, 'records']);
 		Route::get('/hcpdf/{id}', [App\Http\Controllers\Patients\ProcedimientosController::class, 'hcpdf']);
 	});
-	
+
 	//Patalogias
 	Route::group([
 		'prefix' => 'patalogias'
@@ -540,8 +540,8 @@ Route::middleware(['auth'])->group(function () {
 		Route::get('/records', [App\Http\Controllers\Patients\PatalogiasController::class, 'records']);
 		Route::get('/hcpdf/{id}', [App\Http\Controllers\Patients\PatalogiasController::class, 'hcpdf']);
 	});
-	
-	
+
+
 	//MEDICO
 	Route::get('miagenda', [App\Http\Controllers\MiagendaController::class, 'index']);
 	//----------------------------------------------------------------------------------

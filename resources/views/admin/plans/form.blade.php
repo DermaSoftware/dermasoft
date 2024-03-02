@@ -173,8 +173,13 @@
         <div class="control">
 			<label>Cantidad de mensajes de texto</label>
             <select class="input" name="validity" id="validity">
-                <option value="Mensual">Mensual</option>
-                <option value="Anual">Anual</option>
+                @foreach ($validity_types as $item)
+                    @if ($item == $o->validity)
+                        <option value="{{$item}}" selected>{{$item}}</option>
+                    @else
+                        <option value="{{$item}}">{{$item}}</option>
+                    @endif
+                @endforeach
             </select>
         </div>
     </div>
@@ -184,10 +189,13 @@
         <div class="control">
 			<label>Back up de seguridad</label>
             <select class="input" name="sequrity_backup" id="sequrity_backup">
-                <option value="Mensual">Mensual</option>
-                <option value="Semanal">Semanal</option>
-                <option value="Cada 3 días">Cada 3 días</option>
-                <option value="Diario">Diario</option>
+                @foreach ($sequrity_backup_types as $item)
+                    @if ($item == $o->sequrity_backup)
+                        <option value="{{$item}}" selected>{{$item}}</option>
+                    @else
+                        <option value="{{$item}}">{{$item}}</option>
+                    @endif
+                @endforeach
             </select>
         </div>
     </div>
