@@ -16,7 +16,7 @@ class PlansController extends Controller
     private $c_names = 'Planes';
 	private $list_tbl_fsc = ['name' => 'Nombre','price' => 'Precio','month' => 'Duración'];
 	private $o_model = Plans::class;
-	
+
 	private function gdata($t = 'Lista de')
     {
         $data['menu'] = $this->r_name;
@@ -97,6 +97,7 @@ class PlansController extends Controller
     public function update(Request $request, $id)
     {
         $data = request()->except(['_token','_method']);
+        $data['rtc_protocol'] = $data['rtc_protocol'] === 'on' ? TRUE : FALSE;
 		$validatedData = $request->validate([
 			'name' => 'required|string',
 		],[
