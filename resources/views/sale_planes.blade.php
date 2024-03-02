@@ -76,11 +76,15 @@
             <div class="notification is-danger">
                 <button class="delete"></button>
                <p style="text-align: center;color: white"> Su periodo de prueba ha terminado , por favor adquiera una nueva membresia</p>
-            </div>
 
+            </div>
+            <div class="button-wrap logout-button" style="display: flex;float: right">
+                <a href="<?= url('logout') ?>" class="button h-button is-primary is-elevated">Salir</a>
+            </div>
 
         </div>
         <div class="container">
+
             <!--Title-->
             <div class="section-title has-text-centered">
                 <h2 class="title is-2"><?= $title ?></h2>
