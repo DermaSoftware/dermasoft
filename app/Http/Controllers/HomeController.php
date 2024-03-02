@@ -89,6 +89,20 @@ class HomeController extends Controller
 		return view('general.planes',$data);
     }
 
+    public function sale_planes()
+    {
+        $auth = Auth::user();
+        $company = Companies::where(['id' => $auth->company])->first(); // Obtengo la compañia a que pertenece el usuario
+		$data['company'] = $company;
+		$data['menu'] = 'payments';
+        $data['c_name'] = $this->c_name;
+        $data['c_names'] = $this->c_names;
+        $data['title'] = 'Planes';
+		$data['o_all'] = Plans::where(['status' => 'active'])->orderBy('id', 'asc')->get();
+		$data['o_setting'] = Settings::orderBy('id', 'DESC')->first();
+		return view('sale_planes',$data);
+    }
+
 	public function payplan()
     {
 		$data['title'] = 'Pago de membresía';

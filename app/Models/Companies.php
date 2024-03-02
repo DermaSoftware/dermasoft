@@ -8,9 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class Companies extends Model
 {
     use HasFactory,Uuids;
-	
+
 	protected $table = 'companies';
 
     protected $guarded = ['id'];
-	
+
+    public function plan()
+    {
+        return $this->belongsTo(Plans::class, 'plan_id');
+    }
+
 }

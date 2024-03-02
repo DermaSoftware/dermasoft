@@ -1,4 +1,16 @@
-<!DOCTYPE html>
+<?php
+$test_text = false;
+if (Auth::user()->company != 0 && Auth::user()->company_class->plan && Auth::user()->company_class->plan->id == 4) {
+    $test_text = "Membresia de Prueba";
+    $days = round((time() - strtotime(Auth::user()->company_class->created_at)) / (60 * 60 * 24));
+    if ($days > 30) {
+        echo "<script>window.location.href = '/sale_planes';</script>";
+    }
+    if ($days >= 15)
+        $test_text .= ' | le quedan ' . $days . ' dias para culminar la membresia de prueba';
+}
+?>
+    <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <!-- Required meta tags  -->
@@ -912,7 +924,9 @@
                         <h1 class="title is-4"><?= $title ?></h1>
                     </div>
                     <div class="toolbar ml-auto">
-                        <div class="danger-text"><?= Auth::user()->company_class ?></div>
+                        @if ($test_text)
+                            <a href="/planes" class="danger-text button bd-fat-button"><?= $test_text ?></a>
+                        @endif
                         <div class="toolbar-link"><label class="dark-mode ml-auto"><input type="checkbox"
                                                                                           checked><span></span></label>
                         </div>
