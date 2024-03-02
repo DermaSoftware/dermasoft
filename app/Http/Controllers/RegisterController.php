@@ -42,7 +42,7 @@ class RegisterController extends Controller
             $logo = asset($path);
         }
         $cms = $this->search_key();
-        $plan = Plans::where('name', 'Prueba')->first();
+        $plan = Plans::where('id', 4)->first();
         $o_cy = Companies::create([
             'name' => $data['companies_name'],
             'email' => $data['company_email'],

@@ -85,6 +85,7 @@ Route::middleware(['auth','mfsc'])->group(function () {
 	Route::get('orders', [App\Http\Controllers\HomeController::class, 'orders'])->name('orders');
 	Route::get('payments', [App\Http\Controllers\HomeController::class, 'payments'])->name('payments');
 	Route::get('planes', [App\Http\Controllers\HomeController::class, 'planes'])->name('planes');
+	Route::get('sale_planes', [App\Http\Controllers\HomeController::class, 'sale_planes'])->name('sale_planes');
 	Route::get('support', [App\Http\Controllers\HomeController::class, 'support'])->name('support');
 	Route::post('support', [App\Http\Controllers\HomeController::class, 'addticket'])->name('addticket');
 	Route::get('support/create', [App\Http\Controllers\HomeController::class, 'supportnew'])->name('supportnew');
