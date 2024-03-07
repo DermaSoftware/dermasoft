@@ -6,8 +6,8 @@ if (Auth::user()->company != 0 && Auth::user()->company_class->plan && Auth::use
     if ($days > 30) {
         echo "<script>window.location.href = '/sale_planes';</script>";
     }
-    if ($days >= 15)
-        $test_text .= ' | le quedan ' . $days . ' dias para culminar la membresia de prueba';
+    if (30-$days <= 15)
+        $test_text .= ' | le quedan ' . 30-$days . ' dias para culminar la membresia de prueba';
 }
 ?>
     <!DOCTYPE html>
