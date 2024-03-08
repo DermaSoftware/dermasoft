@@ -5,7 +5,7 @@
         <div class="column is-12">
             <form action="{{url($menu.'/'.$o->uuid)}}" method="post" enctype="multipart/form-data">
 			{{csrf_field()}}
-			{{method_field('PATCH')}}
+			<!--{{method_field('PATCH')}}-->
 			<div class="account-box is-form is-footerless">
                 <div class="form-head stuck-header">
                     <div class="form-head-inner">

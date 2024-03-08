@@ -24,7 +24,7 @@ class DiaryController extends Controller
     private $c_names = 'Agendas';
 	private $list_tbl_fsc = ['name' => 'Nombre','lastname' => 'Apellidos','email' => 'Correo','phone' => 'Telefono'];
 	private $o_model = Diary::class;
-	
+
 	private function gdata($t = 'Lista de')
     {
         $data['menu'] = $this->r_name;
@@ -41,7 +41,7 @@ class DiaryController extends Controller
 	public function __construct(){
         $this->middleware('checkRole:2');
     }
-	
+
 	public function index()
     {
         $data = $this->gdata();
@@ -98,7 +98,7 @@ class DiaryController extends Controller
 		$request->session()->flash('msj_success', $this->tag_the.' '.$this->c_name.' '.$o->uuid.' ha sido actualizad'.$this->tag_o.' correctamente.');
 		return redirect($this->r_name);
     }
-	
+
 	private function async_dp($id, $ps){
 		//Eliminamos los que no esten
 		$o_all = Diaryqt::where(['diary_id' => $id])->whereNotIn('qt_id',$ps)->orderBy('id', 'asc')->get();

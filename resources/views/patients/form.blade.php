@@ -38,7 +38,7 @@
             <?php $t_att = 'scd_lastname'; ?>
 			<?php $n_att = 'Segundo apellido'; ?>
 			<label><?= $n_att ?></label>
-			<input name="{{$t_att}}" type="text" class="input" placeholder="<?= $n_att ?>" value="{{ isset($o->$t_att)?$o->$t_att:old($t_att) }}" <?= $modo=='detalles'?'readonly disabled':'required' ?> />
+			<input name="{{$t_att}}" type="text" class="input" placeholder="<?= $n_att ?>" value="{{ isset($o->$t_att)?$o->$t_att:old($t_att) }}" <?= $modo=='detalles'?'readonly disabled':'' ?> />
         </div>
     </div>
 </div>

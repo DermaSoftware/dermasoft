@@ -8,9 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Diary extends Model
 {
     use HasFactory,Uuids;
-	
+
 	protected $table = 'diary';
 
     protected $guarded = ['id'];
-	
 }

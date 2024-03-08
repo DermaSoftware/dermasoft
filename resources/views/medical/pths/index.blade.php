@@ -26,7 +26,7 @@
                     </div>
                 </div>
                 <div class="form-body">
-                    
+
 					@if ($errors->any())
 					<div class="message is-danger">
 						<a class="delete"></a>
@@ -39,14 +39,14 @@
 						</div>
 					</div>
 					@endif
-					
+
 					<div class="columns is-multiline">
 						<!--Field-->
 						<div class="column is-12">
 							<div class="field">
 								<div class="control">
 									<label>Patología</label>
-									<select class="input pths_f1">
+									<select class="input pths_f1 select2_fsc">
 										<option value="" data-code="" data-note="" selected disabled>--Seleccione--</option>
 										<?php foreach($o_paths as $key_sel => $row_sel){ ?>
 										<option value="<?= $row_sel->name ?>" data-code="<?= $row_sel->name ?>" data-note="<?= $row_sel->description ?>"><?= $row_sel->name ?> - <?= $row_sel->description ?></option>
@@ -70,7 +70,7 @@
 						<div class="column is-12">
 							<hr>
 						</div>
-						
+
 						<div class="column is-12 inner_table_pths is-hidden">
 							<div class="s-card" style="margin-top: 20px;max-height: 400px;overflow: auto;">
 								<h4 class="title is-5 is-narrow">Patologías seleccionadas</h4>
@@ -90,7 +90,7 @@
 								</table>
 							</div>
 						</div>
-						
+
 						<!--Field-->
 						<div class="column is-12">
 							<div class="field">
@@ -102,16 +102,16 @@
 								</div>
 							</div>
 						</div>
-						
+
 						<div class="column is-12">
 							<div class="field"><div class="control"><label class="checkbox is-outlined is-info"><input name="notification_email" type="checkbox" value="yes"><span></span> Enviar al correo del paciente</label></div></div>
 							<div class="field"><div class="control"><label class="checkbox is-outlined is-info"><input name="notification_whatsapp" type="checkbox" value="yes"><span></span> Enviar al whatsapp del paciente</label></div></div>
 						</div>
-						
+
 					</div>
 					<hr>
 					<div style="width: 100%;text-align: right;padding: 10px;"><button type="submit" class="button h-button is-primary is-raised">Guardar</button></div>
-					
+
                 </div>
             </div>
 			</form>

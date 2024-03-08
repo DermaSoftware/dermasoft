@@ -10,7 +10,7 @@
                 </div>
                 <div class="right">
                     <a href="<?= url($menu.'/create') ?>" class="button h-button is-success is-rounded is-elevated m-r-10"><span class="icon"><i class="fas fa-plus"></i></span> <span>Crear <?= $c_name ?></span></a>
-					
+
                 </div>
             </div>
         </div>
@@ -34,7 +34,7 @@
             <td><?= $key+1 ?></td>
 			<?php foreach($list_tbl_fsc as $keyx => $rowx){ ?>
 			<?php if($keyx == 'role'){ ?>
-			<td><?= $row->role()->first()->name ?></td>
+			<td><?= $row->role_class->name ?></td>
 			<?php } else { ?>
 			<td><?= $row->$keyx ?></td>
 			<?php } ?>

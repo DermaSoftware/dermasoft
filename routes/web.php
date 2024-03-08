@@ -20,7 +20,7 @@ Route::get('/clear', function () {
 	//2- correr la url /clear
 	Artisan::call('cache:clear');
 	Artisan::call('view:clear');
-	//Artisan::call('session:flush');
+	// Artisan::call('session:flush');
     Artisan::call('route:clear');
     //Artisan::call('storage:link', [] );
 });
@@ -208,6 +208,8 @@ Route::middleware(['auth'])->group(function () {
 		Route::get('logmails', [App\Http\Controllers\Admon\LogmailsController::class, 'index']);
 		Route::get('logmails/create', [App\Http\Controllers\Admon\LogmailsController::class, 'create']);
 		Route::post('logmails/tpl/{id}', [App\Http\Controllers\Admon\LogmailsController::class, 'show']);
+		Route::match(["POST","GET"],'logmails/{id}/edit', [App\Http\Controllers\Admon\LogmailsController::class, 'update']);
+        Route::get('logmails/{id}/detail', [App\Http\Controllers\Admon\LogmailsController::class, 'detail']);
 		Route::post('logmails/uss/{id}', [App\Http\Controllers\Admon\LogmailsController::class, 'uss']);
 		Route::get('logmails/{id}/resend', [App\Http\Controllers\Admon\LogmailsController::class, 'resend']);
 		Route::post('logmails', [App\Http\Controllers\Admon\LogmailsController::class, 'store']);

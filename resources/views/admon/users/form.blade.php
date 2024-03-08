@@ -173,7 +173,7 @@
             <?php $t_att = 'specialty'; ?>
 			<?php $n_att = 'Especialidad'; ?>
 			<label><?= $n_att ?></label>
-			<select name="<?= $t_att ?>" class="input" <?= $modo=='detalles'?'readonly disabled':'' ?>>
+			<select name="<?= $t_att ?>" class="input" <?= $modo=='detalles'?'readonly disabled':'' ?> hidden>
 				<option value="0" selected disabled >--Seleccione--</option>
 				<?php foreach($o_specialties as $key => $row){ ?>
 				<option value="<?= $row->id ?>" <?= (isset($o->$t_att) AND $o->$t_att==$row->id)?'selected':'' ?>><?= $row->name ?></option>

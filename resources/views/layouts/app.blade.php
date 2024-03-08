@@ -1025,6 +1025,7 @@ if (Auth::user()->company != 0 && Auth::user()->company_class->plan && Auth::use
     <!--Load Mapbox-->
     <!-- Concatenated plugins -->
 
+    @section('js')
     <script src="<?= asset('assets') ?>/js/app.js"></script>
     <!-- Huro js -->
     <script src="<?= asset('assets') ?>/js/functions.js"></script>
@@ -1741,21 +1742,31 @@ if (Auth::user()->company != 0 && Auth::user()->company_class->plan && Auth::use
                     var btn = $(this);
                     btn.on('click', function () {
                         const tag_id = btn.data('id');
-                        let item_tr = $('#' + tag_id);
-                        if (item_tr.find('select').val() == null || item_tr.find('select').val() == '') {
+                        const diagnosticsty = document.querySelector("#o_diagnosesty");
+                        const diagnosticsty_selectd = diagnosticsty.options[diagnosticsty.selectedIndex];
+                        if (diagnosticsty_selectd.value == null || diagnosticsty_selectd.value == '') {
                             alert('Debe elejir el tipo');
                         } else {
                             if ($('.table_diagnoses_eo_fn').hasClass('is-hidden')) {
                                 $('.table_diagnoses_eo_fn').removeClass('is-hidden');
                             }
-                            //Agregamos item a tabla
-                            const x_code = '<td><input type="hidden" name="diagnostics[]" value="' + item_tr.find('.code_inner').data('id') + '">' + item_tr.find('.code_inner').html() + '</td>';
-                            const x_name = '<td>' + item_tr.find('.name_inner').html() + '</td>';
-                            const x_type = '<td><input type="hidden" name="diagnosticsty[]" value="' + item_tr.find('select').val() + '">' + item_tr.find('select option:selected').html() + '</td>';
-                            const x_trash = '<td class="is-end"><div><button type="button" class="button is-danger is-circle is-elevated btn_deo_trash"><span class="icon is-small"><i class="fas fa-trash"></i></span></button></div></td>';
-                            const item = '<tr>' + x_code + x_name + x_type + x_trash + '</tr>';
-                            $('.table_diagnoses_eo_fn tbody').append(item);
-                            trash_deo_all();
+                            if(document.querySelector('.table_diagnoses_eo_fn tr td input[value="'+ diagnosticsty_selectd.value  +'"]')){
+                                alert('Este registro ay se encuentra seleccionado');
+                            }
+                            else{
+                                //Agregamos item a tabla
+                                const diag = document.querySelector("#diagnoses");
+                                const opt_selectd = diag.options[diag.selectedIndex];
+                                const code = opt_selectd.value;
+                                const name = opt_selectd.dataset.name;
+                                const x_code = '<td><input type="hidden" name="diagnostics[]" value="' + code + '"/>' + code + '</td>';
+                                const x_name = '<td>' + name + '</td>';
+                                const x_type = '<td><input type="hidden" name="diagnosticsty[]" value="' + diagnosticsty_selectd.value + '"/>' + diagnosticsty_selectd.innerHTML + '</td>';
+                                const x_trash = '<td class="is-end"><div><button type="button" class="button is-danger is-circle is-elevated btn_deo_trash"><span class="icon is-small"><i class="fas fa-trash"></i></span></button></div></td>';
+                                const item = '<tr>' + x_code + x_name + x_type + x_trash + '</tr>';
+                                $('.table_diagnoses_eo_fn tbody').append(item);
+                                trash_deo_all();
+                            }
                         }
                     });
                 });
@@ -2263,6 +2274,7 @@ if (Auth::user()->company != 0 && Auth::user()->company_class->plan && Auth::use
             $("#photo_profile_img").fadeIn("fast").attr('src', tmppath);
         });
     </script>
+    @show
 </div>
 </body>
 </html>

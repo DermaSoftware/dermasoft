@@ -31,7 +31,7 @@ class PatientsController extends Controller
     private $c_names = 'Pacientes';
 	private $list_tbl_fsc = ['name' => 'Nombre','document_type' => 'Tipo de documento','document_number' => 'Número de documento','email' => 'Correo','phone' => 'Telefono'];
 	private $o_model = User::class;
-	
+
 	private function gdata($t = 'Historial de', $tfinal = true)
     {
         $data['menu'] = $this->r_name;
@@ -117,7 +117,7 @@ class PatientsController extends Controller
 		$data['o_qtys'] = Querytypes::where(['company' => Auth::user()->company,'status' => 'active'])->orderBy('id', 'asc')->get();
 		return view($this->v_name.'.vitalsigns',$data);
     }
-	
+
 	public function svitalsigns(Request $request, $id)
     {
         $data = request()->except(['_token','_method']);
@@ -198,7 +198,7 @@ class PatientsController extends Controller
 		$request->session()->flash('msj_error', 'No se han encontrado resultados');
 		return redirect($this->r_name.'/search_gallery');
     }
-	
+
 	public function gallery($id)
     {
         if(empty($id)){
@@ -213,7 +213,7 @@ class PatientsController extends Controller
 		$data['o_gallerys'] = Photographic::where(['user' => $o->id,'status' => 'active'])->orderBy('id', 'DESC')->get();
 		return view($this->v_name.'.gallery',$data);
     }
-	
+
 	public function sgallery(Request $request, $id)
     {
         $data = request()->except(['_token','_method']);
@@ -249,11 +249,14 @@ class PatientsController extends Controller
 			return redirect($this->r_name);
 		}
 		$o = $this->o_model::where(['uuid' => $id])->first();
+        $company = $o->company_class;
+
 		if(empty($o->id)){
 			return redirect($this->r_name);
 		}
 		$data = $this->gdata('Datos complementarios', false);
         $data['o'] = $o;
+        $data['company'] = $company;
 		$data['o_campus'] = Headquarters::where(['company' => Auth::user()->company,'status' => 'active'])->orderBy('id', 'asc')->get();
 		return view($this->v_name.'.suppdata',$data);
     }
@@ -380,7 +383,7 @@ class PatientsController extends Controller
 		Mail::to($o->email)->send(new HabeasData($full_name,$attach_file));
 		return redirect($fullpath);
     }
-	
+
 	private function pdfhabeasdata($id, $save = false)
     {
 		if(empty($id)){
@@ -422,7 +425,7 @@ class PatientsController extends Controller
 		//$pdf = PDF::chunkLoadView('<html-separator/>', 'pdf.document', $data);
         //->save($pdfFilePath);
     }
-	
+
 	private function dateYears($date, $limit = 18){
 		$date1 = $date;
 		if(empty($date1)){
@@ -435,7 +438,7 @@ class PatientsController extends Controller
 		//$days = floor(($diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60*24));
 		return $years < $limit;
 	}
-	
+
 	//PDF
 	public function pdfgallery($id, $save = false)
     {
