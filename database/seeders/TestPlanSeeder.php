@@ -24,6 +24,7 @@ class TestPlanSeeder extends Seeder
     {
         $company=Companies::query()->find(3);
         $company->plan_id=4;
+        $company->status='active';
         $company->save();
     }
 }
