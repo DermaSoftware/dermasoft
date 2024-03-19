@@ -52,7 +52,7 @@
                 <div id="signup-step-1" class="columns signup-columns">
                     <div class="column is-4 is-offset-1">
                         <h1 id="main-signup-title" class="title is-3 signup-title">Nueva cuenta</h1>
-                        <h2 id="main-signup-subtitle" class="subtitle signup-subtitle">Ingrese sus datos basicos para registrar su cuenta.</h2>
+                        <h2 id="main-signup-subtitle" class="subtitle signup-subtitle">Datos del contacto.</h2>
                         @if ($errors->any())
 						<div class="message is-danger">
 							<a class="delete"></a>

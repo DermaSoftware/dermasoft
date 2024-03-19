@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Admon;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -11,13 +11,13 @@ class HeadquartersController extends Controller
 {
 	private $tag_the = 'La';
     private $tag_o = 'a';
-    private $r_name = 'admin/headquarters';
-    private $v_name = 'admin.headquarters';
+    private $r_name = 'admon/headquarters';
+    private $v_name = 'admon.headquarters';
     private $c_name = 'Sede';
     private $c_names = 'Sedes';
 	private $list_tbl_fsc = ['name' => 'Nombre','code' => 'Código','email' => 'Correo','responsible' => 'Responsable'];
 	private $o_model = Headquarters::class;
-	
+
 	private function gdata($t = 'Lista de')
     {
         $data['menu'] = $this->r_name;
@@ -33,7 +33,7 @@ class HeadquartersController extends Controller
 	public function __construct(){
         $this->middleware('checkRole:2');
     }
-	
+
 	public function index()
     {
         $data = $this->gdata();

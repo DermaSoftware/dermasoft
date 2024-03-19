@@ -10,7 +10,7 @@
                 </div>
                 <div class="right">
                     <a href="<?= url($menu.'/create') ?>" class="button h-button is-success is-rounded is-elevated m-r-10"><span class="icon"><i class="fas fa-plus"></i></span> <span>Crear <?= $c_name ?></span></a>
-					
+
                 </div>
             </div>
         </div>
@@ -50,6 +50,22 @@
                                     <div class="meta">
                                         <span>Enviar</span>
                                         <span>Re-enviar mensaje</span>
+                                    </div>
+                                </a>
+                                <a href="<?= url($menu.'/'.$row->id.'/edit') ?>" class="dropdown-item is-media">
+                                    <div class="icon">
+                                        <i class="lnil lnil-pencil"></i>
+                                    </div>
+                                    <div class="meta">
+                                        <span>Editar</span>
+                                    </div>
+                                </a>
+                                <a href="<?= url($menu.'/'.$row->id.'/detail') ?>" class="dropdown-item is-media">
+                                    <div class="icon">
+                                        <i class="fa-solid fa-binoculars"></i>
+                                    </div>
+                                    <div class="meta">
+                                        <span>Detalle</span>
                                     </div>
                                 </a>
                             </div>

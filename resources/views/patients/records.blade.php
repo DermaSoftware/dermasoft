@@ -58,7 +58,16 @@
                                         <span>Modificar</span>
                                     </div>
                                 </a>
-								<a href="<?= url($menu.'/'.$row->uuid) ?>" class="dropdown-item is-media">
+								<a href="<?= url($menu.'/appointments'.'/'.$row->uuid) ?>" class="dropdown-item is-media">
+                                    <div class="icon">
+                                        <i class="lnil lnil-calender-alt-3"></i>
+                                    </div>
+                                    <div class="meta">
+                                        <span>Citas</span>
+                                        <span>Citas agendadas</span>
+                                    </div>
+                                </a>
+                                <a href="<?= url($menu.'/make_cita'.'/'.$row->uuid) ?>" class="dropdown-item is-media">
                                     <div class="icon">
                                         <i class="lnil lnil-calender-alt-3"></i>
                                     </div>

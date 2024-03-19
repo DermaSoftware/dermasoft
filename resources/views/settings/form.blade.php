@@ -66,6 +66,9 @@
 						<span class="file-label">Seleccione un logo…</span>
 					</span>
 				</label>
+                @if ($o->logo_pp)
+                    <img src="{{ asset($o->logo_pp) }}" alt="Imagen">
+                    @endif
 			</div>
 		</div>
     </div>

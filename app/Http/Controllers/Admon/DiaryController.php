@@ -24,7 +24,7 @@ class DiaryController extends Controller
     private $c_names = 'Agendas';
 	private $list_tbl_fsc = ['name' => 'Nombre','lastname' => 'Apellidos','email' => 'Correo','phone' => 'Telefono'];
 	private $o_model = Diary::class;
-	
+
 	private function gdata($t = 'Lista de')
     {
         $data['menu'] = $this->r_name;
@@ -41,7 +41,7 @@ class DiaryController extends Controller
 	public function __construct(){
         $this->middleware('checkRole:2');
     }
-	
+
 	public function index()
     {
         $data = $this->gdata();
@@ -98,7 +98,7 @@ class DiaryController extends Controller
 		$request->session()->flash('msj_success', $this->tag_the.' '.$this->c_name.' '.$o->uuid.' ha sido actualizad'.$this->tag_o.' correctamente.');
 		return redirect($this->r_name);
     }
-	
+
 	private function async_dp($id, $ps){
 		//Eliminamos los que no esten
 		$o_all = Diaryqt::where(['diary_id' => $id])->whereNotIn('qt_id',$ps)->orderBy('id', 'asc')->get();
@@ -165,6 +165,40 @@ class DiaryController extends Controller
 		$o = Locks::create($data);
 		$request->session()->flash('msj_success', 'El bloqueo de agenda ha sido registrado correctamente.');
 		return redirect($this->r_name.'/'.$id.'/locks');
+    }
+
+    public function update_lock(Request $request, $id)
+    {
+
+        if($request->method() === 'GET'){
+            if(empty($id)){
+                return redirect($this->r_name);
+            }
+            $o_lock = Locks::where(['uuid' => $id])->first();
+            if(empty($o_lock->id)){
+                return redirect($this->r_name);
+            }
+            $data = $this->gdata('Actualizar');
+            $data['title'] = 'Actualizar bloqueo de agenda';
+            $data['o'] = $o_lock;
+            $data['usr'] = $o_lock->user_class;
+            return view($this->v_name.'.update_lock',$data);
+        }
+        else{
+            $obj = Locks::where(['uuid' => $id])->first();
+            $data = request()->except(['_token','_method']);
+            $validatedData = $request->validate([
+                'date_init' => 'required',
+                'date_end' => 'required',
+            ],[
+                'date_init.required' => 'La fecha de inicio es requerido',
+                'date_end.required' => 'La fecha de fin es requerido',
+            ]);
+            $o = $obj->update($data);
+            $request->session()->flash('msj_success', 'El bloqueo de agenda ha sido registrado correctamente.');
+            return redirect($this->r_name.'/'.$obj->user_class->uuid.'/locks');
+        }
+
     }
 	public function destroy($id)
     {

@@ -25,7 +25,7 @@ class UsersController extends Controller
     private $c_names = 'Usuarios';
 	private $list_tbl_fsc = ['name' => 'Nombre','lastname' => 'Apellidos','email' => 'Correo','phone' => 'Telefono','role' => 'Rol'];
 	private $o_model = User::class;
-	
+
 	private function gdata($t = 'Lista de')
     {
         if (request()->session()->has('filter_email')) {
@@ -56,7 +56,7 @@ class UsersController extends Controller
 				request()->session()->flash('filter_'.$row, $filter_x);
 			}
 		}
-		
+
 		$data = request()->except(['_token','_method']);
 		if(!empty($data['value'])){
 			request()->session()->flash('filter_'.$data['field'], $data['value']);
@@ -100,7 +100,7 @@ class UsersController extends Controller
 		}
 		$data['o_all'] = $tb->items();
 		$data['pagination'] = $this->getStructurePaginate($tb);
-		
+
 		$data['filter_email'] = $filter_email;
 		$data['filter_name'] = $filter_name;
 		$data['filter_phone'] = $filter_phone;
@@ -113,7 +113,7 @@ class UsersController extends Controller
 		$data['o_charges'] = Charges::where(['status' => 'active'])->orderBy('id', 'asc')->get();
 		$data['o_specialties'] = Specialties::where(['status' => 'active'])->orderBy('id', 'asc')->get();
 		$data['o_campus'] = Headquarters::where(['company' => Auth::user()->company,'status' => 'active'])->orderBy('id', 'asc')->get();
-		$data['o_roles'] = Roles::where(['status' => 'active'])->whereNotIn('id', [1])->orderBy('id', 'asc')->get();
+		$data['o_roles'] = Roles::where(['status' => 'active'])->whereNotIn('name', ["Paciente","Super Administrador"])->orderBy('id', 'asc')->get();
 		return view($this->v_name.'.create',$data);
     }
 

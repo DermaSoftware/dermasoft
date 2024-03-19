@@ -45,8 +45,10 @@ class RegisterController extends Controller
         $plan = Plans::where('id', 4)->first();
         $o_cy = Companies::create([
             'name' => $data['companies_name'],
+            'contact_name' => $data['name'] . ' ' . $data['lastname'],
             'email' => $data['company_email'],
             'phone' => $data['company_phone'],
+            'contact_phone' => $data['contact_phone'],
             'nit' => $data['nit'],
             'kind_person' => $data['kind_person'],
             'location' => $data['location'],
@@ -69,8 +71,9 @@ class RegisterController extends Controller
         $twofa = !empty($data['twofa']) ? 'yes' : 'not';
         $o = User::create([
             'name' => $data['name'],
+            'lastname' => $data['lastname'],
             'email' => $data['email'],
-            'phone' => $data['company_phone'],
+            'phone' => $data['contact_phone'],
             'gender' => $data['gender'],
             'email_verified_at' => now(),
             'twofa' => $twofa,
@@ -80,7 +83,7 @@ class RegisterController extends Controller
             'company' => $o_cy->id,
             'campus' => $o_hs->id,
         ]);
-        $admin= User::query()->find()->where(['role'=>1])->first();
+        $admin= User::query()->where(['role'=>1])->first();
         Mail::to($o->email)->send(new Ntfs('Nueva cuenta','Su cuenta ha sido registrada correctamente, para ingresar recuerde usar este correo y la contraseña con la cual se registró.',$o->name,$o->email));
         Mail::to($admin->email)->send(new Ntfs('Nueva cuenta de prueba','Su ha creado una nueva cuenta de prueba, con los siguientes datos '.$o->name.' '.$o->email));
         return redirect('/');

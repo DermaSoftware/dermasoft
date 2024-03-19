@@ -97,13 +97,22 @@
         <div class="control">
 			<?php $t_att = 'sel_users'; ?>
 			<?php $n_att = 'Seleccione rol'; ?>
+			<?php $optionsr = ['Todos','Administradores','Medicos','Administrativo','Pacientes']; ?>
 			<label><?= $n_att ?></label>
 			<select name="<?= $t_att ?>" id="roles_uss_fsc" class="input" data-url="<?= url('admon/logmails') ?>" required>
-				<option value="0" selected >--Todos--</option>
-				<?php $options = [2 => 'Administradores',3 => 'Medicos',4 => 'Administrativo',5 => 'Pacientes']; ?>
-				<?php foreach($options as $key => $row){ ?>
-				<option value="<?= $key ?>"><?= $row ?></option>
-				<?php } ?>
+				{{-- <option value="Todos" >--Todos--</option> --}}
+                @foreach ($optionsr as $item)
+                    @isset($o)
+                        @if ($item === $o->sel_users)
+                        <option selected value="<?= $item ?>"><?= $item ?></option>
+                        @else
+                        <option value="<?= $item ?>"><?= $item ?></option>
+                        @endif
+                    @endisset
+                    @empty($o)
+                        <option value="<?= $item ?>"><?= $item ?></option>
+                    @endempty
+                @endforeach
 			</select>
         </div>
     </div>
@@ -116,10 +125,20 @@
 			<?php $n_att = 'Seleccione usuario'; ?>
 			<label><?= $n_att ?></label>
 			<select name="<?= $t_att ?>" id="sel_list_users_fsc" class="input select2_fsc">
-				<option value="0" selected >--Todos--</option>
-				<?php foreach($us_all as $key_sel => $row_sel){ ?>
-				<option value="<?= $row_sel->id ?>"><?= $row_sel->name ?><?= !empty($row_sel->scd_name)?' '.$row_sel->scd_name:'' ?> <?= $row_sel->lastname ?> <?= $row_sel->scd_lastname ?> (<?= $row_sel->email ?>)</option>
-				<?php } ?>
+				<option value="0" >--Todos--</option>
+				<?php foreach($us_all as $key_sel => $row_sel){
+                    if(isset($o)){
+                        if($row_sel->id === $o->user_id){?>
+                            <option selected value="<?= $row_sel->id ?>"><?= $row_sel->name ?><?= !empty($row_sel->scd_name)?' '.$row_sel->scd_name:'' ?> <?= $row_sel->lastname ?> <?= $row_sel->scd_lastname ?> (<?= $row_sel->email ?>)</option>
+                        <?php
+                        }
+                        else{?>
+                        <option value="<?= $row_sel->id ?>"><?= $row_sel->name ?><?= !empty($row_sel->scd_name)?' '.$row_sel->scd_name:'' ?> <?= $row_sel->lastname ?> <?= $row_sel->scd_lastname ?> (<?= $row_sel->email ?>)</option>
+                    <?php }
+                    } else{ ?>
+                        <option value="<?= $row_sel->id ?>"><?= $row_sel->name ?><?= !empty($row_sel->scd_name)?' '.$row_sel->scd_name:'' ?> <?= $row_sel->lastname ?> <?= $row_sel->scd_lastname ?> (<?= $row_sel->email ?>)</option>
+                    <?php }
+                } ?>
 			</select>
         </div>
     </div>
@@ -132,11 +151,18 @@
 			<?php $n_att = 'Seleccione genero'; ?>
 			<label><?= $n_att ?></label>
 			<select name="<?= $t_att ?>" class="input" required>
-				<option value="Todos" selected >--Todos--</option>
-				<?php $options = ['Masculino','Femenino']; ?>
-				<?php foreach($options as $key => $row){ ?>
-				<option value="<?= $row ?>"><?= $row ?></option>
-				<?php } ?>
+				<?php $options = ['Todos','Masculino','Femenino']; ?>
+				<?php foreach($options as $key => $row){
+                    if(isset($o)){
+                    if($row === $o->sel_gender){?>
+				        <option value="<?= $row ?>" selected><?= $row ?></option>
+                    <?php
+                    } else{?>
+                        <option value="<?= $row ?>"><?= $row ?></option>
+				    <?php }
+                    } else{ ?>
+                        <option value="<?= $row ?>"><?= $row ?></option>
+              <?php       }} ?>
 			</select>
         </div>
     </div>
@@ -161,9 +187,18 @@
 			<label><?= $n_att ?></label>
 			<select name="<?= $t_att ?>" id="tpl_html_fsc" data-url="<?= url('admon/logmails') ?>" class="input" required>
 				<option value="" selected >--Seleccione--</option>
-				<?php foreach($o_all as $key_sel => $row_sel){ ?>
-				<option value="<?= $row_sel->id ?>"><?= $row_sel->name ?></option>
-				<?php } ?>
+
+                <?php foreach($o_all as $key_sel => $row_sel){
+                    if(isset($o)){
+                    if($row_sel->id == $o->tpl_id){?>
+				        <option value="<?= $row_sel->id ?>" selected><?= $row_sel->name ?></option>
+                    <?php
+                    } else{?>
+                        <option value="<?= $row_sel->id ?>"><?= $row_sel->name ?></option>
+				    <?php }
+                    } else{ ?>
+                        <option value="<?= $row_sel->id ?>"><?= $row_sel->name ?></option>
+              <?php       }} ?>
 			</select>
         </div>
     </div>
@@ -175,10 +210,17 @@
 <!--Field-->
 <div class="column is-12 inner-attach is-hidden">
 	<div class="filepond-uploader is-three-grid">
+        <div class="files">
+
+            @foreach ($mattachs as $item)
+                <a href="{{ asset($item->path_attach)}}">{{$item->path_attach}}</a>
+            @endforeach
+        </div>
         <div class="control">
             <div class="file is-boxed">
                 <label class="file-label">
-                    <input class="file-input" type="file" multiple name="files[]">
+                    <input id="adjuntos" class="file-input" type="file" multiple name="files[]">
+                    <img id="photo_profile_img" src="<?= asset('assets/img/avatars/svg/huro-1.svg') ?>" alt="" >
                     <span class="file-cta">
                         <span class="file-icon">
                             <i class="lnil lnil-32 lnil-cloud-upload"></i>

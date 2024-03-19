@@ -20,7 +20,7 @@ Route::get('/clear', function () {
 	//2- correr la url /clear
 	Artisan::call('cache:clear');
 	Artisan::call('view:clear');
-	//Artisan::call('session:flush');
+	// Artisan::call('session:flush');
     Artisan::call('route:clear');
     //Artisan::call('storage:link', [] );
 });
@@ -189,7 +189,7 @@ Route::middleware(['auth'])->group(function () {
 		Route::get('trainings/pbr/{id}', [App\Http\Controllers\Admon\TrainingsController::class, 'resendpbr']);
 		Route::post('hidviews', [App\Http\Controllers\Admon\TrainingsController::class, 'hidviews']);
 		//Sedes
-		Route::resource('headquarters', App\Http\Controllers\Admin\HeadquartersController::class);
+		Route::resource('headquarters', App\Http\Controllers\Admon\HeadquartersController::class);
 		//Sliders
 		Route::resource('sliders', App\Http\Controllers\Admon\SlidersController::class);
 		//Categories
@@ -208,6 +208,8 @@ Route::middleware(['auth'])->group(function () {
 		Route::get('logmails', [App\Http\Controllers\Admon\LogmailsController::class, 'index']);
 		Route::get('logmails/create', [App\Http\Controllers\Admon\LogmailsController::class, 'create']);
 		Route::post('logmails/tpl/{id}', [App\Http\Controllers\Admon\LogmailsController::class, 'show']);
+		Route::match(["POST","GET"],'logmails/{id}/edit', [App\Http\Controllers\Admon\LogmailsController::class, 'update']);
+        Route::get('logmails/{id}/detail', [App\Http\Controllers\Admon\LogmailsController::class, 'detail']);
 		Route::post('logmails/uss/{id}', [App\Http\Controllers\Admon\LogmailsController::class, 'uss']);
 		Route::get('logmails/{id}/resend', [App\Http\Controllers\Admon\LogmailsController::class, 'resend']);
 		Route::post('logmails', [App\Http\Controllers\Admon\LogmailsController::class, 'store']);
@@ -217,6 +219,7 @@ Route::middleware(['auth'])->group(function () {
 		Route::patch('diary/{id}', [App\Http\Controllers\Admon\DiaryController::class, 'update']);
 		Route::get('diary/{id}/locks', [App\Http\Controllers\Admon\DiaryController::class, 'locks']);
 		Route::get('diary/{id}', [App\Http\Controllers\Admon\DiaryController::class, 'create']);
+		Route::match(["POST","GET"],'diary/{id}/update_lock', [App\Http\Controllers\Admon\DiaryController::class, 'update_lock']);
 		Route::post('diary/{id}', [App\Http\Controllers\Admon\DiaryController::class, 'store']);
 		Route::delete('diary/{id}', [App\Http\Controllers\Admon\DiaryController::class, 'destroy']);
 		//Route::resource('diary', App\Http\Controllers\Admon\DiaryController::class);
@@ -250,8 +253,14 @@ Route::middleware(['auth'])->group(function () {
 		Route::post('/suppdata/{id}', [App\Http\Controllers\Patients\PatientsController::class, 'ssuppdata'])->name('ssuppdata');
 		Route::post('/', [App\Http\Controllers\Patients\PatientsController::class, 'store'])->name('store');
 		Route::get('/{id}/edit', [App\Http\Controllers\Patients\PatientsController::class, 'edit'])->name('edit');
+        Route::post('/get_habailable_days', [App\Http\Controllers\Patients\PatientsController::class, 'get_habailable_days']);
 		Route::post('/{id}', [App\Http\Controllers\Patients\PatientsController::class, 'update'])->name('update');
 		Route::delete('/{id}', [App\Http\Controllers\Patients\PatientsController::class, 'destroy'])->name('destroy');
+        Route::match(["POST","GET"],'make_cita/{id}/{uuid?}', [App\Http\Controllers\Patients\PatientsController::class, 'make_cita']);
+        Route::get('get_doctors/{qt}', [App\Http\Controllers\Patients\PatientsController::class, 'get_doctors']);
+        Route::get('/appointments/{id}', [App\Http\Controllers\Patients\PatientsController::class, 'appointments']);
+        Route::match(["POST","GET"],'/appointments/{id}/edit', [App\Http\Controllers\Patients\PatientsController::class, 'update_appointment']);
+
 	});
 	Route::group([
 		'prefix' => 'clinichistory'

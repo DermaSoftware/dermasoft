@@ -52,3 +52,43 @@
     </div>
 </div>
 @endsection
+@section('js')
+    @parent
+    <script>
+        $(document).ready(function(){
+            const rol = document.querySelector('select[name="role"]');
+
+            var op = rol.options[rol.selectedIndex];
+            var field_espec = document.querySelector('select[name="specialty"]');
+            var signature = document.querySelector('input[name="signature"]');
+            var professional_card = document.querySelector('input[name="professional_card"]');
+            if(op.text !== "Medico"){
+                debugger
+                field_espec.setAttribute('disabled',false);
+                signature.setAttribute('disabled',false);
+                professional_card.setAttribute('disabled',false);
+            }
+            else{
+
+                field_espec.removeAttribute('disabled');
+                signature.removeAttribute('disabled');
+                professional_card.removeAttribute('disabled');
+            }
+            rol.addEventListener('change',function(){
+                op = rol.options[rol.selectedIndex];
+                if(op.text !== "Medico"){
+                    debugger
+                    field_espec.setAttribute('disabled',false);
+                    signature.setAttribute('disabled',false);
+                    professional_card.setAttribute('disabled',false);
+                }
+                else{
+
+                    field_espec.removeAttribute('disabled');
+                    signature.removeAttribute('disabled');
+                    professional_card.removeAttribute('disabled');
+                }
+            });
+        });
+    </script>
+@endsection
