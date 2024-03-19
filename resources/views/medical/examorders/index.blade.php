@@ -26,7 +26,7 @@
                     </div>
                 </div>
                 <div class="form-body">
-                    
+
 					@if ($errors->any())
 					<div class="message is-danger">
 						<a class="delete"></a>
@@ -39,49 +39,42 @@
 						</div>
 					</div>
 					@endif
-					
+
 					<div class="columns is-multiline">
 						<!--Field-->
 						<div class="column is-12">
 							<div class="s-card">
 								<h3 class="subtitle">Diagnóstico</h3>
-								<table class="table is-hoverable is-fullwidth">
-									<tbody>
-										<tr>
-											<th>Código</th>
-											<th>Nombre</th>
-											<th>Tipo</th>
-											<th class="is-end">
-												<div class="dark-inverted">
-													Seleccionar
-												</div>
-											</th>
-										</tr>
-										<?php foreach($o_diagnoses as $key => $row){ ?>
-										<tr id="trdg_<?= $row->uuid ?>">
-											<td class="code_inner" data-id="<?= $row->id ?>"><?= $row->code ?></td>
-											<td class="name_inner"><?= $row->name ?></td>
-											<td>
-												<div class="field">
-													<div class="control">
-														<select class="input">
-															<option value="" selected disabled >--Seleccione--</option>
-															<?php foreach($o_diagnosesty as $key_sel => $row_sel){ ?>
-															<option value="<?= $row_sel->id ?>"><?= $row_sel->name ?></option>
-															<?php } ?>
-														</select>
-													</div>
-												</div>
-											</td>
-											<td class="is-end">
-												<div><button data-id="trdg_<?= $row->uuid ?>" type="button" class="button is-primary is-circle is-elevated btn_diagnoses_eo"><span class="icon is-small"><i class="fas fa-plus"></i></span></button></div>
-											</td>
-										</tr>
-										<?php } ?>
-									</tbody>
-								</table>
+                                <div class="columns">
+                                    <div class="column is-5">
+                                        <div class="field">
+                                            <div class="control">
+                                                <select name="diagnoses" id="diagnoses" class="input select2_fsc">
+                                                    @foreach ($o_diagnoses as $item)
+                                                    <option data-code="{{$item->code}}" data-name="{{$item->name}}" value="{{$item->id}}">{{$item->code}}-{{$item->name}}</option>
+                                                @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="column is-5">
+                                        <div class="field">
+                                            <div class="control">
+                                                <select name="o_diagnosesty" id="o_diagnosesty" class="input">
+                                                    <option value="" selected disabled >--Seleccione--</option>
+                                                    <?php foreach($o_diagnosesty as $key_sel => $row_sel){ ?>
+                                                    <option value="<?= $row_sel->id ?>"><?= $row_sel->name ?></option>
+                                                    <?php } ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="column is-2">
+                                        <button type="button" class="button is-primary is-circle is-elevated btn_diagnoses_eo"><span class="icon is-small"><i class="fas fa-plus"></i></span></button>
+                                    </div>
+                                </div>
 							</div>
-							
+
 							<div class="s-card table_diagnoses_eo_fn is-hidden">
 								<table class="table is-hoverable is-fullwidth">
 									<tbody>
@@ -98,15 +91,15 @@
 									</tbody>
 								</table>
 							</div>
-							
+
 						</div>
-						
+
 						<!--Field-->
 						<div class="column is-10">
 							<div class="field">
 								<div class="control">
 									<label>Examen</label>
-									<select class="input inpeo_exam">
+									<select class="input inpeo_exam select2_fsc">
 										<option value="0" selected disabled >--Seleccione--</option>
 										<?php foreach($o_labexams as $key_sel => $row_sel){ ?>
 										<option value="<?= $row_sel->id ?>"><?= $row_sel->name ?> - <?= $row_sel->description ?></option>
@@ -119,10 +112,10 @@
 							<div>&nbsp;</div>
 							<a href="javascript:void(0)" class="button h-button is-primary is-dark-outlined btn_add_eoexam">Agregar</a>
 						</div>
-						
+
 						<div class="column is-12">
-							
-							
+
+
 							<div class="inner_table_eo_exams is-hidden">
 								<h2 class="title is-thin is-5" style="margin: 0;">Solicitud de examenes</h2>
 								<div class="s-card" style="margin-top: 20px;max-height: 400px;overflow: auto;">
@@ -141,20 +134,20 @@
 								</div>
 							</div>
 						</div>
-						
+
 						<div class="column is-12">
 							<hr>
 						</div>
-						
+
 						<div class="column is-12">
 							<div class="field"><div class="control"><label class="checkbox is-outlined is-info"><input name="notification_email" type="checkbox" value="yes"><span></span> Enviar al correo del paciente</label></div></div>
 							<div class="field"><div class="control"><label class="checkbox is-outlined is-info"><input name="notification_whatsapp" type="checkbox" value="yes"><span></span> Enviar al whatsapp del paciente</label></div></div>
 						</div>
-						
+
 					</div>
 					<hr>
 					<div style="width: 100%;text-align: right;padding: 10px;"><button type="submit" class="button h-button is-primary is-raised">Guardar</button></div>
-					
+
                 </div>
             </div>
 			</form>

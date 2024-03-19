@@ -11,19 +11,17 @@ yarn-error.log
 # Laravel 4 specific
 
 bootstrap/compiled.php
-.vscode/
-app/storage/
-.idea/
-storage/
 
-public/
+app/storage/
+
+
 
 # Laravel 5 & Lumen specific
 
 public/storage
 
 public/hot
-
+storage/
 
 
 # Laravel 5 & Lumen specific with changed public path

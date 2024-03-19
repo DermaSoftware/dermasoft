@@ -3,7 +3,7 @@
 <?php /*if($o_all->count() > 0){ ?>
 <div class="columns is-multiline">
     <?php foreach($o_all as $key => $row){ ?>
-	
+
 	<div class="column is-4">
         <div class="s-card is-raised demo-s-card">
             <div class="card-head">
@@ -101,7 +101,11 @@
 				<hr>
 				<div class="buttons text-center">
 					<!--<button class="button h-button is-dark-outlined">Skip</button>-->
-					<button class="button h-button is-success is-raised btn_plan_price_epayco" style="margin: 0 auto;">Pagar membresía</button>
+					@if ($company->plan_id == $row->id )
+                    <button disabled class="button h-button is-success is-raised btn_plan_price_epayco" style="margin: 0 auto;">Membresía adquirida</button>
+                    @else
+                    <button class="button h-button is-success is-raised btn_plan_price_epayco" style="margin: 0 auto;">Pagar membresía</button>
+                    @endif
 					<form class="is-hidden">
 						<script
 						src="https://checkout.epayco.co/checkout.js"

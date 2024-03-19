@@ -107,7 +107,7 @@
 
     </div>
 
-    
+
 </div>
 <?php if(Auth::user()->role == 2){ ?>
 <!--Profile Settings-->
@@ -172,7 +172,7 @@
                     <img src="<?= asset('assets/img/landing/d/diary.svg') ?>" alt="">
                 </div>
                 <span>Agenda</span>
-                <h3>Programación de citas</h3>
+                <h3>Programación agenda médica</h3>
             </a>
             <a href="<?= url('planes') ?>" class="settings-box">
                 <div class="edit-icon">

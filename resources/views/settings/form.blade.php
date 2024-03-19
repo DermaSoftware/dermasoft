@@ -66,8 +66,70 @@
 						<span class="file-label">Seleccione un logo…</span>
 					</span>
 				</label>
+                @if ($o->logo_pp)
+                    <img src="{{ asset($o->logo_pp) }}" alt="Imagen">
+                    @endif
 			</div>
 		</div>
+    </div>
+</div>
+
+<div class="column is-12">
+	<hr>
+	<h2>Datos de la clínica</h2>
+</div>
+<!--Field-->
+<div class="column is-12">
+    <div class="field">
+        <div class="control">
+            <?php $t_att = 'hours_quotes'; ?>
+            <?php $n_att = 'Cantidad de horas que tiene el paciente antes de la cita para pagar la consulta'; ?>
+			<label><?= $n_att ?></label>
+			<input name="{{$t_att}}" type="text" class="input" placeholder="<?= $n_att ?>" value="{{ isset($o->$t_att)?$o->$t_att:old($t_att) }}" <?= $modo=='detalles'?'readonly disabled':'' ?> />
+        </div>
+    </div>
+</div>
+<!--Field-->
+<div class="column is-12">
+    <div class="field">
+        <div class="control">
+            <?php $t_att = 'hours_scheduling_web'; ?>
+            <?php $n_att = 'Cantidad de horas antes para notificar recordatorio de pago de consulta cuando se toma cita por la web'; ?>
+			<label><?= $n_att ?></label>
+			<input name="{{$t_att}}" type="text" class="input" placeholder="<?= $n_att ?>" value="{{ isset($o->$t_att)?$o->$t_att:old($t_att) }}" <?= $modo=='detalles'?'readonly disabled':'' ?> />
+        </div>
+    </div>
+</div>
+<!--Field-->
+<div class="column is-12">
+    <div class="field">
+        <div class="control">
+            <?php $t_att = 'time_consultation'; ?>
+            <?php $n_att = 'Tiempo de duración de consulta'; ?>
+			<label><?= $n_att ?></label>
+			<input name="{{$t_att}}" type="text" class="input" placeholder="<?= $n_att ?>" value="{{ isset($o->$t_att)?$o->$t_att:old($t_att) }}" <?= $modo=='detalles'?'readonly disabled':'' ?> />
+        </div>
+    </div>
+</div>
+<!--Field-->
+<div class="column is-12">
+    <div class="field">
+        <div class="control">
+            <?php $t_att = 'time_consultation_text'; ?>
+            <?php $n_att = 'Texto de tiempo de duración de consulta'; ?>
+			<label><?= $n_att ?></label>
+			<input name="{{$t_att}}" type="text" class="input" placeholder="<?= $n_att ?>" value="{{ isset($o->$t_att)?$o->$t_att:old($t_att) }}" <?= $modo=='detalles'?'readonly disabled':'' ?> />
+        </div>
+    </div>
+</div>
+<div class="column is-12">
+    <div class="field">
+        <div class="control">
+            <?php $t_att = 'hours_ntf'; ?>
+            <?php $n_att = 'Cantidad de horas antes para notificar recordatorio de cita por whatsapp, correo electrónico y mini mensaje de texto'; ?>
+			<label><?= $n_att ?></label>
+			<input name="{{$t_att}}" type="text" class="input" placeholder="<?= $n_att ?>" value="{{ isset($o->$t_att)?$o->$t_att:old($t_att) }}" <?= $modo=='detalles'?'readonly disabled':'' ?> />
+        </div>
     </div>
 </div>
 <div class="column is-12">

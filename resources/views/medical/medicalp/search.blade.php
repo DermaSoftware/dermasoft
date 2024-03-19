@@ -39,7 +39,7 @@
                         <div class="fieldset-heading">
                         </div>
                         <div class="columns is-multiline">
-                            
+
 							<!--Field-->
 							<div class="column is-6">
 								<div class="field">
@@ -47,7 +47,7 @@
 										<?php $t_att = 'document_type'; ?>
 										<?php $n_att = 'Tipo de documento'; ?>
 										<label><?= $n_att ?></label>
-										<select name="<?= $t_att ?>" class="input" required>
+										<select name="<?= $t_att ?>" class="input select2_fsc" required>
 											<option value="0" selected disabled >--Seleccione--</option>
 											<?php $options = ['cedula de ciudadanía','pasaporte','cedula de extranjería','carné diplomático','registro civil','tarjeta de identidad','adulto sin identificar','menor sin identificar','certificado de nacimiento','salvoconducto','pasaporte de la ONU','Permiso especial de permanencia']; ?>
 											<?php foreach($options as $key => $row){ ?>
@@ -67,7 +67,7 @@
 									</div>
 								</div>
 							</div>
-							
+
                         </div>
                     </div>
                 </div>

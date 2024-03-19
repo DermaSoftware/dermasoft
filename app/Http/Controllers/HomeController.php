@@ -35,7 +35,7 @@ class HomeController extends Controller
         $data['title'] = $this->c_names;
 		return view('general.home',$data);
     }
-	
+
     public function membership()
     {
 		$data['menu'] = 'membership';
@@ -74,9 +74,12 @@ class HomeController extends Controller
 		}
 		return view('general.membership',$data);
     }
-	
+
 	public function planes()
     {
+        $auth = Auth::user();
+        $company = Companies::where(['id' => $auth->company])->first(); // Obtengo la compañia a que pertenece el usuario
+		$data['company'] = $company;
 		$data['menu'] = 'payments';
         $data['c_name'] = $this->c_name;
         $data['c_names'] = $this->c_names;
@@ -85,13 +88,27 @@ class HomeController extends Controller
 		$data['o_setting'] = Settings::orderBy('id', 'DESC')->first();
 		return view('general.planes',$data);
     }
-	
+
+    public function sale_planes()
+    {
+        $auth = Auth::user();
+        $company = Companies::where(['id' => $auth->company])->first(); // Obtengo la compañia a que pertenece el usuario
+		$data['company'] = $company;
+		$data['menu'] = 'payments';
+        $data['c_name'] = $this->c_name;
+        $data['c_names'] = $this->c_names;
+        $data['title'] = 'Planes';
+		$data['o_all'] = Plans::where(['status' => 'active'])->orderBy('id', 'asc')->get();
+		$data['o_setting'] = Settings::orderBy('id', 'DESC')->first();
+		return view('sale_planes',$data);
+    }
+
 	public function payplan()
     {
 		$data['title'] = 'Pago de membresía';
 		return view('general.payplan',$data);
     }
-	
+
     public function payajax()
     {
 		$x_id_invoice = $_POST['referencia'];
@@ -113,7 +130,7 @@ class HomeController extends Controller
 		}
 		echo 'ok';
     }
-	
+
     public function payext($id = '')
     {
         if(empty($id)){
@@ -131,13 +148,13 @@ class HomeController extends Controller
 		$data['o_plan'] = Plans::where(['id' => $o->plan])->first();
 		return view('general.payext',$data);
     }
-	
+
     public function payres()
     {
 		$data['title'] = 'Pago de membresía';
 		return view('general.payres',$data);
     }
-	
+
     public function paycon()
     {
 		$uuid = $_POST['extra1'];//Order
@@ -164,7 +181,7 @@ class HomeController extends Controller
 		}
 		echo 'ok';
     }
-	
+
 	public function paymentres($data = [])
     {
 		if(empty($data['x_ref_payco'])){
@@ -215,7 +232,7 @@ class HomeController extends Controller
 		}
         return null;
     }
-	
+
 	public function payment($data = [])
     {
 		if(empty($data['x_ref_payco'])){
@@ -271,20 +288,20 @@ class HomeController extends Controller
 		}
         return null;
     }
-	
+
 	private function expiration($d = 30) {
 		$fecha = date('Y-m-j');
 		$nuevafecha = strtotime ( '+'.$d.' day' , strtotime ( $fecha ) ) ;
 		$nuevafecha = date ( 'Y-m-d' , $nuevafecha );
 		return $nuevafecha;
     }
-	
+
 	private function plusMonth($m = 1) {
 		$d = date('Y-m-d');
 		$nd = strtotime ('+'.$m.' month', strtotime($d)) ;
 		return date ('Y-m-d', $nd);
     }
-	
+
     public function orders()
     {
 		$data['menu'] = 'orders';
@@ -294,7 +311,7 @@ class HomeController extends Controller
 		$data['o_all'] = Orders::where(['company' => Auth::user()->company])->orderBy('id', 'asc')->get();
 		return view('general.orders',$data);
     }
-	
+
     public function payments()
     {
 		$data['menu'] = 'payments';
@@ -304,7 +321,7 @@ class HomeController extends Controller
 		$data['o_all'] = Payments::where(['company' => Auth::user()->company])->orderBy('id', 'asc')->get();
 		return view('general.payments',$data);
     }
-	
+
     public function trainings()
     {
 		$data['menu'] = 'trainings';
@@ -323,7 +340,7 @@ class HomeController extends Controller
 		//$data['o_all'] = Trainings::where(['status' => 'active'])->orderBy('id', 'DESC')->get();
 		return view('general.trainings',$data);
     }
-	
+
     public function contact()
     {
 		$data['menu'] = 'contact';
@@ -333,7 +350,7 @@ class HomeController extends Controller
 		$data['o_all'] = Payments::where(['user' => Auth::user()->id])->orderBy('id', 'asc')->get();
 		return view('general.contact',$data);
     }
-	
+
     public function contactform(Request $request)
     {
 		$data = request()->except(['_token','_method']);
@@ -356,7 +373,7 @@ class HomeController extends Controller
         $request->session()->flash('msj_success', 'El formulario de contacto ha sido enviado correctamente.');
 		return redirect('contact');
     }
-	
+
     public function faqs($id = '')
     {
 		$data['menu'] = 'faqs';
@@ -372,7 +389,7 @@ class HomeController extends Controller
 		$data['c_all'] = Catfaqs::where(['status' => 'active'])->orderBy('id', 'asc')->get();
 		return view('general.faqs',$data);
     }
-	
+
     public function support()
     {
 		$data['menu'] = 'support';
@@ -451,7 +468,7 @@ class HomeController extends Controller
 		if ($validator->fails()) {
 			return redirect('support/'.$id)->withErrors($validator)->withInput();
 		}
-		
+
 		$file = '';
 		if ($request->hasFile('file')) {
             $path = $request->file('file')->store('uploads','public');

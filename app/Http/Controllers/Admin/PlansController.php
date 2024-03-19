@@ -16,7 +16,8 @@ class PlansController extends Controller
     private $c_names = 'Planes';
 	private $list_tbl_fsc = ['name' => 'Nombre','price' => 'Precio','month' => 'Duración'];
 	private $o_model = Plans::class;
-	
+    private $sequrity_backup_types = ['Mensual','Semanal','Cada 3 días','Diario'];
+    private $validity_types = ['Mensual','Anual'];
 	private function gdata($t = 'Lista de')
     {
         $data['menu'] = $this->r_name;
@@ -26,6 +27,8 @@ class PlansController extends Controller
         $data['c_names'] = $this->c_names;
         $data['list_tbl_fsc'] = $this->list_tbl_fsc;
         $data['title'] = $t.' '.$this->c_names;
+        $data['sequrity_backup_types'] = $this->sequrity_backup_types;
+        $data['validity_types'] = $this->validity_types;
 		return $data;
     }
 
@@ -86,6 +89,7 @@ class PlansController extends Controller
 		}
 		$tag = is_numeric($id)?'id':'uuid';
 		$o = $this->o_model::where([$tag => $id])->first();
+
 		if(empty($o->id)){
 			return redirect($this->r_name);
 		}
@@ -97,6 +101,7 @@ class PlansController extends Controller
     public function update(Request $request, $id)
     {
         $data = request()->except(['_token','_method']);
+        $data['rtc_protocol'] = $data['rtc_protocol'] === 'on' ? TRUE : FALSE;
 		$validatedData = $request->validate([
 			'name' => 'required|string',
 		],[

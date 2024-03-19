@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Charges;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
@@ -17,8 +18,9 @@ class ProfileController extends Controller
     private $c_names = 'Perfil';
 	private $list_tbl_fsc = ['name' => 'Nombre','username' => 'Usuario','email' => 'Correo','phone' => 'Tel&eacute;fono','group' => 'Grupo','city' => 'Ciudad','birth' => 'Fecha de nacimiento','role' => 'Rol'];
 	private $o_model = User::class;
-	
-	
+    private $documents_type = ["cédula de ciudadanía","pasaporte","cédula de extranjería"];
+
+
 	/**
      * Display a listing of the resource.
      *
@@ -28,11 +30,15 @@ class ProfileController extends Controller
     {
         $id = Auth::user()->id;
 		$o = $this->o_model::find($id);
+        $charges = Charges::all();
+
 		$data['menu'] = $this->r_name;
         $data['c_name'] = $this->c_name;
         $data['c_names'] = $this->c_names;
         $data['title'] = 'Mi perfil';
         $data['o'] = $o;
+        $data['charges'] = $charges;
+        $data['documents_type'] = $this->documents_type;
 		$data['o_specialties'] = Specialties::where(['status' => 'active'])->orderBy('id', 'asc')->get();
 		return view($this->r_name,$data);
     }

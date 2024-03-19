@@ -57,9 +57,15 @@ class SettingsController extends Controller
 		'attendant' => 'Acudiente',
 		'name_attendant' => 'Nombre del acudiente',
 		'relationship' => 'Parentesco del acudiente',
-		'phone_attendant' => 'Teléfono del acudiente'
+		'phone_attendant' => 'Teléfono del acudiente',
+
+        'hours_quotes' => 'Cantidad de horas que tiene el paciente antes de la cita para pagar la consulta',
+		'hours_scheduling_web' => 'Cantidad de horas antes para notificar recordatorio de pago de consulta cuando se toma cita por la web',
+		'time_consultation' => 'Tiempo de duración de consulta',
+		'time_consultation_text' => 'Texto de tiempo de duración de consulta',
+		'hours_ntf' => 'Cantidad de horas antes para notificar recordatorio de cita por whatsapp, correo electrónico y mini mensaje de texto'
 	];
-	
+
 	private function gdata($t = 'Lista de')
     {
         $data['menu'] = $this->r_name;
@@ -121,7 +127,7 @@ class SettingsController extends Controller
 		$request->session()->flash('msj_success', $this->tag_the.' '.$this->c_name.' '.$o->name.' ha sido actualizad'.$this->tag_o.' correctamente.');
 		return redirect($this->r_name);
     }
-	
+
 	//Obtener codigo de CMS
 	private function search_key($len = 8){
 		$r = Str::random($len);

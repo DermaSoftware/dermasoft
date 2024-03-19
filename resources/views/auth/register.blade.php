@@ -52,7 +52,7 @@
                 <div id="signup-step-1" class="columns signup-columns">
                     <div class="column is-4 is-offset-1">
                         <h1 id="main-signup-title" class="title is-3 signup-title">Nueva cuenta</h1>
-                        <h2 id="main-signup-subtitle" class="subtitle signup-subtitle">Ingrese sus datos basicos para registrar su cuenta.</h2>
+                        <h2 id="main-signup-subtitle" class="subtitle signup-subtitle">Datos del contacto.</h2>
                         @if ($errors->any())
 						<div class="message is-danger">
 							<a class="delete"></a>
@@ -201,12 +201,13 @@
 
                 <!-- Step 3 -->
                 <div id="signup-step-3" class="columns signup-columns is-hidden">
-                    <div class="column is-4 is-offset-4 username-form">
+                    <div class="column is-12 username-form">
                         <h1 class="title is-5 signup-title has-text-centered">Empresa</h1>
                         <h2 class="subtitle signup-subtitle has-text-centered">Ingrese sus datos de su empresa.</h2>
                         <div class="signup-form">
                             <div class="columns is-multiline">
-                                <div class="column is-12">
+                                @include('auth/company_form',['modo' => 'crear'])
+                                {{-- <div class="column is-12">
                                     <div class="control has-validation">
                                         <input name="companies_name" type="text" class="input">
                                         <small class="error-text">Este es un campo obligatorio</small>
@@ -248,7 +249,7 @@
                                             <i></i>
                                         </label>
                                     </div>
-                                </div>
+                                </div> --}}
                             </div>
 
                             <div class="button-wrap is-centered has-text-centered">
