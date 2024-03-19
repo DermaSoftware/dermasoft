@@ -166,6 +166,40 @@ class DiaryController extends Controller
 		$request->session()->flash('msj_success', 'El bloqueo de agenda ha sido registrado correctamente.');
 		return redirect($this->r_name.'/'.$id.'/locks');
     }
+
+    public function update_lock(Request $request, $id)
+    {
+
+        if($request->method() === 'GET'){
+            if(empty($id)){
+                return redirect($this->r_name);
+            }
+            $o_lock = Locks::where(['uuid' => $id])->first();
+            if(empty($o_lock->id)){
+                return redirect($this->r_name);
+            }
+            $data = $this->gdata('Actualizar');
+            $data['title'] = 'Actualizar bloqueo de agenda';
+            $data['o'] = $o_lock;
+            $data['usr'] = $o_lock->user_class;
+            return view($this->v_name.'.update_lock',$data);
+        }
+        else{
+            $obj = Locks::where(['uuid' => $id])->first();
+            $data = request()->except(['_token','_method']);
+            $validatedData = $request->validate([
+                'date_init' => 'required',
+                'date_end' => 'required',
+            ],[
+                'date_init.required' => 'La fecha de inicio es requerido',
+                'date_end.required' => 'La fecha de fin es requerido',
+            ]);
+            $o = $obj->update($data);
+            $request->session()->flash('msj_success', 'El bloqueo de agenda ha sido registrado correctamente.');
+            return redirect($this->r_name.'/'.$obj->user_class->uuid.'/locks');
+        }
+
+    }
 	public function destroy($id)
     {
         if(empty($id)){

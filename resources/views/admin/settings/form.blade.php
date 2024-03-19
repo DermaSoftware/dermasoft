@@ -1,54 +1,9 @@
-<!--Field-->
+
 <div class="column is-12">
-    <div class="field">
-        <div class="control">
-            <?php $t_att = 'hours_quotes'; ?>
-			<label>Cantidad de horas que tiene el paciente antes de la cita para pagar la consulta</label>
-			<input name="{{$t_att}}" type="number" min="1" class="input" placeholder="Cantidad de horas que tiene el paciente antes de la cita para pagar la consulta" value="{{ isset($o->$t_att)?$o->$t_att:old($t_att) }}" <?= $modo=='detalles'?'readonly disabled':'required' ?> />
-        </div>
-    </div>
+	{{-- <hr> --}}
+	<h2>Datos de la pasarela de pagos</h2>
 </div>
-<!--Field-->
-<div class="column is-12">
-    <div class="field">
-        <div class="control">
-            <?php $t_att = 'hours_scheduling_web'; ?>
-			<label>Cantidad de horas antes para notificar recordatorio de pago de consulta cuando se toma cita por la web</label>
-			<input name="{{$t_att}}" type="number" min="1" class="input" placeholder="Cantidad de horas antes para notificar recordatorio de pago de consulta cuando se toma cita por la web" value="{{ isset($o->$t_att)?$o->$t_att:old($t_att) }}" <?= $modo=='detalles'?'readonly disabled':'required' ?> />
-        </div>
-    </div>
-</div>
-<!--Field-->
-<div class="column is-12">
-    <div class="field">
-        <div class="control">
-            <?php $t_att = 'time_consultation'; ?>
-			<label>Tiempo de duración de consulta</label>
-			<input name="{{$t_att}}" type="number" min="1" class="input" placeholder="Tiempo de duración de consulta" value="{{ isset($o->$t_att)?$o->$t_att:old($t_att) }}" <?= $modo=='detalles'?'readonly disabled':'required' ?> />
-        </div>
-    </div>
-</div>
-<!--Field-->
-<div class="column is-12">
-    <div class="field">
-        <div class="control">
-            <?php $t_att = 'time_consultation_text'; ?>
-			<label>Texto de tiempo de duración de consulta</label>
-			<input name="{{$t_att}}" type="text" class="input" placeholder="Texto de tiempo de duración de consulta" value="{{ isset($o->$t_att)?$o->$t_att:old($t_att) }}" <?= $modo=='detalles'?'readonly disabled':'required' ?> />
-        </div>
-    </div>
-</div>
-<!--Field-->
-<div class="column is-12">
-    <div class="field">
-        <div class="control">
-            <?php $t_att = 'hours_ntf'; ?>
-			<label>Cantidad de horas antes para notificar recordatorio de cita por whatsapp, correo electrónico y mini mensaje de texto</label>
-			<input name="{{$t_att}}" type="number" min="1" class="input" placeholder="Cantidad de horas antes para notificar recordatorio de cita por whatsapp, correo electrónico y mini mensaje de texto" value="{{ isset($o->$t_att)?$o->$t_att:old($t_att) }}" <?= $modo=='detalles'?'readonly disabled':'required' ?> />
-        </div>
-    </div>
-</div>
-<!--Field-->
+
 <div class="column is-12">
     <div class="field">
         <div class="control">
@@ -60,15 +15,13 @@
 						<span class="file-icon"><i class="fas fa-cloud-upload-alt"></i></span>
 						<span class="file-label">Seleccione un logo…</span>
 					</span>
+                    @if ($o->logo_pp)
+                    <img src="{{ asset($o->logo_pp) }}" alt="Imagen">
+                    @endif
 				</label>
 			</div>
 		</div>
     </div>
-</div>
-<div class="column is-12">
-	<hr>
-	<h2>Datos de la pasarela de pagos</h2>
-</div>
 <!--Field-->
 <div class="column is-12">
     <div class="field">

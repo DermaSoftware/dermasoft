@@ -58,6 +58,16 @@
                                 </div>
                                 <div class="dropdown-menu" role="menu">
                                     <div class="dropdown-content">
+                                        <a href="<?= url($menu . '/' . $row->uuid . '/update_lock') ?>"
+                                            class="dropdown-item is-media">
+                                            <div class="icon">
+                                                <i class="lnil lnil-pencil"></i>
+                                            </div>
+                                            <div class="meta">
+                                                <span>Editar</span>
+                                                <span>Editar Bloqueo</span>
+                                            </div>
+                                        </a>
                                         @can('delete', $row)
                                             <a id="<?= $row->uuid ?>" href="javascript:void(0)"
                                                 data-href="<?= url($menu . '/' . $row->uuid) ?>" data-itemtag="El"
@@ -68,7 +78,7 @@
                                                 </div>
                                                 <div class="meta">
                                                     <span>Eliminar</span>
-                                                    <span>Eliminar <?= $tag_the ?> <?= $c_name ?></span>
+                                                    <span>Eliminar Bloqueo</span>
                                                 </div>
                                             </a>
                                         @endcan

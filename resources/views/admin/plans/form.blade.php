@@ -44,6 +44,7 @@
         <div class="control">
 			<label>Portada</label>
 			<div class="file has-name is-fullwidth">
+                <img src="{{ asset('' . Storage::disk('public')->url($o->photo)) }}" alt="Imagen">
 				<label class="file-label">
 					<input name="photo" class="file-input" type="file">
 					<span class="file-cta is-fullwidth">
@@ -171,14 +172,18 @@
 <div class="column is-4">
     <div class="field">
         <div class="control">
-			<label>Cantidad de mensajes de texto</label>
+			<label>Vigencia</label>
             <select class="input" name="validity" id="validity">
                 @foreach ($validity_types as $item)
-                    @if ($item == $o->validity)
-                        <option value="{{$item}}" selected>{{$item}}</option>
-                    @else
+                    @isset($o)
+                        @if ($item == $o->validity)
+                            <option value="{{$item}}" selected>{{$item}}</option>
+                        @endif
+                    @endisset
+                    @empty($o)
                         <option value="{{$item}}">{{$item}}</option>
-                    @endif
+                    @endempty
+
                 @endforeach
             </select>
         </div>
@@ -190,11 +195,15 @@
 			<label>Back up de seguridad</label>
             <select class="input" name="sequrity_backup" id="sequrity_backup">
                 @foreach ($sequrity_backup_types as $item)
-                    @if ($item == $o->sequrity_backup)
-                        <option value="{{$item}}" selected>{{$item}}</option>
-                    @else
+                    @isset($o)
+                        @if ($item == $o->sequrity_backup)
+                            <option value="{{$item}}" selected>{{$item}}</option>
+                        @endif
+                    @endisset
+                    @empty($o)
                         <option value="{{$item}}">{{$item}}</option>
-                    @endif
+                    @endempty
+
                 @endforeach
             </select>
         </div>
@@ -213,7 +222,7 @@
     <div class="field">
         <div class="control">
             <?php $t_att = 'rtc_protocol'; ?>
-            <input name="{{$t_att}}" id="{{$t_att}}" type="checkbox" class="checkbox" {{ $o->$t_att ? 'checked' : '' }}/>
+            <input name="{{$t_att}}" id="{{$t_att}}" type="checkbox" class="checkbox" <?= (isset($o->$t_att) and $o->$t_att) ? 'checked':'' ?>/>
 			<label class="checkbox">Uso de protocolo web RTC</label>
         </div>
     </div>

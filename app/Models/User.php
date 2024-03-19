@@ -80,4 +80,9 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Trainings::class,'trainingsusers');
     }
+
+    public function headquarters()
+    {
+        return $this->belongsToMany(Headquarters::class,'solicitude','user','campus');
+    }
 }

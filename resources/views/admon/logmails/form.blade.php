@@ -210,10 +210,17 @@
 <!--Field-->
 <div class="column is-12 inner-attach is-hidden">
 	<div class="filepond-uploader is-three-grid">
+        <div class="files">
+
+            @foreach ($mattachs as $item)
+                <a href="{{ asset($item->path_attach)}}">{{$item->path_attach}}</a>
+            @endforeach
+        </div>
         <div class="control">
             <div class="file is-boxed">
                 <label class="file-label">
-                    <input class="file-input" type="file" multiple name="files[]">
+                    <input id="adjuntos" class="file-input" type="file" multiple name="files[]">
+                    <img id="photo_profile_img" src="<?= asset('assets/img/avatars/svg/huro-1.svg') ?>" alt="" >
                     <span class="file-cta">
                         <span class="file-icon">
                             <i class="lnil lnil-32 lnil-cloud-upload"></i>

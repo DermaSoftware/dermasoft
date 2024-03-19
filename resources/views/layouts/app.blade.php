@@ -25,14 +25,19 @@ if (Auth::user()->company != 0 && Auth::user()->company_class->plan && Auth::use
     <link rel="stylesheet" href="<?= asset('assets/css/app.css') ?>">
     <link rel="stylesheet" href="<?= asset('assets/css/main.css') ?>">
     <link rel="stylesheet" href="<?= asset('assets/css/mycss.css') ?>">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&display=swap"
-          rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,700" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="<?= asset('assets/css/css2.css') ?>">
+
+    <!--<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&display=swap"
+          rel="stylesheet">-->
+    <link rel="stylesheet" href="<?= asset('assets/css/css.css') ?>">
+    <!--<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,700" rel="stylesheet">-->
+    <link rel="stylesheet" href="<?= asset('assets/css/select2.min.css') ?>">
+    <!--<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>-->
     <link href="//cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css" rel="stylesheet"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css"
+    <link rel="stylesheet" href="<?= asset('assets/css/all.min.css') ?>">
+    <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css"
           integrity="sha512-q3eWabyZPc1XTCmF+8/LuE1ozpg5xxn7iO89yfSOd5/oKvyqLngoNGsx8jq92Y8eXJ/IRxQbEC+FGSYxtk2oiw=="
-          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>-->
 
     <style>
         .is-fullwidth {
@@ -1039,19 +1044,19 @@ if (Auth::user()->company != 0 && Auth::user()->company_class->plan && Auth::use
     <script src="<?= asset('assets') ?>/js/card-grid.js" async></script>
     <script src="<?= asset('assets') ?>/js/syntax.js" async></script>
 
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="{{ asset('assets/js/sweetalert.min.js') }}"></script>
     <script src="{{ asset('assets/js/fsc.js') }}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+    <script src="{{ asset('assets/js/moment.min.js') }}"></script>
     <script
         src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/2.1.25/daterangepicker.min.js"></script>
 
 
-    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="<?= asset('assets') ?>/js/jquery-3.7.0.js"></script>
+    <script src="<?= asset('assets') ?>/js/select2.min.js"></script>
     <script src="//cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
     <script src="<?= asset('assets') ?>/codes.js" async></script>
-    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/index.global.min.js'></script>
-    <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.9/locales/es.global.js'></script>
+    <script src='<?= asset('assets') ?>/js/index.global.min.js'></script>
+    <script src='<?= asset('assets') ?>/js/es.global.js'></script>
     <script>
         <?= !empty($o_chat_scx) ? $o_chat_scx : '' ?>
     </script>
@@ -2195,11 +2200,11 @@ if (Auth::user()->company != 0 && Auth::user()->company_class->plan && Auth::use
                             _token: $("meta[name='csrf-token']").attr("content")
                         }, function (data) {
                             editor.setContents(data);
-                            $('textarea#sun-editorx').val(data);
+                            $('textarea #sun-editorx').val(data);
                         }, "html");
                     } else {
                         editor.setContents('');
-                        $('textarea#sun-editorx').val('');
+                        $('textarea #sun-editorx').val('');
                     }
                 });
             }

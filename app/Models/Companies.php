@@ -18,4 +18,9 @@ class Companies extends Model
         return $this->belongsTo(Plans::class, 'plan_id');
     }
 
+    public function campus()
+    {
+        return $this->hasMany(Headquarters::class, 'company');
+    }
+
 }

@@ -152,12 +152,18 @@ class LogmailsController extends Controller
         if ($request->method() === "GET") {
 
             $object = Logmails::find($id);
+            $mattachs = $object->mattachs;
+
+
             $data = $this->gdata('Modificar');
             $data['us_all'] = User::where(['company' => Auth::user()->company])->whereNotIn('status', ['deleted'])->orderBy('id', 'asc')->get();
             $data['dg_all'] = Diagnoses::where(['status' => 'active'])->orderBy('id', 'asc')->get();
             $data['o_all'] = Tplmails::where(['company' => Auth::user()->company])->whereNotIn('status', ['deleted'])->orderBy('id', 'asc')->get();
             $data['rol_all'] = Roles::all();
             $data["o"] = $object;
+            if(isset($mattachs)){
+                $data['mattachs'] = $mattachs;
+            }
             return view($this->r_name . '.edit', $data);
         } else {
             $data = request()->except(['_token', '_method']);
