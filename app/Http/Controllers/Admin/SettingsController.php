@@ -16,7 +16,7 @@ class SettingsController extends Controller
     private $c_names = 'Configuraciones';
 	private $list_tbl_fsc = ['hours_quotes' => 'Cantidad de horas que tiene el paciente antes de la cita para pagar la consulta'];
 	private $o_model = Settings::class;
-	
+
 	private function gdata($t = 'Lista de')
     {
         $data['menu'] = $this->r_name;
@@ -47,11 +47,11 @@ class SettingsController extends Controller
     public function update(Request $request)
     {
 		$data = request()->except(['_token','_method']);
-		$validatedData = $request->validate([
-			'hours_quotes' => 'required',
-		],[
-			'hours_quotes.required' => 'La Cantidad de horas es requerida',
-		]);
+		// $validatedData = $request->validate([
+		// 	'hours_quotes' => 'required',
+		// ],[
+		// 	'hours_quotes.required' => 'La Cantidad de horas es requerida',
+		// ]);
 		$o = $this->o_model::orderBy('id', 'DESC')->first();
 		if(empty($o->id)){
 			return redirect('/');

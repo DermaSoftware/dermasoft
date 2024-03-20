@@ -205,29 +205,43 @@
 </div>
 <!--Field-->
 <div class="column is-4">
-	<div class="field"><div class="control"><br><label class="checkbox is-outlined is-info"><input id="is_attach" name="is_attach" type="checkbox" value="si"><span></span> Adjuntos</label></div></div>
+	<div class="field">
+        <div class="control">
+            <br>
+            <label class="checkbox is-outlined is-info">
+                <input id="is_attach" name="is_attach" type="checkbox" value="<?= isset($mattachs) ? 'si' : 'no'?>">
+                <span></span> Adjuntos
+            </label>
+        </div>
+    </div>
 </div>
 <!--Field-->
-<div class="column is-12 inner-attach is-hidden">
+<div class="column is-12 inner-attach "<?= isset($mattachs) ? '' : 'is-hidden'?> ">
 	<div class="filepond-uploader is-three-grid">
-        <div class="files">
+        @isset($mattachs)
+        <div class="files" style="display: flex;flex-direction: column; margin-bottom: 10px">
 
             @foreach ($mattachs as $item)
-                <a href="{{ asset($item->path_attach)}}">{{$item->path_attach}}</a>
+                <a href="{{ asset($item->path_attach)}}">{{$item->file_name}}</a>
             @endforeach
         </div>
+        @endisset
+
         <div class="control">
-            <div class="file is-boxed">
+            <div id="attachments" class="file has-name">
                 <label class="file-label">
                     <input id="adjuntos" class="file-input" type="file" multiple name="files[]">
-                    <img id="photo_profile_img" src="<?= asset('assets/img/avatars/svg/huro-1.svg') ?>" alt="" >
+                    {{-- <img id="photo_profile_img" src="<?= asset('assets/img/avatars/svg/huro-1.svg') ?>" alt="" > --}}
                     <span class="file-cta">
                         <span class="file-icon">
-                            <i class="lnil lnil-32 lnil-cloud-upload"></i>
+                            <i class="fas fa-upload"></i>
                         </span>
                         <span class="file-label">
                             Seleccione los archivos…
                         </span>
+                    </span>
+                    <span class="file-name" style="max-width:none !important;">
+                        No hay ficheros subidos
                     </span>
                 </label>
             </div>
