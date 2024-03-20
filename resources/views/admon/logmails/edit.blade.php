@@ -52,4 +52,20 @@
     </div>
 </div>
 @endsection
+@section('js')
+    @parent
+    <script>
+        $(document).ready(async function() {
+            $('#adjuntos').on('change', function(event) {
+                var tmppath = URL.createObjectURL(event.target.files[0]);
+                event.target.files.forEach(element => {
+                    var fileName = document.querySelector('#attachments .file-name');
+                    debugger
+                    fileName.textContent = fileName.textContent.indexOf('No hay ficheros subidos') !== -1 ? element.name : fileName.textContent + ',' + element.name;
+                });
+                //$("#photo_profile_img").fadeIn("fast").attr('src', tmppath);
+            });
+        });
+    </script>
+@endsection
 

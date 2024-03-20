@@ -31,6 +31,7 @@
         <div class="auth-wrapper">
 			@yield('content')
         </div>
+    @section('js')
         <script src="<?= asset('assets/js/app.js') ?>"></script>
         <script src="<?= asset('assets/js/functions.js') ?>"></script>
         <script src="<?= asset('assets/js/auth.js') ?>"></script>
@@ -46,6 +47,7 @@
 			$("#photo_profile_img").fadeIn("fast").attr('src',tmppath);
 		});
 		</script>
+        @show
     </div>
 </body>
 </html>
