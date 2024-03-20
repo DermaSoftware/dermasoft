@@ -26,7 +26,7 @@ class CompaniesController extends Controller
     private $c_names = 'Clientes';
 	private $list_tbl_fsc = ['name' => 'Nombre','nit' => 'NIT','phone' => 'Teléfono','email' => 'Correo','state' => 'Estado'];
 	private $o_model = Companies::class;
-	
+
 	private function gdata($t = 'Lista de')
     {
         $data['menu'] = $this->r_name;
@@ -81,7 +81,7 @@ class CompaniesController extends Controller
             $params['logo'] = asset($path);
         }
 		$o = $this->o_model::create($params);
-		
+
 		$o_hs = Headquarters::create([
             'name' => $data['name'],
             'code' => '01',
@@ -92,7 +92,7 @@ class CompaniesController extends Controller
             'responsible_phone' => $data['contact_phone'],
             'company' => $o->id,
         ]);
-		
+
 		$password = Str::random(12);
 		$email = Str::random(4).'_temp_'.$data['email'];
 		$us_params = ['name' => $data['legal_representative'],'main_address' => $data['location'],'city' => $data['city'],'phone' => $data['phone'],'document_type' => $data['document_type'],'document_number' => $data['document_number'],'charge' => $data['charge'],'email' => $email,'landline' => $data['contact_phone'],'twofa' => 'not','password' => Hash::make($password),'company' => $o->id,'campus' => $o_hs->id];
@@ -161,6 +161,17 @@ class CompaniesController extends Controller
 		}
 		$tag = is_numeric($id)?'id':'uuid';
 		$o = $this->o_model::where([$tag => $id])->first();
+
+        $logo = '';
+        if (request()->hasFile('logo')) {
+            $path = request()->file('logo')->store('uploads', 'public');
+            $path = 'storage/' . $path;
+            $logo_pp = $path;
+            $logo = asset($path);
+            $data['logo'] = $logo;
+            $data['logo_pp'] = $logo_pp;
+        }
+
 		if(empty($o->id)){
 			return redirect($this->r_name);
 		}

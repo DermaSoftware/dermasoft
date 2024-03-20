@@ -147,7 +147,7 @@
                     </div>
 
                 </div>
-				
+
 				<?php if(!empty($o->video)){ ?>
 				<div id="about" class="section">
                     <div class="container">
@@ -285,15 +285,6 @@
                             </div>
                         </div>
 
-                        <div class="cta-wrapper">
-                            <div class="cta-title">
-                                <h3>Registra tu cuenta empresarial</h3>
-                                <a href="<?= url('register') ?>" class="custom-button">
-                                    <img src="assets/img/icons/logos/envato.svg" alt="">
-                                    <span>Regístrate</span>
-                                </a>
-                            </div>
-                        </div>
                     </div>
 
 
@@ -332,6 +323,15 @@
 							</div>
 							<?php } ?>
 						</div>
+                        <div class="cta-wrapper">
+                            <div class="cta-title">
+                                <h3>Registra tu cuenta empresarial</h3>
+                                <a href="<?= url('register') ?>" class="custom-button">
+                                    <img src="assets/img/icons/logos/envato.svg" alt="">
+                                    <span>Regístrate</span>
+                                </a>
+                            </div>
+                        </div>
                         <div class="footer-copyright has-text-centered">
                             <p>&copy; <?= date('Y') ?> | <a href="<?= url('/') ?>"><?= config('app.name', '') ?></a></p>
                         </div>
@@ -373,7 +373,7 @@
 				item.html(moneycop(item.html()));
 			});
 		}
-		
+
 		function moneycop(v){
 			const options2 = { style: 'currency', currency: 'COP' };
 			const numberFormat2 = new Intl.NumberFormat('es-CO', options2);

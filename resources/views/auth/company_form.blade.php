@@ -39,12 +39,11 @@
 </div>
 <!--Field-->
 <div class="column is-6">
-
     <div class="field">
         <div class="control">
-			<div class="file">
+			<div id="attachment" class="file has-name">
                 <label class="file-label">
-                    <input name="logo" class="file-input" type="file" accept="image/*">
+                    <input id="logo_setting" name="logo" class="file-input" type="file" accept="image/*">
                   <span class="file-cta">
                     <span class="file-icon">
                       <i class="fas fa-upload"></i>
@@ -53,6 +52,9 @@
                         Seleccione un logo…
                     </span>
                   </span>
+                  <span class="file-name" style="max-width:none !important;">
+                    No hay fichero
+                </span>
                 </label>
               </div>
 		</div>

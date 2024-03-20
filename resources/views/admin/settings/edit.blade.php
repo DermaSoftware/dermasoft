@@ -51,3 +51,19 @@
     </div>
 </div>
 @endsection
+@section('js')
+    @parent
+    <script>
+        $(document).ready(async function() {
+            $('#logo_setting').on('change', function(event) {
+                var tmppath = URL.createObjectURL(event.target.files[0]);
+                event.target.files.forEach(element => {
+                    var fileName = document.querySelector('#attachment .file-name');
+                    debugger
+                    fileName.textContent = fileName.textContent.indexOf('No hay fichero') !== -1 ? element.name : fileName.textContent + ',' + element.name;
+                });
+                //$("#photo_profile_img").fadeIn("fast").attr('src', tmppath);
+            });
+        });
+    </script>
+@endsection

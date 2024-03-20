@@ -96,7 +96,7 @@ class LogmailsController extends Controller
             foreach ($request->file('files') as $key => $file) {
                 $path = $file->store('uploads', 'public');
                 $path = 'storage/' . $path;
-                Mattachs::create(['mail_id' => $o->id, 'path_attach' => $path]);
+                Mattachs::create(['mail_id' => $o->id, 'path_attach' => $path,'file_name' => $file->getClientOriginalName()]);
             }
         }
         //NOTIFICAR
@@ -192,13 +192,18 @@ class LogmailsController extends Controller
             if (isset($data['files'])) {
                 unset($data['files']);
             }
-            $o = $this->o_model::create($data);
+            $o = Logmails::find($id);
+            $o->update($data);
+            foreach ($o->mattachs as $key => $value) {
+                $value->delete();
+                Storage::disk('public')->delete($value->path_attach);
+            }
             //ADJUNTOS
             if ($request->file('files')) {
                 foreach ($request->file('files') as $key => $file) {
                     $path = $file->store('uploads', 'public');
                     $path = 'storage/' . $path;
-                    Mattachs::create(['mail_id' => $o->id, 'path_attach' => $path]);
+                    Mattachs::create(['mail_id' => $o->id, 'path_attach' => $path,'file_name' => $file->getClientOriginalName()]);
                 }
             }
             //NOTIFICAR

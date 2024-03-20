@@ -82,17 +82,33 @@
     </div>
 </div>
 <!--Field-->
-<div class="column is-4">
+<div class="column is-1">
+    <div class="field">
+        <div class="control">
+            <div id="attachment" class="file has-name is-fullwidth">
+                @if ($o->logo)
+                <img src="{{ asset($o->logo) }}" alt="Imagen" style="width: 50px;
+                border-radius: 30px;
+                height: 50px;"/>
+            @endif
+            </div>
+        </div>
+    </div>
+</div>
+<div class="column is-3">
     <div class="field">
         <div class="control">
 			<label>Logo</label>
-			<div class="file has-name is-fullwidth">
+			<div id="attachment" class="file has-name is-fullwidth">
 				<label class="file-label">
-					<input name="logo" class="file-input" type="file">
+					<input id="logo_setting" name="logo" class="file-input" type="file">
 					<span class="file-cta is-fullwidth">
 						<span class="file-icon"><i class="fas fa-cloud-upload-alt"></i></span>
 						<span class="file-label">Seleccione un logo…</span>
 					</span>
+                    <span class="file-name" style="max-width:none !important;">
+                        No hay fichero
+                    </span>
 				</label>
 			</div>
 		</div>
@@ -179,6 +195,7 @@
 </div>
 <?php if($modo != 'detalles'){ ?>
 <!--Field-->
+
 <div class="column is-4">
     <div class="field">
         <div class="control">
