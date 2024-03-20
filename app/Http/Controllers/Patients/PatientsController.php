@@ -607,12 +607,11 @@ class PatientsController extends Controller
                 $patient->id
             )
                 ->where('company', $patient->company)
-                ->where('status', 'active');
+                ->where('status', 'active')
+                ->latest()
+                ->first(['uuid']);
             if (!empty($last_sol)) {
-                $o_s = $last_sol
-                    ->latest()
-                    ->first(['uuid']);
-                $data['o_sol'] = $o_s;
+                $data['o_sol'] = $last_sol;
             } else {
                 $data['o_sol'] = Solicitude::create($params_s);
             }
