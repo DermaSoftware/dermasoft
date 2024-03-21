@@ -3,7 +3,7 @@
 <div class="account-wrapper">
     <div class="columns">
         <div class="column is-12">
-            <form action="{{url($menu.'/'.$o->uuid.'/edit')}}" method="post" enctype="multipart/form-data">
+            <form action="{{url($menu.'/'.$o->id.'/edit')}}" method="post" enctype="multipart/form-data">
 			{{csrf_field()}}
 			<!--{{method_field('PATCH')}}-->
 			<div class="account-box is-form is-footerless">
