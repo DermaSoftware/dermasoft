@@ -57,7 +57,7 @@ class SettingsController extends Controller
 			return redirect('/');
 		}
 		if ($request->hasFile('logo')) {
-            $path = $request->file('logo')->store('uploads','storage');
+            $path = $request->file('logo')->store('uploads','public');
 			$path = 'storage/'.$path;
 			$data['logo_pp'] = $path;
             $data['logo'] = asset($path);
