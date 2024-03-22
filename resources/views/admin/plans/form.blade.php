@@ -44,7 +44,9 @@
         <div class="control">
 			<label>Portada</label>
 			<div class="file has-name is-fullwidth">
-                <img src="{{ asset('' . Storage::disk('public')->url($o->photo)) }}" alt="Imagen">
+                @isset($o)
+                <img src="{{ asset($o->photo) }}" alt="Imagen">
+                @endisset
 				<label class="file-label">
 					<input name="photo" class="file-input" type="file">
 					<span class="file-cta is-fullwidth">
