@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\Settings;
 use App\Models\Xsliders;
 use App\Models\Plans;
+use App\Models\User;
 
 class HomepageController extends Controller
 {
@@ -19,7 +20,7 @@ class HomepageController extends Controller
     private $c_names = 'Pagina de inicio';
 	private $list_tbl_fsc = ['name' => 'Nombre'];
 	private $o_model = User::class;
-	
+
 	private function gdata($t = 'Lista de')
     {
         $data['menu'] = $this->r_name;
@@ -51,5 +52,5 @@ class HomepageController extends Controller
 		$data['o_all'] = Plans::whereNotIn('status',['deleted'])->orderBy('id', 'asc')->get();
 		return view($this->v_name,$data);
     }
-	
+
 }

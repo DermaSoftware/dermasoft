@@ -25,7 +25,7 @@
                         </div>
                         <div class="right">
                             <div class="buttons">
-                                <a href="{{url($menu)}}" class="button h-button is-light is-dark-outlined">
+                                <a href="{{url($url_preview)}}" class="button h-button is-light is-dark-outlined">
                                     <span class="icon"><i class="lnir lnir-arrow-left rem-100"></i></span><span>Regresar</span>
                                 </a>
                                 <button type="submit" class="button h-button is-primary is-raised">Guardar</button>
@@ -39,8 +39,6 @@
                         <div class="fieldset-heading">
                         </div>
                         <div class="columns is-multiline">
-
-
 							<!--Field-->
 							<div class="column is-3">
 								<div class="field">
@@ -135,6 +133,18 @@
 							</div>
 
 							<!--Field-->
+                            @if($url_preview !== '')
+                            <div class="column is-4 is-hidden">
+								<div class="field">
+									<div class="control">
+										<?php $t_att = 'url_preview'; ?>
+										<?php $n_att = 'url_preview'; ?>
+										<label><?= $n_att ?></label>
+										<input name="url_preview" type="text" class="input" value="{{$url_preview}}"/>
+									</div>
+								</div>
+							</div>
+                            @endif
 							<div class="column is-4">
 								<div class="field">
 									<div class="control">

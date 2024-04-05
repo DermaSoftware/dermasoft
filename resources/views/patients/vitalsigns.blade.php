@@ -3,7 +3,7 @@
 <div class="account-wrapper">
     <div class="columns">
         <div class="column is-12">
-            <form action="{{url($menu.'/vitalsigns/'.$o->uuid)}}" method="post" enctype="multipart/form-data">
+            <form action="{{url($menu.'/vitalsigns/'.$o->uuid . '/' . $o_appointment)}}" method="post" enctype="multipart/form-data">
 			{{csrf_field()}}
 			<div class="account-box is-form is-footerless">
                 <div class="form-head stuck-header">
@@ -39,8 +39,8 @@
                         <div class="fieldset-heading">
                         </div>
                         <div class="columns is-multiline">
-                            
-							
+
+
 							<!--Field-->
 							<div class="column is-3">
 								<div class="field">
@@ -129,11 +129,11 @@
 									</div>
 								</div>
 							</div>
-							
+
 							<div class="column is-12">
 								<hr>
 							</div>
-							
+
 							<!--Field-->
 							<div class="column is-3">
 								<div class="field">
@@ -217,6 +217,22 @@
 								</div>
 							</div>
 							<!--Field-->
+							<div class="column is-6">
+								<div class="field">
+									<div class="control">
+										<?php $t_att = 'hc_type'; ?>
+										<?php $n_att = 'Tipo de Historia Clinica'; ?>
+										<label><?= $n_att ?></label>
+										<select name="<?= $t_att ?>" class="input">
+											<option value="0" selected disabled >--Seleccione--</option>
+											<?php foreach($o_hctype as $key => $row){ ?>
+											<option value="<?= $row ?>"><?= $row ?></option>
+											<?php } ?>
+										</select>
+									</div>
+								</div>
+							</div>
+							<!--Field-->
 							<div class="column is-12">
 								<div class="field">
 									<div class="control">
@@ -227,7 +243,7 @@
 									</div>
 								</div>
 							</div>
-							
+
                         </div>
                     </div>
                 </div>

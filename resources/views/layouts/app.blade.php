@@ -24,16 +24,16 @@ if (Auth::user()->company != 0 && Auth::user()->company_class->plan && Auth::use
     <link rel="icon" type="image/png" href="<?= asset('assets/img/favicon.png') ?>"/>
     <link rel="stylesheet" href="<?= asset('assets/css/app.css') ?>">
     <link rel="stylesheet" href="<?= asset('assets/css/main.css') ?>">
-    <link rel="stylesheet" href="<?= asset('assets/css/mycss.css') ?>">
     <link rel="stylesheet" href="<?= asset('assets/css/css2.css') ?>">
-
+    <link rel="stylesheet" href="<?= asset('assets/css/mycss.css') ?>">
     <!--<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&display=swap"
           rel="stylesheet">-->
     <link rel="stylesheet" href="<?= asset('assets/css/css.css') ?>">
     <!--<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,700" rel="stylesheet">-->
     <link rel="stylesheet" href="<?= asset('assets/css/select2.min.css') ?>">
     <!--<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>-->
-    <link href="//cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="<?= asset('assets/css/jquery.dataTables.min.css') ?>">
+    <!-- <link href="//cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css" rel="stylesheet"/> -->
     <link rel="stylesheet" href="<?= asset('assets/css/all.min.css') ?>">
     <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css"
           integrity="sha512-q3eWabyZPc1XTCmF+8/LuE1ozpg5xxn7iO89yfSOd5/oKvyqLngoNGsx8jq92Y8eXJ/IRxQbEC+FGSYxtk2oiw=="
@@ -1036,7 +1036,7 @@ if (Auth::user()->company != 0 && Auth::user()->company_class->plan && Auth::use
     <script src="<?= asset('assets') ?>/js/functions.js"></script>
     <script src="<?= asset('assets') ?>/js/main.js" async></script>
     <script src="<?= asset('assets') ?>/js/components.js" async></script>
-    <script src="<?= asset('assets') ?>/js/popover.js" async></script>
+    <!--<script src="<?= asset('assets') ?>/js/popover.js" async></script>-->
     <script src="<?= asset('assets') ?>/js/widgets.js" async></script>
     <!-- Additional Features -->
     <script src="<?= asset('assets') ?>/js/touch.js" async></script>
@@ -1047,21 +1047,32 @@ if (Auth::user()->company != 0 && Auth::user()->company_class->plan && Auth::use
     <script src="{{ asset('assets/js/sweetalert.min.js') }}"></script>
     <script src="{{ asset('assets/js/fsc.js') }}"></script>
     <script src="{{ asset('assets/js/moment.min.js') }}"></script>
-    <script
-        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/2.1.25/daterangepicker.min.js"></script>
+    <script src="{{ asset('assets/js/daterangepicker.min.js') }}"></script>
+    <!--<script
+        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/2.1.25/daterangepicker.min.js"></script>-->
 
 
-    <script src="<?= asset('assets') ?>/js/jquery-3.7.0.js"></script>
+    <!--<script src="<?= asset('assets') ?>/js/jquery-3.7.0.js"></script>-->
+    <script src="<?= asset('assets') ?>/js/jquery.min.js"></script>
+    {{-- <script src="<?= asset('assets') ?>/js/popover.js" async></script> --}}
     <script src="<?= asset('assets') ?>/js/select2.min.js"></script>
-    <script src="//cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+    <script src="<?= asset('assets') ?>/js/jquery.dataTables.min.js"></script>
+    <!--<script src="//cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>-->
     <script src="<?= asset('assets') ?>/codes.js" async></script>
     <script src='<?= asset('assets') ?>/js/index.global.min.js'></script>
     <script src='<?= asset('assets') ?>/js/es.global.js'></script>
-    <script>
-        <?= !empty($o_chat_scx) ? $o_chat_scx : '' ?>
-    </script>
+    <!--<script>
+        {{-- <?= !empty($o_chat_scx) ? $o_chat_scx : '' ?> --}}
+    </script>-->
     <script>
         $(document).ready(function () {
+            if ($(".select2_fsc").length) {
+                $('.select2_fsc').each(function () {
+                    $(this).select2({
+                        theme: "classic",
+                    });
+                });
+            }
             function uuidv4() {
                 return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c => (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16));
             }
@@ -1422,9 +1433,19 @@ if (Auth::user()->company != 0 && Auth::user()->company_class->plan && Auth::use
                         const tag_id = btn.data('id');
                         let item_tr = $('#' + tag_id);
                         //Agregamos item a tabla
-                        const x_code = '<td><input type="hidden" name="diagnostics[]" value="' + item_tr.find('.code_inner').data('id') + '">' + item_tr.find('.code_inner').html() + '</td>';
-                        const x_name = '<td>' + item_tr.find('.name_inner').html() + '</td>';
-                        const x_type = '<td><input type="hidden" name="diagnosticsty[]" value="' + item_tr.find('select').val() + '">' + item_tr.find('select option:selected').html() + '</td>';
+                        const diag = document.querySelector(".diagnoses");
+                        const opt_selectd = diag.options[diag.selectedIndex];
+                        const code =opt_selectd.dataset.code;
+                        const name = opt_selectd.dataset.name;
+                        const diagnosticsty = document.querySelector(".o_diagnosesty");
+                        const diagnosticsty_selectd = diagnosticsty.options[diagnosticsty.selectedIndex];
+                        const x_code = '<td><input type="hidden" name="diagnostics[]" value="' + code + '"/>' + code + '</td>';
+                        const x_name = '<td>' + name + '</td>';
+                        const x_type = '<td><input type="hidden" name="diagnosticsty[]" value="' + diagnosticsty_selectd.value + '"/>' + diagnosticsty_selectd.innerHTML + '</td>';
+
+                        //const x_code = '<td><input type="hidden" name="diagnostics[]" value="' + $('.prods_f1').val() + '">' + $('.prods_f1 option:selected').html() + '</td>';
+                        // const x_name = '<td>' + $('.prods_f1 option:selected').html() + '</td>';
+                        // const x_type = '<td><input type="hidden" name="diagnosticsty[]" value="' + $('.prods_f2').val() + '">' + $('.prods_f2 option:selected').html() + '</td>';
                         const x_trash = '<td class="is-end"><div><button type="button" class="button is-danger is-circle is-elevated btn_diagnoses_trash_sel_fn"><span class="icon is-small"><i class="fas fa-trash"></i></span></button></div></td>';
                         const item = '<tr>' + x_code + x_name + x_type + x_trash + '</tr>';
                         $('.table_diagnoses_sel_fn tbody').append(item);
@@ -2000,13 +2021,7 @@ if (Auth::user()->company != 0 && Auth::user()->company_class->plan && Auth::use
                 load_countries_fn();
             }
 
-            if ($(".select2_fsc").length) {
-                $('.select2_fsc').each(function () {
-                    $(this).select2({
-                        theme: "classic",
-                    });
-                });
-            }
+
 
             if ($("#pickaday-datepicker-fsc1").length) {
                 var picker = new Pikaday({

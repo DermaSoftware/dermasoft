@@ -45,6 +45,16 @@
                 <span>Registros</span>
                 <h3>fotográficos</h3>
             </a>
+            <a href="<?= url('patients/appointments_calendar') ?>" class="settings-box">
+                <div class="edit-icon">
+                    <i class="lnil lnil-pencil"></i>
+                </div>
+                <div class="icon-wrap">
+                    <img src="<?= asset('assets/img/landing/p/vitalsigns.jpg') ?>" alt="">
+                </div>
+                <span>Calendario</span>
+                <h3>Calenario de citas</h3>
+            </a>
         </div>
     </div>
 </div>

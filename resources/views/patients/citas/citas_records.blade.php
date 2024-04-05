@@ -78,6 +78,16 @@
                                                 <span>Editar Cita</span>
                                             </div>
                                         </a>
+                                        <a href="<?= url($menu . '/vitalsigns/' . $user->uuid . '/' . $item->uuid) ?>"
+                                            class="dropdown-item is-media">
+                                            <div class="icon">
+                                                <i class="lnil lnil-hospital-sign"></i>
+                                            </div>
+                                            <div class="meta">
+                                                <span>Registrar</span>
+                                                <span>Signos vitales</span>
+                                            </div>
+                                        </a>
                                     </div>
                                 </div>
                             </div>

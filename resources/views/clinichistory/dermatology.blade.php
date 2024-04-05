@@ -18,7 +18,7 @@
                                     <span class="icon"><i class="fas fa-briefcase-medical"></i></span><span>Consultas <span class="tag is-rounded" style="height: 2em !important;"><?= $t_records ?></span> Ver Historial</span>
                                 </a>
 								<?php } ?>
-                                <a href="{{url($menu)}}" class="button h-button is-light is-dark-outlined">
+                                <a href="{{url($menu . '/dermatology')}}" class="button h-button is-light is-dark-outlined">
                                     <span class="icon"><i class="lnir lnir-arrow-left rem-100"></i></span><span>Regresar</span>
                                 </a>
                             </div>
@@ -26,7 +26,7 @@
                     </div>
                 </div>
                 <div class="form-body">
-                    
+
 					@if ($errors->any())
 					<div class="message is-danger">
 						<a class="delete"></a>
@@ -39,7 +39,7 @@
 						</div>
 					</div>
 					@endif
-					
+
 					<div class="tabs-wrapper">
 						<div class="tabs-inner">
 							<div class="tabs">
