@@ -245,8 +245,8 @@ Route::middleware(['auth'])->group(function () {
 		Route::post('/search_vitalsigns', [App\Http\Controllers\Patients\PatientsController::class, 'shvs_search'])->name('shvs_search');
 		Route::get('/search_gallery', [App\Http\Controllers\Patients\PatientsController::class, 'shgallery'])->name('shgallery');
 		Route::post('/search_gallery', [App\Http\Controllers\Patients\PatientsController::class, 'shgy_search'])->name('shgy_search');
-		Route::get('/vitalsigns/{id}', [App\Http\Controllers\Patients\PatientsController::class, 'vitalsigns'])->name('vitalsigns');
-		Route::post('/vitalsigns/{id}', [App\Http\Controllers\Patients\PatientsController::class, 'svitalsigns'])->name('svitalsigns');
+		Route::get('/vitalsigns/{id}/{appointment?}', [App\Http\Controllers\Patients\PatientsController::class, 'vitalsigns'])->name('vitalsigns');
+		Route::post('/vitalsigns/{id}/{appointment?}', [App\Http\Controllers\Patients\PatientsController::class, 'svitalsigns'])->name('svitalsigns');
 		Route::get('/gallery/{id}', [App\Http\Controllers\Patients\PatientsController::class, 'gallery'])->name('gallery');
 		Route::post('/gallery/{id}', [App\Http\Controllers\Patients\PatientsController::class, 'sgallery'])->name('sgallery');
 		Route::get('/suppdata/{id}', [App\Http\Controllers\Patients\PatientsController::class, 'suppdata'])->name('suppdata');
@@ -260,6 +260,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('get_doctors/{qt}', [App\Http\Controllers\Patients\PatientsController::class, 'get_doctors']);
         Route::get('/appointments/{id}', [App\Http\Controllers\Patients\PatientsController::class, 'appointments']);
         Route::match(["POST","GET"],'/appointments/{id}/edit', [App\Http\Controllers\Patients\PatientsController::class, 'update_appointment']);
+        Route::get('/appointments_calendar', [App\Http\Controllers\Patients\PatientsController::class, 'appointments_calendar']);
+        Route::post('/appointments_calendar/events', [App\Http\Controllers\Patients\PatientsController::class, 'appointments_calendar_events']);
 
 	});
 	Route::group([

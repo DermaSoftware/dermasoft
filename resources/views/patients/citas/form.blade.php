@@ -48,7 +48,7 @@
         </div>
     </div>
     <!--Field-->
-    <div class="column is-6">
+    <div class="column is-6 is-hidden">
         <div class="field">
             <div class="control">
                 <?php $t_att = 'action_value'; ?>
@@ -60,7 +60,7 @@
         </div>
     </div>
     <!--Field-->
-    <div class="column is-6">
+    <div class="column is-6 is-hidden">
         <div class="field">
             <div class="control">
                 <?php $t_att = 'time_quote'; ?>
@@ -101,6 +101,9 @@
     </div>
     <div class="column is-12">
 
+        <div class="info-calendar">
+
+        </div>
         <div id='calendar'></div>
 
     </div>

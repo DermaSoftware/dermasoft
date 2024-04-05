@@ -28,6 +28,8 @@ use Illuminate\Http\File;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
+use function PHPUnit\Framework\isEmpty;
+
 class PatientsController extends Controller
 {
     private $tag_the = 'El';
@@ -36,8 +38,12 @@ class PatientsController extends Controller
     private $v_name = 'patients';
     private $c_name = 'Paciente';
     private $c_names = 'Pacientes';
-    private $list_tbl_fsc = ['name' => 'Nombre', 'document_type' => 'Tipo de documento', 'document_number' => 'Número de documento', 'email' => 'Correo', 'phone' => 'Telefono'];
+    private $list_tbl_fsc = [
+        'name' => 'Nombre', 'document_type' => 'Tipo de documento', 'document_number' => 'Número de documento',
+        'email' => 'Correo', 'phone' => 'Telefono'
+    ];
     private $o_model = User::class;
+    private $hctype = ['Dermatología general', 'Biopsías y/o procedimientos', 'Procedimientos Estéticos', 'Descripción Quirúrgica'];
 
     private function gdata($t = 'Historial de', $tfinal = true)
     {
@@ -111,7 +117,7 @@ class PatientsController extends Controller
         return redirect($url);
     }
 
-    public function vitalsigns($id)
+    public function vitalsigns($id, $appointment)
     {
         if (empty($id)) {
             return redirect($this->r_name);
@@ -123,10 +129,12 @@ class PatientsController extends Controller
         $data = $this->gdata('Registrar signos vitales', false);
         $data['o'] = $o;
         $data['o_qtys'] = Querytypes::where(['company' => Auth::user()->company, 'status' => 'active'])->orderBy('id', 'asc')->get();
+        $data['o_hctype'] = $this->hctype;
+        $data['o_appointment'] = $appointment;
         return view($this->v_name . '.vitalsigns', $data);
     }
 
-    public function svitalsigns(Request $request, $id)
+    public function svitalsigns(Request $request, $id, $appointment)
     {
         $data = request()->except(['_token', '_method']);
         $validatedData = $request->validate([
@@ -153,7 +161,8 @@ class PatientsController extends Controller
         }
         $data['user'] = $ox->id;
         $data['company'] = Auth::user()->company;
-        $data['campus'] = Auth::user()->campus;
+        $o_appointment = Appointments::where(['uuid' => $appointment])->first(['id']);
+        $data['appointment_id'] = $o_appointment->id;
         $o = Vitalsigns::create($data);
         $request->session()->flash('msj_success', 'Los signos vitales han sido registrados correctamente.');
         return redirect($this->r_name . '/records');
@@ -251,7 +260,7 @@ class PatientsController extends Controller
         return redirect($this->r_name . '/gallery/' . $id);
     }
 
-    public function suppdata($id)
+    public function suppdata(Request $request, $id)
     {
         if (empty($id)) {
             return redirect($this->r_name);
@@ -264,6 +273,7 @@ class PatientsController extends Controller
         }
         $data = $this->gdata('Datos complementarios', false);
         $data['o'] = $o;
+        $data['url_preview'] = strpos(url()->previous(), 'patients') ? '' : url()->previous() ;
         $data['company'] = $company;
         $data['o_campus'] = Headquarters::where(['company' => Auth::user()->company, 'status' => 'active'])->orderBy('id', 'asc')->get();
         return view($this->v_name . '.suppdata', $data);
@@ -302,6 +312,10 @@ class PatientsController extends Controller
         }
         $o->update($data);
         $request->session()->flash('msj_success', $this->tag_the . ' ' . $this->c_name . ' ' . $o->name . ' ha sido actualizad' . $this->tag_o . ' correctamente.');
+
+        if(!empty($data['url_preview'])){
+            return redirect($data['url_preview']);
+        }
         return redirect($this->r_name . '/records');
     }
 
@@ -483,7 +497,7 @@ class PatientsController extends Controller
             ->join('querytypes', 'querytypes.id', '=', 'diaryqt.qt_id')
             ->where('querytypes.id', '=', $qt);
         if ($user->role_class->name === 'Medico') {
-            $doctores = $doctores->where('doctor', $user->id);
+            $doctores = $doctores->where('user', $user->id);
         }
         $doctores = $doctores->select('users.id', 'users.name')
             ->distinct()->get(['id', 'name']);
@@ -722,14 +736,14 @@ class PatientsController extends Controller
             if ($o_diary->$tag == 'not' || $o_diary->$tag_campus != intval($data['campus'])) {
                 $str_days .= !empty($str_days) ? ', ' . $i : $i;
             } else {
-                array_push(
-                    $businessHours,
-                    [
-                        "daysOfWeek" => [$i],
-                        "startTime" => $o_diary->$time_init,
-                        "endTime" => $o_diary->$time_end
-                    ]
-                );
+                // array_push(
+                //     $businessHours,
+                //     [
+                //         "daysOfWeek" => [$i],
+                //         "startTime" => $o_diary->$time_init,
+                //         "endTime" => $o_diary->$time_end
+                //     ]
+                // );
                 $event = '{
                     "daysOfWeek": [' . $i . '],
                     "startTime" :"' . '00:00' . '",
@@ -777,7 +791,57 @@ class PatientsController extends Controller
 
         $data['str_days'] = $str_days;
         $data['locks_days'] = $locks_days;
-        $data['businessHours'] = $businessHours;
+        // $data['businessHours'] = $businessHours;
         return $data;
+    }
+
+    public function appointments_calendar(Request $request)
+    {
+        $doctors = DB::table('users')
+                ->join('roles', function ($join) {
+                    $join->on('users.role', '=', 'roles.id')
+                        ->where('roles.name', '=', 'Medico');
+                })
+                ->get(['users.id', 'users.name']);
+        $campus = Headquarters::all();
+
+        $data = $this->gdata('Agenda de citas');
+        $data['doctors'] = $doctors;
+        $data['campus'] = $campus;
+        return view($this->v_name . '.appointments_calendar', $data);
+    }
+
+    public function appointments_calendar_events(Request $request)
+    {
+        if ($request->method() === 'POST') {
+            $data = request()->except(['_token', '_method']);
+            $locks_days = ''; //
+            //Agendas programadas
+            $pts_all = Appointments::whereNotIn('status', ['deleted'])->orderBy('id', 'asc');
+            if (!empty($data['doctor']) && $data['doctor'] !== '0') {
+                $pts_all = $pts_all->where(['doctor' => $data['doctor']]);
+            }
+            if(!empty($data['sede']) && $data['sede'] !== '0') {
+                $pts_all = $pts_all->where(['campus' => $data['sede']]);
+            }
+            $pts_all = $pts_all->get(['uuid','date_quote','time_quote','doctor','campus','query_type']);
+            if (count($pts_all) > 0) {
+                foreach ($pts_all as $key => $row) {
+                    $date = new DateTime($row->date_quote . ' ' . $row->time_quote);
+                    $resourceId = '[' . $row->doctor . ',' . $row->campus . ']';
+                    $date_end = $date->add(new DateInterval('PT30M'));
+                    $locks_event = '{"id": "' . $row->uuid . '","start": "' . $row->date_quote . 'T' . $row->time_quote . ':00", "end": "' . $date_end->format('Y-m-d H:i:s') . '","overlap": false,"title": "Cita ' . $row->query_type . '","display": "auto","backgroundColor": "#79f392","color": "#79f392","resourceId":' . $resourceId . '}'; //Event
+                    $locks_days .= !empty($locks_days) ? ', ' . $locks_event : $locks_event;
+                }
+            }
+            if (!empty($locks_days)) {
+                $locks_days = '[' . $locks_days . ']';
+            } else {
+                $locks_days = '[]';
+            }
+            $data['locks_days'] = $locks_days;
+            return $data;
+        }
+        return redirect('/');
     }
 }

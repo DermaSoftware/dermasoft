@@ -21,9 +21,12 @@
         <link rel="stylesheet" type="text/css" href="<?= asset('assets/vendor/overlay-scrollbar/css/OverlayScrollbars.min.css') ?>">
 		<!-- Theme CSS -->
 		<link id="style-switch" rel="stylesheet" type="text/css" href="<?= asset('assets/css/style.css') ?>">
-		<link href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.4/sweetalert2.css" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" href="<?= asset('assets/css/sweetalert2.css') ?>">
+        <link rel="stylesheet" href="<?= asset('assets/css/daterangepicker.css') ?>">
+        <link rel="stylesheet" href="<?= asset('assets/css/daterangepicker.min.css') ?>">
+		<!--<link href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.4/sweetalert2.css" rel="stylesheet" type="text/css">
 		<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
-		<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/2.1.25/daterangepicker.min.css" rel="stylesheet" type="text/css">
+		<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/2.1.25/daterangepicker.min.css" rel="stylesheet" type="text/css">-->
 	</head>
 	<body>
 	<span id="fsc-switch-light" name="<?= asset('assets/css/style.css') ?>"></span>
@@ -249,7 +252,7 @@
 												</div>
 												<span>Dark mode</span>
 											</div>
-										</li> 
+										</li>
 										<!-- Dark mode switch END -->
 									</ul>
 									<!-- Profile dropdown END -->
@@ -282,10 +285,14 @@
 		<script src="<?= asset('assets/vendor/overlay-scrollbar/js/overlayscrollbars.min.js') ?>"></script>
 		<!-- Template Functions -->
 		<script src="<?= asset('assets/js/functions.js') ?>"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="{{ asset('assets/js/jquery.min.js') }}"></script>
+        <script src="{{ asset('assets/js/sweetalert2.min.js') }}"></script>
+        <script src="{{ asset('assets/js/sweetalert2.min.js') }}"></script>
+        <script src="{{ asset('assets/js/daterangepicker.min.js') }}"></script>
+		<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.4/sweetalert2.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/2.1.25/daterangepicker.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/2.1.25/daterangepicker.min.js"></script>-->
 		<script>
 		$(document).ready(function(){
 			if($('.alert-remove-fsc').length){
@@ -361,7 +368,7 @@
 				},function(dismiss){
 				});
 			});
-			
+
 			if ($(".datepicker-fsc").length) {
 				$('.datepicker-fsc').each(function(){
 					$(this).daterangepicker({

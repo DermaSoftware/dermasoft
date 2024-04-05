@@ -365,6 +365,16 @@
                 <span>Agenda</span>
                 <h3>Gestión de citas</h3>
             </a>
+			<a href="<?= url('patients/appointments_calendar') ?>" class="settings-box">
+                <div class="edit-icon">
+                    <i class="lnil lnil-pencil"></i>
+                </div>
+                <div class="icon-wrap">
+                    <i class="lnil lnil-file-upload"></i>
+                </div>
+                <span>Calendario</span>
+                <h3>Calendario de citas</h3>
+            </a>
 			<a href="<?= url('trainings') ?>" class="settings-box">
                 <div class="edit-icon">
                     <i class="lnil lnil-pencil"></i>

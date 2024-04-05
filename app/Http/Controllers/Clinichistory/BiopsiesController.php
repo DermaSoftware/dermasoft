@@ -42,7 +42,7 @@ class BiopsiesController extends Controller
 	private $o_model = User::class;
 	private $hc_view = 'biopsies';
 	private $hc_type = 'Biopsías y/o procedimientos';
-	
+
 	private function gdata($t = '')
     {
         $data['menu'] = $this->r_name;
@@ -60,19 +60,26 @@ class BiopsiesController extends Controller
 	public function __construct(){
         $this->middleware('checkRole:2_3');
     }
-	
-	public function index($id)
+
+	public function index(Request $request,$id)
     {
         if(empty($id)){
 			return redirect($this->r_name);
 		}
 		$o = $this->o_model::where(['uuid' => $id])->first();
+        $o_vitalsigns = Vitalsigns::where(['user' => $o->id])
+                        ->where(['hc_type' => 'Biopsías y/o procedimientos'])
+                        ->orderBy('id', 'DESC')->first();
 		if(empty($o->id)){
+			return redirect($this->r_name);
+		}
+		if(empty($o_vitalsigns)){
+            $request->session()->flash('msj_error', 'El paciente '.$o->name.'No tiene signos vitales registrados para esta consulta.');
 			return redirect($this->r_name);
 		}
 		$data = $this->gdata('HC - '.$this->hc_type, false);
         $data['o'] = $o;
-		$data['o_vitalsigns'] = Vitalsigns::where(['user' => $o->id])->orderBy('id', 'DESC')->first();
+		$data['o_vitalsigns'] = $o_vitalsigns; // Vitalsigns::where(['user' => $o->id])->orderBy('id', 'DESC')->first();
 		$data['o_diagnoses'] = Diagnoses::where(['status' => 'active'])->orderBy('id', 'asc')->get();
 		$data['o_diagnosesty'] = Diagnosestype::where(['status' => 'active'])->orderBy('id', 'asc')->get();
 		$data['o_indications'] = Indications::where(['status' => 'active'])->orderBy('id', 'asc')->get();
@@ -80,7 +87,7 @@ class BiopsiesController extends Controller
 		$data['o_labexams'] = Laboratoryexams::where(['status' => 'active'])->orderBy('id', 'asc')->get();
 		$data['o_procs'] = Procedures::where(['status' => 'active'])->orderBy('id', 'asc')->get();
 		$data['o_paths'] = Pathologies::where(['status' => 'active'])->orderBy('id', 'asc')->get();
-		
+
 		//Historial
 		$t = Dermatology::where(['user' => $o->id,'hc_type' => $this->hc_type])->count();
 		$is_records = !empty($t)?$t > 0:false;
@@ -92,10 +99,10 @@ class BiopsiesController extends Controller
 		}
 		$data['t_records'] = $t;
 		$data['is_records'] = $is_records;
-		
+
 		return view($this->v_name.'.'.$this->hc_view.'.index',$data);
     }
-	
+
 	public function store(Request $request, $id)
     {
         $data = request()->except(['_token','_method']);
@@ -132,7 +139,7 @@ class BiopsiesController extends Controller
 		$params['hc_type'] = $this->hc_type;
 		//path_pdf
 		$o = Dermatology::create($params);
-		
+
 		//HCPROCEDURE
 		$aux_params = ['hc' => $o->id,'user' => $ox->id,'company' => $ox->company,'campus' => $ox->campus];
 		$all_params = ['type_procedure','other_procedure','disinfection','antiseptic','anesthesia','type_anesthesia','other_anesthesia','hemostasis','other_hemostasis','procedure_time','complications','record_complications','participants','comments','biopsy_method','other_biopsy_method','biopsy_type','required_margin','how_much','body_area','body_area_other'];
@@ -149,7 +156,7 @@ class BiopsiesController extends Controller
 				$o_x = Hcsuture::create($aux_params);
 			}
 		}
-		
+
 		//Guardamos el diagnostico
 		if(!empty($data['diagnostics'])){
 			foreach($data['diagnostics'] as $key => $row){
@@ -222,18 +229,18 @@ class BiopsiesController extends Controller
 		}
 		//notificamos al whatsapp
 		if(!empty($data['notification_whatsapp']) AND $data['notification_whatsapp'] == 'yes'){
-			
+
 		}
 		$request->session()->flash('msj_success', 'El HC '.$this->hc_type.' ha sido registrado correctamente.');
 		return redirect($this->r_name);
     }
-	
+
 	public function show()
     {
 		$data = $this->gdata('Buscar paciente', false);
 		return view($this->v_name.'.'.$this->hc_view.'.search',$data);
     }
-	
+
 	public function search(Request $request)
     {
 		$data = request()->except(['_token','_method']);
@@ -252,8 +259,8 @@ class BiopsiesController extends Controller
 		$request->session()->flash('msj_error', 'No se han encontrado resultados');
 		return redirect($this->r_name.'/'.$this->hc_view);
     }
-	
-	
+
+
 	//PDF
 	public function hcpdf($id)
     {
@@ -293,7 +300,7 @@ class BiopsiesController extends Controller
 		$logo = !empty($o_company->logo_pp)?public_path($o_company->logo_pp):public_path('assets/images/favicon.png');
 		$photo = !empty($o->photo_pp)?$o->photo_pp:public_path('assets/images/user.png');
 		$signature = !empty($o_doctor->signature_pp)?$o_doctor->signature_pp:public_path('assets/images/firma.png');
-		
+
 		$data['o_vitalsigns'] = Vitalsigns::where(['user' => $o_derm->user])->orderBy('id', 'DESC')->first();
 		$data['o_hcpro'] = Hcprocedure::where(['hc' => $o_derm->id])->first();
 		$all_sut = Hcsuture::where(['hc' => $o_derm->id])->orderBy('id', 'asc')->get();//Suture
@@ -303,7 +310,7 @@ class BiopsiesController extends Controller
 		$all_sex = Hcdermsolexams::where(['hc' => $o_derm->id])->orderBy('id', 'asc')->get();//Solicitudes de examenes
 		$all_spr = Hcdermsolproc::where(['hc' => $o_derm->id])->orderBy('id', 'asc')->get();//Solicitudes de procedimientos
 		$all_spa = Hcdermsolpath::where(['hc' => $o_derm->id])->orderBy('id', 'asc')->get();//Solicitudes de patalogías
-		
+
 		$data['all_sut'] = $all_sut;
 		$data['all_dgs'] = $all_dgs;
 		$data['all_ind'] = $all_ind;
@@ -326,8 +333,8 @@ class BiopsiesController extends Controller
 		return $pdf->stream('document.pdf');
 		exit();
     }
-	
-	
+
+
 	//PDF Historial de todos las consultas
 	public function listrecords($id)
     {
@@ -371,7 +378,7 @@ class BiopsiesController extends Controller
 		$data['company_name'] = $o_company->name;
 		$data['full_name'] = $full_name;
 		$data['o_vitalsigns'] = Vitalsigns::where(['user' => $o->id])->orderBy('id', 'DESC')->first();
-		
+
 		$arr = [];
 		$derm_all = Dermatology::where(['user' => $o->id,'hc_type' => $this->hc_type])->orderBy('id', 'asc')->get();
 		foreach($derm_all as $key => $o_derm){
@@ -389,7 +396,7 @@ class BiopsiesController extends Controller
 			array_push($arr, ['o_derm' => $o_derm,'o_doctor' => $o_doctor,'dfull_name' => $dfull_name,'signature' => $signature,'o_hcpro' => $o_hcpro,'all_sut' => $all_sut,'all_dgs' => $all_dgs,'all_ind' => $all_ind,'all_pre' => $all_pre,'all_sex' => $all_sex,'all_spr' => $all_spr,'all_spa' => $all_spa]);
 		}
 		$data['arr'] = $arr;
-		
+
 		$pdf = PDF::loadView('pdf.'.$this->hc_view.'all', $data);
 		return $pdf->stream('document.pdf');
 		exit();

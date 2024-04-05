@@ -15,6 +15,9 @@ use App\Models\Diary;
 use App\Models\Locks;
 use App\Models\User;
 use App\Mail\Ntfs;
+use App\Models\Headquarters;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class LandingController extends Controller
 {
@@ -26,7 +29,7 @@ class LandingController extends Controller
     private $c_names = 'Pagina de inicio';
 	private $list_tbl_fsc = ['name' => 'Nombre'];
 	private $o_model = User::class;
-	
+
 	private function gdata($t = 'Lista de')
     {
         $data['menu'] = $this->r_name;
@@ -136,7 +139,8 @@ class LandingController extends Controller
 		$data['logo'] = $logo;
 		$data['str_days'] = '';
 		$data['locks_days'] = '';
-		$data['o_all'] = Querytypes::where(['company' => $o_sol->company])->whereNotIn('status',['deleted'])->orderBy('id', 'asc')->get();
+		$data['o_all'] = Querytypes::where(['company' => $o_sol->company])->whereNotIn('status',['deleted'])->orderBy('id', 'asc')->get(['id','name']);
+		$data['o_all_sede'] = Headquarters::where(['company' => $o_sol->company])->whereNotIn('status',['deleted'])->orderBy('id', 'asc')->get(['id','name']);
 		return view('agendar.solicitude',$data);
     }
 	//3 - Buscar medicos disponibles
@@ -160,7 +164,18 @@ class LandingController extends Controller
 		$data['logo'] = $logo;
 		$data['str_days'] = '';
 		$data['locks_days'] = '';
-		$data['o_all'] = User::where(['role' => 3,'company' => $o_sol->company])->whereNotIn('status',['deleted'])->orderBy('id', 'asc')->get();
+        $user = Auth::user();
+        $doctores = DB::table('users')
+            ->join('diary', 'users.id', '=', 'diary.user')
+            ->join('diaryqt', 'diaryqt.diary_id', '=', 'diary.id')
+            ->join('querytypes', 'querytypes.id', '=', 'diaryqt.qt_id')
+            ->where('querytypes.id', '=', $o_sol->qt_id);
+        if ($user->role_class->name === 'Medico') {
+            $doctores = $doctores->where('user', $user->id);
+        }
+        $doctores = $doctores->select('users.id', 'users.name')
+            ->distinct()->get(['id', 'name']);
+		$data['o_all'] = $doctores; //User::where(['role' => 3,'company' => $o_sol->company])->whereNotIn('status',['deleted'])->orderBy('id', 'asc')->get();
 		//$data['o_ids'] = Diaryqt::where('diary_id', $o->id)->pluck('qt_id')->toArray();
 		//tenemos que hacer filtro de los mmedicos que tengan disponibles los tipos de consulta seleccionado
 		return view('agendar.doctors',$data);
@@ -212,12 +227,12 @@ class LandingController extends Controller
 				$locks_event = "{id: '".$row->uuid."',start: '".$row->date_quote."T".$row->time_quote.":00', end: '".$row->date_quote."T".$row->time_quote.":00',overlap: false,title: 'Cita ".$row->query_type."',display: 'auto',backgroundColor: '#79f392',color: '#79f392'}";//Event
 				$locks_days .= !empty($locks_days)?', '.$locks_event:$locks_event;
 			}
-			
+
 		}
 		if(!empty($locks_days)){
 			$locks_days = 'events: [ '.$locks_days.' ],';
 		}
-		
+
 		$data['o_sol'] = $o_sol;
 		$data['o'] = $o;
 		$data['o_user'] = $o_user;
@@ -274,11 +289,12 @@ class LandingController extends Controller
 			'action_type.required' => 'El tipo de documento es requerido',
 			'action_value.required' => 'El valor es requerido',
 		]);
-		
+
 		$params = [$data['action_type'] => $data['action_value']];
 		if($data['action_type'] == 'qt_id'){
 			$o_qt = Querytypes::where(['id' => $data['action_value']])->first();
-			$params['query_type'] = !empty($o_qt->id)?$o_qt->name:'';
+			$params['query_type'] = !empty($o_qt->id) ? $o_qt->name : '';
+			$params['campus'] = !empty($data['campus']) ? $data['campus'] : '';
 		} else if($data['action_type'] == 'date_quote'){
 			//$params['campus'] = $data['campus'];
 			$params['time_quote'] = $data['time_quote'];
@@ -327,13 +343,13 @@ class LandingController extends Controller
 		}
 		return redirect('/');
     }
-	
+
 	public function pyresp()
     {
 		$data['title'] = 'Pago de membresía';
 		return view('agendar.pyresp',$data);
     }
-	
+
 	public function pyconn()
     {
 		$uuid = $_POST['extra1'];//SOLICITUD
@@ -368,7 +384,7 @@ class LandingController extends Controller
 		}
 		echo 'ok';
     }
-	
+
 	public function payment($data = [])
     {
 		if(empty($data['x_ref_payco'])){

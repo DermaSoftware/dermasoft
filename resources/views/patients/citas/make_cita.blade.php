@@ -161,7 +161,7 @@
                         selectable: true,
 
                         hiddenDays: JSON.parse(resp.str_days),
-                        businessHours: resp.businessHours,
+                       /* businessHours: resp.businessHours,*/
                         events: JSON.parse(resp.locks_days),
                         validRange: {
                             start: new Date()
@@ -178,6 +178,13 @@
                             var fecha = `${year}-${month}-${day}`;
 
                             $('.date-view-fsc').html(info.dateStr);
+                            $('.info-calendar').html(
+                                `<h2 style="
+                                    text-align: center;
+                                    margin-bottom: 10px;
+                                    color: green;
+                                ">${fecha} ${time}</h2>`
+                            );
                             $('#date_quote').val(fecha);
                             $('#time_quote').val(time);
                             if ($('#date_quote').val() != '') {
