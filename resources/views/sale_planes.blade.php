@@ -98,7 +98,7 @@
                 <div class="pricing-plan is-featured">
                     <div class="name"><?= $row->name ?></div>
                     <img src="<?= !empty($row->photo)?$row->photo:asset('assets/img/logos/logo/logo-platinum.svg') ?>" alt="">
-                    <div class="price money_to_fscx"><?= intval($row->price) ?></div>
+                    <div class="price money_to_fscx"><?=intval($row->price)/intval($row->month) ?></div>
                     <div class="trial"><?= $row->subtitle ?></div>
                     <hr>
                     <ul>
@@ -113,9 +113,13 @@
                     <div class="buttons text-center">
                         <!--<button class="button h-button is-dark-outlined">Skip</button>-->
                         @if ($company->plan_id == $row->id )
-                            <button disabled class="button h-button is-success is-raised btn_plan_price_epayco" style="margin: 0 auto;">Membresía adquirida</button>
+                            <button disabled class="button h-button is-success is-raised btn_plan_price_epayco"
+                                    style="margin: 0 auto;">Membresía adquirida
+                            </button>
                         @else
-                            <button class="button h-button is-success is-raised btn_plan_price_epayco" style="margin: 0 auto;">Pagar membresía</button>
+                            <button {{$company->plan_id == 0 ? 'disabled ':'' }}
+                                class="button h-button is-success is-raised btn_plan_price_epayco"
+                                style="margin: 0 auto;">{{$company->plan_id == 0 ? 'Membresia de prueba' : 'Pagar membresía'}}</button>
                         @endif
                         <form class="is-hidden">
                             <script
