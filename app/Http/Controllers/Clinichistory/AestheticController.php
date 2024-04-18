@@ -72,7 +72,7 @@ class AestheticController extends Controller
             return redirect($this->r_name);
         }
         $o_vitalsigns = Vitalsigns::where(['user' => $o->id])
-            ->where(['hc_type' => 'Procedimientos Estéticos'])
+            // ->where(['hc_type' => 'Procedimientos Estéticos'])
             ->orderBy('id', 'DESC')->first();
         if (empty($o_vitalsigns)) {
             $request->session()->flash('msj_error', 'El paciente ' . $o->name . 'No tiene signos vitales registrados para esta consulta.');
@@ -90,10 +90,11 @@ class AestheticController extends Controller
         $data['o_paths'] = Pathologies::where(['status' => 'active'])->orderBy('id', 'asc')->get();
 
         //Historial
-        $t = Dermatology::where(['user' => $o->id, 'hc_type' => $this->hc_type])->count();
+        // $t = Dermatology::where(['user' => $o->id, 'hc_type' => $this->hc_type])->count();
+        $t = Dermatology::where(['user' => $o->id])->count();
         $is_records = !empty($t) ? $t > 0 : false;
         if ($is_records) {
-            $o_derm = Dermatology::where(['user' => $o->id, 'hc_type' => $this->hc_type])->orderBy('id', 'DESC')->first();
+            $o_derm = Dermatology::where(['user' => $o->id])->orderBy('id', 'DESC')->first();
             $data['o_derm'] = $o_derm;
             $o_hcp = Hcaesthetic::where(['hc' => $o_derm->id, 'user' => $o->id])->orderBy('id', 'DESC')->first();
             $data['o_hcp'] = $o_hcp;

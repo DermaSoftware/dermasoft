@@ -1,9 +1,12 @@
 
-<a class="button h-button is-rounded h-modal-trigger is-primary" data-modal="indications_a_modal">Prescripción médica</a>
+{{-- <a class="button h-button is-rounded h-modal-trigger is-primary" data-modal="indications_a_modal">Prescripción médica</a>
 <a class="button h-button is-rounded h-modal-trigger is-primary" data-modal="indications_b_modal">Solicitud de examenes</a>
 <a class="button h-button is-rounded h-modal-trigger is-primary" data-modal="indications_c_modal">Solicitud de procedimientos</a>
-<a class="button h-button is-rounded h-modal-trigger is-primary" data-modal="indications_d_modal">Solicitud de patalogías</a>
-
+<a class="button h-button is-rounded h-modal-trigger is-primary" data-modal="indications_d_modal">Solicitud de patalogías</a> --}}
+<a href="{{ url('medicalp/' . $o->uuid ) }}" class="button h-button is-rounded is-primary" data-modal="indications_a_modal">Prescripción médica</a>
+<a href="{{ url('ordersexam/' . $o->uuid ) }}" class="button h-button is-rounded is-primary" data-modal="indications_b_modal">Solicitud de examenes</a>
+<a href="{{ url('prods/' . $o->uuid ) }}" class="button h-button is-rounded is-primary" data-modal="indications_c_modal">Solicitud de procedimientos</a>
+<a href="{{ url('pths/' . $o->uuid ) }}" class="button h-button is-rounded is-primary" data-modal="indications_d_modal">Solicitud de patalogías</a>
 @include($v_name.'.form.modals.modal_a',['modo' => 'create'])
 @include($v_name.'.form.modals.modal_b',['modo' => 'create'])
 @include($v_name.'.form.modals.modal_c',['modo' => 'create'])

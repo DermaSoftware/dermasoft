@@ -18,6 +18,7 @@ use Illuminate\Support\Str;
 use App\Mail\HabeasData;
 use App\Mail\Ntfs;
 use App\Models\Appointments;
+use App\Models\Dermatology;
 use App\Models\Diary;
 use App\Models\Locks;
 use App\Models\Solicitude;
@@ -162,8 +163,22 @@ class PatientsController extends Controller
         $data['user'] = $ox->id;
         $data['company'] = Auth::user()->company;
         $o_appointment = Appointments::where(['uuid' => $appointment])->first(['id']);
+        $hc = Dermatology::where('user',$ox->id)->first();
+        if(empty($hc)){
+            $params = [];
+            $params['user'] = $ox->id;
+            $params['doctor'] = Auth::user()->id;
+            $params['company'] = $ox->company;
+            $params['campus'] = $ox->campus;
+            $params['hct_type'] = $data["hc_type"];
+            $o = Dermatology::create($params);
+        }
+        else{
+            $hc->update(["hc_type"=>$data["hc_type"]]);
+        }
         $data['appointment_id'] = $o_appointment->id;
         $o = Vitalsigns::create($data);
+        $o_appointment->update(["hc_type"=>$data["hc_type"]]);
         $request->session()->flash('msj_success', 'Los signos vitales han sido registrados correctamente.');
         return redirect($this->r_name . '/records');
     }

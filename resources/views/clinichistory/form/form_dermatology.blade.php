@@ -1,7 +1,7 @@
 <div class="single-accordion">
 	<div class="accordion-header is-active">Datos personales</div>
 	<div class="accordion-content" style="display: block;">
-		
+
 		<div class="columns is-multiline">
 							<!--Field-->
 							<div class="column is-3">
@@ -158,12 +158,12 @@
 								</div>
 							</div>
         </div>
-		
+
 		<div style="width: 100%;text-align: right;">
 		<a target="_blank" href="<?= url('patients/suppdata/'.$o->uuid) ?>" class="button h-button is-primary is-dark-outlined"><span class="icon"><i class="fas fa-edit"></i></span><span>Actualizar datos secundarios</span></a>
 		</div>
 	</div>
-	
+
 	<div class="accordion-header is-active">Datos de afiliación</div>
 	<div class="accordion-content" style="display: block;">
 		<div class="columns is-multiline">
@@ -213,7 +213,7 @@
 			</div>
         </div>
 	</div>
-	
+
 	<div class="accordion-header is-active">Signos vitales</div>
 	<div class="accordion-content" style="display: block;">
 		<?php if(!empty($o_vitalsigns->id)){ ?>
@@ -241,48 +241,42 @@
 		</div>
 		<?php } ?>
 	</div>
-	
-	<div class="fieldset">
-		<div class="columns is-multiline">
-			<!--Field-->
-			<div class="column is-6">
-				<div class="field">
-					<div class="control">
-						<?php $t_att = 'external_cause'; ?>
-						<?php $n_att = 'Causa externa'; ?>
-						<label><?= $n_att ?></label>
-						<select name="<?= $t_att ?>" class="input">
-							<option value="0" selected disabled >--Seleccione--</option>
-							<?php $options = ['Enfermedad general','Enfermedad profesional','Accidente de trabajo','Accidente de tránsito','Accidente rábico','Accidente ofídico','Otro tipo de accidente','Evento catastrófico','Lesión por agresión','Lesión autoinflingida','Sospecha maltrato Físico','Sospecha abuso sexual','Sospecha violencia sexual','Sospecha maltrato emocional','Otra','Ninguna']; ?>
-							<?php $select_old = $is_records?$o_derm->external_cause:''; ?>
-							<?php foreach($options as $key => $row){ ?>
-							<option value="<?= $row ?>" <?= $select_old==$row?'selected':'' ?> ><?= $row ?></option>
-							<?php } ?>
-						</select>
-					</div>
-				</div>
-			</div>
-			<!--Field-->
-			<div class="column is-6">
-				<div class="field">
-					<div class="control">
-						<?php $t_att = 'consultation_purpose'; ?>
-						<?php $n_att = 'Finalidad consulta'; ?>
-						<label><?= $n_att ?></label>
-						<select name="<?= $t_att ?>" class="input">
-							<option value="0" selected disabled >--Seleccione--</option>
-							<?php $options = ['Ninguna','Atención parto (puerperlo)','Atención recién nacido','Atención planificación familiar','Detección alteración crecimiento y desarrollo','Detección alteración desarrollo joven','Detección alteración embarazo','Detección alteración adulto','Detección alteración agudeza visual','Detección enfermedad profesional','No aplica']; ?>
-							<?php $select_old = $is_records?$o_derm->consultation_purpose:''; ?>
-							<?php foreach($options as $key => $row){ ?>
-							<option value="<?= $row ?>" <?= $select_old==$row?'selected':'' ?> ><?= $row ?></option>
-							<?php } ?>
-						</select>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+
+	<div class="columns is-multiline">
+        <div class="column is-12">
+            <div class="card">
+                <header class="card-header">
+                    <p class="card-header-title">Consulta</p>
+                    <a id="add_appointments_reason" href="<?= url($menu . '/appointments_reason/' . $o_derm->id .'/'.$appointment. '/add') ?>"
+                        data-toggle="modal" data-modal="derma_modal" class="h-modal-trigger btn card-header-icon">
+                        <span class="fas fa-plus mr-2"></span>Adicionar
+                    </a>
+                </header>
+                <div class="card-content">
+                    <div class="content">
+                        <table id="appointments_reason_table" class="table is-striped" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Causa Externa</th>
+                                    <th>Motivo de la consulta</th>
+                                    <th>Doctor</th>
+                                    <th>Creado</th>
+                                    {{-- <th>Actualizado</th> --}}
+                                    {{-- <th class="is-end">Acciones</th> --}}
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+        </div>
+    </div>
+    </div>
 	<div style="width: 100%;text-align: right;padding: 20px;">
 		<a href="javascript:void(0)" class="button h-button is-success is-dark-outlined btn_next_tab_fsc" data-idtab="anamnesis_tab"><span class="icon"><i class="lnir lnir-arrow-right rem-100"></i></span> <span>Siguiente</span></a>
 	</div>
 </div>
+

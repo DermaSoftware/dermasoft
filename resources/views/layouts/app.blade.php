@@ -32,9 +32,10 @@ if (Auth::user()->company != 0 && Auth::user()->company_class->plan && Auth::use
     <!--<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,700" rel="stylesheet">-->
     <link rel="stylesheet" href="<?= asset('assets/css/select2.min.css') ?>">
     <!--<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>-->
-    <link rel="stylesheet" href="<?= asset('assets/css/jquery.dataTables.min.css') ?>">
+
     <!-- <link href="//cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css" rel="stylesheet"/> -->
     <link rel="stylesheet" href="<?= asset('assets/css/all.min.css') ?>">
+    <link rel="stylesheet" href="<?= asset('assets/css/jquery.dataTables.min.css') ?>">
     <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css"
           integrity="sha512-q3eWabyZPc1XTCmF+8/LuE1ozpg5xxn7iO89yfSOd5/oKvyqLngoNGsx8jq92Y8eXJ/IRxQbEC+FGSYxtk2oiw=="
           crossorigin="anonymous" referrerpolicy="no-referrer"/>-->
@@ -104,6 +105,9 @@ if (Auth::user()->company != 0 && Auth::user()->company_class->plan && Auth::use
         .profile-wrapper .profile-body .settings-section .settings-box .icon-wrap img {
             display: block;
             max-width: 50px;
+        }
+        table td{
+            font-size: 12px !important;
         }
 
     </style>

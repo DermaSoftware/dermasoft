@@ -1,41 +1,39 @@
 
-<div class="s-card demo-table">
-	<h3 class="subtitle">Diagnóstico</h3>
-   <table class="table is-hoverable is-fullwidth">
-        <tbody>
-			<tr>
-				<th>Código</th>
-				<th>Nombre</th>
-				<th>Tipo</th>
-				<th class="is-end">
-					<div class="dark-inverted">
-						Seleccionar
-					</div>
-				</th>
-			</tr>
-			<?php foreach($o_diagnoses as $key => $row){ ?>
-			<tr id="trdg_<?= $row->uuid ?>">
-				<td class="code_inner" data-id="<?= $row->id ?>"><?= $row->code ?></td>
-				<td class="name_inner"><?= $row->name ?></td>
-				<td>
-					<div class="field">
-						<div class="control">
-							<select class="input">
-								<option value="0" selected disabled >--Seleccione--</option>
-								<?php foreach($o_diagnosesty as $key_sel => $row_sel){ ?>
-								<option value="<?= $row_sel->id ?>"><?= $row_sel->name ?></option>
-								<?php } ?>
-							</select>
-						</div>
-					</div>
-				</td>
-				<td class="is-end">
-					<div><button data-id="trdg_<?= $row->uuid ?>" type="button" class="button is-primary is-circle is-elevated btn_diagnoses_sel_fn"><span class="icon is-small"><i class="fas fa-plus"></i></span></button></div>
-				</td>
-			</tr>
-			<?php } ?>
-		</tbody>
-	</table>
+<div class="columns is-multiline">
+    <div class="column is-12">
+        <button id="diag_view" type="button"
+            class="button is-primary is-elevated btn_diagnoses_sel_fn">Ver diagnosticos registrados</span></button>
+    </div>
+    <div class="column is-5">
+        <div class="field">
+            <div class="control">
+                <label>Diagnóstico</label>
+                <select class="input diagnoses select2_fsc">
+                    <?php foreach($o_diagnoses as $key_sel => $row_sel){ ?>
+                    <option data-code="<?= $row_sel->code ?>" data-name="<?= $row_sel->name ?>" value="<?= $row_sel->id ?>"><?= $row_sel->code . '-' . $row_sel->name ?></option>
+                    <?php } ?>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="column is-5">
+        <div class="field">
+            <div class="control">
+                <label>Tipo de Diagnóstico</label>
+                <select class="o_diagnosesty input select2_fsc">
+                    <option value="0" selected disabled>--Seleccione--</option>
+                    <?php foreach($o_diagnosesty as $key_sel => $row_sel){ ?>
+                    <option value="<?= $row_sel->id ?>"><?= $row_sel->name ?></option>
+                    <?php } ?>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="column is-2">
+        <button data-id="prods" type="button"
+            class="button is-primary is-circle is-elevated btn_diagnoses_sel_fn"><span class="icon is-small"><i
+                    class="fas fa-plus"></i></span></button>
+    </div>
 </div>
 
 
@@ -94,7 +92,7 @@
 				<select name="<?= $t_att ?>" class="input sel_disinfection">
 					<option value="" selected disabled >--Seleccione--</option>
 					<?php $options = ['SSN','Alcohol','Yodopovidona','Clorexidina','Otro antiséptico']; ?>
-					<?php $select_old = $is_records?$o_hcp->$t_att:''; ?>
+					<?php $select_old = $is_records and isset($o_hcp)  ?  $o_hcp->$t_att:''; ?>
 					<?php foreach($options as $key => $row){ ?>
 					<option value="<?= $row ?>" <?= $select_old==$row?'selected':'' ?> ><?= $row ?></option>
 					<?php } ?>
@@ -123,7 +121,7 @@
 				<select name="<?= $t_att ?>" class="input sel_anesthesia">
 					<option value="" selected disabled >--Seleccione--</option>
 					<?php $options = ['Si','No']; ?>
-					<?php $select_old = $is_records?$o_hcp->$t_att:''; ?>
+					<?php $select_old = $is_records and isset($o_hcp) ? $o_hcp->$t_att:''; ?>
 					<?php foreach($options as $key => $row){ ?>
 					<option value="<?= $row ?>" <?= $select_old==$row?'selected':'' ?> ><?= $row ?></option>
 					<?php } ?>
@@ -141,7 +139,7 @@
 				<select name="<?= $t_att ?>" class="input fl_sel_parent_disb sel_type_anesthesia" data-xparent=".sel_anesthesia" data-option="Si">
 					<option value="" selected disabled >--Seleccione--</option>
 					<?php $options = ['Lidocaina al 1% con epinefrina','Lidocaina al 1% sin epinefrina','Lidocaina al 2% con epinefrina','Lidocaina al 2% sin epinefrina','Tópica','Otro']; ?>
-					<?php $select_old = $is_records?$o_hcp->$t_att:''; ?>
+					<?php $select_old = $is_records and isset($o_hcp) ? $o_hcp->$t_att:''; ?>
 					<?php foreach($options as $key => $row){ ?>
 					<option value="<?= $row ?>" <?= $select_old==$row?'selected':'' ?> ><?= $row ?></option>
 					<?php } ?>
@@ -160,8 +158,8 @@
 			</div>
 		</div>
 	</div>
-	
-	
+
+
 	<!--Field-->
 	<div class="column is-12 biopsy_method_cll is-hidden">
 		<div class="columns is-multiline">
@@ -175,7 +173,7 @@
 						<select name="<?= $t_att ?>" class="input sel_biopsy_method fl_sel_parent_valid" data-xparent=".type_procedure_sel" data-box=".biopsy_method_cll" data-option="Biopsia">
 							<option value="" selected disabled >--Seleccione--</option>
 							<?php $options = ['Punch','Bisturí','Afeitado','Curetaje','Tijera','Saucerización','Otro']; ?>
-							<?php $select_old = $is_records?$o_hcp->$t_att:''; ?>
+							<?php $select_old = $is_records and isset($o_hcp) ? $o_hcp->$t_att:''; ?>
 							<?php foreach($options as $key => $row){ ?>
 							<option value="<?= $row ?>" <?= $select_old==$row?'selected':'' ?> ><?= $row ?></option>
 							<?php } ?>
@@ -204,7 +202,7 @@
 						<select name="<?= $t_att ?>" class="input">
 							<option value="" selected disabled >--Seleccione--</option>
 							<?php $options = ['Incicional','Excisional']; ?>
-							<?php $select_old = $is_records?$o_hcp->$t_att:''; ?>
+							<?php $select_old = $is_records and isset($o_hcp) ? $o_hcp->$t_att:''; ?>
 							<?php foreach($options as $key => $row){ ?>
 							<option value="<?= $row ?>" <?= $select_old==$row?'selected':'' ?> ><?= $row ?></option>
 							<?php } ?>
@@ -222,7 +220,7 @@
 						<select name="<?= $t_att ?>" class="input sel_required_margin">
 							<option value="" selected disabled >--Seleccione--</option>
 							<?php $options = ['Si','No']; ?>
-							<?php $select_old = $is_records?$o_hcp->$t_att:''; ?>
+							<?php $select_old = $is_records and isset($o_hcp) ? $o_hcp->$t_att:''; ?>
 							<?php foreach($options as $key => $row){ ?>
 							<option value="<?= $row ?>" <?= $select_old==$row?'selected':'' ?> ><?= $row ?></option>
 							<?php } ?>
@@ -251,7 +249,7 @@
 						<select name="<?= $t_att ?>" class="input">
 							<option value="" selected disabled >--Seleccione--</option>
 							<?php $options = ['Frente', 'Espalda']; ?>
-							<?php $select_old = $is_records?$o_hcp->$t_att:''; ?>
+							<?php $select_old = $is_records and isset($o_hcp) ? $o_hcp->$t_att:''; ?>
 							<?php foreach($options as $key => $row){ ?>
 							<option value="<?= $row ?>" <?= $select_old==$row?'selected':'' ?> ><?= $row ?></option>
 							<?php } ?>
@@ -269,7 +267,7 @@
 						<select name="<?= $t_att ?>" class="input">
 							<option value="" selected disabled >--Seleccione--</option>
 							<?php $options = ['Cuero cabelludo', 'Frente', 'Parpado superior', 'Oreja derecha', 'Oreja izquierda', 'Ojo derecho', 'Parpado inferior ojo derecho', 'Parpado superior ojo izquierdo', 'Parpado inferior ojo izquierdo', 'Ceja derecha', 'Ceja izquierda', 'Mejilla derecha', 'Mejilla izquierda', 'Nariz', 'Mentón', 'Labios', 'Lengua', 'Cuello', 'Hombro derecho', 'Hombro izquierdo', 'Brazo izquierdo', 'Brazo derecho', 'Codo derecho', 'Codo izquierdo', 'Antebrazo derecho', 'Antebrazo izquierdo', 'Dorso mano derecha', 'Dorso mano izquierda', 'Palma mano derecha', 'Palma mano izquierda', 'Dedos mano derecha', 'Dedos mano izquierda', 'Tórax posterior', 'Tórax anterior', 'Abdomen', 'Región lumbar', 'Glúteos', 'Pubis', 'Genitales', 'Ano', 'Muslo izquierdo', 'Muslo derecho', 'Rodilla izquierda', 'Rodilla derecha', 'Pierna izquierda', 'Pierna derecha', 'Dorso del pie derecho', 'Dorso pie izquierdo', 'Palma pie derecho', 'Palma pie izquierdo', 'Dedos pie derecho', 'Dedos pie izquierdo']; ?>
-							<?php $select_old = $is_records?$o_hcp->$t_att:''; ?>
+							<?php $select_old = $is_records and isset($o_hcp) ? $o_hcp->$t_att:''; ?>
 							<?php foreach($options as $key => $row){ ?>
 							<option value="<?= $row ?>" <?= $select_old==$row?'selected':'' ?> ><?= $row ?></option>
 							<?php } ?>
@@ -277,13 +275,13 @@
 					</div>
 				</div>
 			</div>
-			
+
 		</div>
 	</div>
-	
-	
-	
-	
+
+
+
+
 	<!--Field-->
 	<div class="column is-3">
 		<div class="field">
@@ -294,7 +292,7 @@
 				<select name="<?= $t_att ?>" class="input sel_hemostasis">
 					<option value="" selected disabled >--Seleccione--</option>
 					<?php $options = ['No','Química','Hyfrecator','Ellman','Sutura','Otra']; ?>
-					<?php $select_old = $is_records?$o_hcp->$t_att:''; ?>
+					<?php $select_old = $is_records and isset($o_hcp) ? $o_hcp->$t_att:''; ?>
 					<?php foreach($options as $key => $row){ ?>
 					<option value="<?= $row ?>" <?= $select_old==$row?'selected':'' ?> ><?= $row ?></option>
 					<?php } ?>
@@ -346,7 +344,7 @@
 		<div class="columns is-multiline box_suture_caliber_inner">
 		</div>
 	</div>
-	
+
 	<!--Field-->
 	<div class="column is-3">
 		<div class="field">
@@ -368,7 +366,7 @@
 				<select name="<?= $t_att ?>" class="input sel_complications">
 					<option value="" selected disabled >--Seleccione--</option>
 					<?php $options = ['Si','No']; ?>
-					<?php $select_old = $is_records?$o_hcp->$t_att:''; ?>
+					<?php $select_old = $is_records and isset($o_hcp) ? $o_hcp->$t_att:''; ?>
 					<?php foreach($options as $key => $row){ ?>
 					<option value="<?= $row ?>" <?= $select_old==$row?'selected':'' ?> ><?= $row ?></option>
 					<?php } ?>
@@ -394,7 +392,7 @@
 				<?php $t_att = 'participants'; ?>
 				<?php $n_att = 'Datos de quienes participaron en el procedimiento'; ?>
 				<label><?= $n_att ?></label>
-				<textarea name="<?= $t_att ?>" class="textarea" rows="2" placeholder="<?= $n_att ?>"><?= old($t_att) ?><?= $is_records?$o_hcp->$t_att:'' ?></textarea>
+				<textarea name="<?= $t_att ?>" class="textarea" rows="2" placeholder="<?= $n_att ?>"><?= old($t_att) ?><?= $is_records and isset($o_hcp) ? $o_hcp->$t_att:'' ?></textarea>
 			</div>
 		</div>
 	</div>
@@ -405,11 +403,11 @@
 				<?php $t_att = 'comments'; ?>
 				<?php $n_att = 'Comentarios adicionales'; ?>
 				<label><?= $n_att ?></label>
-				<textarea name="<?= $t_att ?>" class="textarea" rows="2" placeholder="<?= $n_att ?>"><?= old($t_att) ?><?= $is_records?$o_hcp->$t_att:'' ?></textarea>
+				<textarea name="<?= $t_att ?>" class="textarea" rows="2" placeholder="<?= $n_att ?>"><?= old($t_att) ?><?= $is_records and isset($o_hcp) ? $o_hcp->$t_att:'' ?></textarea>
 			</div>
 		</div>
 	</div>
-	
+
 </div>
 
 

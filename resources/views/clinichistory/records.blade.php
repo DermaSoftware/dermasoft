@@ -22,23 +22,23 @@
                 <span>Sede</span>
                 <span class="cell-end">Ver HC</span>
             </div>
-			<?php foreach($o_all as $key => $row){ ?>
+			<?php foreach($o_appoinments as $key => $row){ ?>
             <!--Table item-->
             <div class="flex-table-item">
                 <div class="flex-table-cell is-bold" data-th="Company">
                     <span class="dark-text"><?= $key+1 ?></span>
                 </div>
 				<div class="flex-table-cell" data-th="created_at">
-                    <span class="light-text"><?= $row->created_at ?></span>
+                    <span class="light-text"><?= $row->date_quote . ' ' . $row->time_quote ?></span>
                 </div>
 				<div class="flex-table-cell" data-th="external_cause">
-                    <span class="light-text"><?= $row->external_cause ?></span>
+                    <span class="light-text"><?= $row->hc_type ?></span>
                 </div>
 				<div class="flex-table-cell" data-th="doctor">
-                    <span class="light-text"><?= $row->getDoctor() ?></span>
+                    <span class="light-text"><?= $row->doctor_class->name ?></span>
                 </div>
 				<div class="flex-table-cell" data-th="campus">
-                    <span class="light-text"><?= $row->getCampus() ?></span>
+                    <span class="light-text"><?= $row->campus_class->name ?></span>
                 </div>
 				<div class="flex-table-cell cell-end" data-th="Actions">
                     <div class="dropdown is-spaced is-dots is-right dropdown-trigger is-pushed-mobile is-up">

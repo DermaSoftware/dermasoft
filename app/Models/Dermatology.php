@@ -8,23 +8,29 @@ use Illuminate\Database\Eloquent\Model;
 class Dermatology extends Model
 {
     use HasFactory,Uuids;
-	
+
 	protected $table = 'dermatology';
 
     protected $guarded = ['id'];
-	
+
+
+    public function user_class()
+    {
+        return $this->belongsTo(User::class, 'user');
+    }
+
 	public function getCampus()
     {
         $o = Headquarters::where(['id' => $this->campus])->first();
 		return !empty($o->id)?$o->name:'No asignado';
     }
-	
+
 	public function getDoctor()
     {
         $o = User::where(['id' => $this->doctor])->first();
 		return !empty($o->id)?$o->name.' '.$o->scd_name.' '.$o->lastname.' '.$o->scd_lastname:'No asignado';
     }
-	
+
 	public function getTagUrl()
     {
         $url = url('clinichistory');
@@ -39,7 +45,7 @@ class Dermatology extends Model
 		}
 		return $url;
     }
-	
+
 	public function getTagUrlTwo()
     {
         $url = url('consultas');
@@ -54,5 +60,5 @@ class Dermatology extends Model
 		}
 		return $url;
     }
-	
+
 }

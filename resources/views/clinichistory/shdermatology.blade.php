@@ -39,7 +39,7 @@
                         <div class="fieldset-heading">
                         </div>
                         <div class="columns is-multiline">
-                            
+
 							<!--Field-->
 							<div class="column is-6">
 								<div class="field">
@@ -67,7 +67,22 @@
 									</div>
 								</div>
 							</div>
-							
+                            <div class="column is-6">
+								<div class="field">
+									<div class="control">
+										<?php $t_att = 'hc_type'; ?>
+										<?php $n_att = 'Tipo de Historia Clinica'; ?>
+										<label><?= $n_att ?></label>
+										<select name="<?= $t_att ?>" class="input">
+											<option value="0" selected disabled >--Seleccione--</option>
+											<?php foreach($o_hctype as $key => $row){ ?>
+											<option value="<?= $row ?>"><?= $row ?></option>
+											<?php } ?>
+										</select>
+									</div>
+								</div>
+							</div>
+
                         </div>
                     </div>
                 </div>

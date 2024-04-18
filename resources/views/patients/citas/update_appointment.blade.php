@@ -59,7 +59,7 @@
 @section('js')
     @parent
     <script>
-        $(document).ready(async function() {
+        $(document).ready(function() {
 
             const doctor = document.querySelector('select[name="doctor"]');
             doctor.removeAttribute('disabled');
@@ -67,7 +67,7 @@
             var value = op.value;
             const campus = document.querySelector('select[name="campus"]');
             var campus_value = campus.options[campus.selectedIndex].value;
-            var calendarEl = document.getElementById('calendar');
+            // var calendarEl = document.getElementById('calendar');
             if (value !== '0') {
                 var data = {
                     _token: $("meta[name='csrf-token']").attr("content"),
@@ -75,23 +75,10 @@
                     "campus": campus_value,
                     "patient": <?= $patient ?>
                 }
-                const response = await fetch('/patients/get_habailable_days', {
-                    method: "POST", // *GET, POST, PUT, DELETE, etc.
-                    mode: "cors", // no-cors, *cors, same-origin
-                    cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-                    credentials: "same-origin", // include, *same-origin, omit
-                    headers: {
-                        "Content-Type": "application/json",
-                        // 'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    redirect: "follow", // manual, *follow, error
-                    referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-                    body: JSON.stringify(data)
-                });
-                var resp = await response.json();
-                console.log(resp);
-
+                const resp = get_days(data).then(resp => {
+                var calendarEl = document.getElementById('calendar');
                 var calendar = new FullCalendar.Calendar(calendarEl, {
+                    schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
                     headerToolbar: {
                         left: 'promptResource today prev,next',
                         center: 'title',
@@ -100,112 +87,13 @@
                     initialView: 'timeGridWeek',
                     locale: 'es',
                     selectable: true,
-                    businessHours: resp.businessHours,
-                    hiddenDays: JSON.parse(resp.str_days),
-                    events: JSON.parse(resp.locks_days),
-                    validRange: {
-                        start: new Date()
-                    },
-                    dateClick: function(info) {
-                        var fecha = info.date;
-                        var hour = fecha.getHours() >= 10 ? fecha.getHours() :
-                            `0${fecha.getHours()}`;
-                        var minutes = fecha.getMinutes() >= 10 ? fecha.getMinutes() :
-                            `0${fecha.getMinutes()}`;
-                        var time = `${hour}:${minutes}`;
-
-                        var month = fecha.getMonth() + 1 >= 10 ? fecha.getMonth() + 1 :
-                            `0${fecha.getMonth() + 1}`;
-                        var day = fecha.getDate() >= 10 ? fecha.getDate() : `0${fecha.getDate()}`;
-                        var year = fecha.getFullYear();
-                        var fecha = `${year}-${month}-${day}`;
-
-                        $('.date-view-fsc').html(info.dateStr);
-                        $('#date_quote').val(fecha);
-                        $('#time_quote').val(time);
-                        if ($('#date_quote').val() != '') {
-                            $(".btn_send_calendar").prop('disabled', false);
-                        }
-
-                    },
-                    eventClick: function(info) {
-                        var eventObj = info.event;
-                        if (eventObj.url) {
-                            console.log(eventObj.url)
-                            $.post(eventObj.url, {
-                                _token: $("meta[name='csrf-token']").attr(
-                                    "content")
-                            }, function(data) {
-                                $('.box_info_cite').html(data);
-                                $('.btn_cita_show').trigger('click');
-                            }, "html");
-                            //window.open(eventObj.url);
-                            info.jsEvent
-                                .preventDefault(); // prevents browser from following link in current tab.
-                        }
-                    },
+                    // resources: JSON.parse(resp.doctors),
+                    events: JSON.parse(resp.locks_days)
                 });
-
                 calendar.render();
+                });
             }
-            /*op = doctor.options[doctor.selectedIndex];
-            var value = op.value;
-            var data = {
-                _token: $("meta[name='csrf-token']").attr("content"),
-                doctor: value,
-                patient: <?= $patient ?>
-            }
-            const response = await fetch('/patients/get_habailable_days', {
-                method: "POST", // *GET, POST, PUT, DELETE, etc.
-                mode: "cors", // no-cors, *cors, same-origin
-                cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-                credentials: "same-origin", // include, *same-origin, omit
-                headers: {
-                    "Content-Type": "application/json",
-                    // 'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                redirect: "follow", // manual, *follow, error
-                referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-                body: JSON.stringify(data)
-            });
 
-            debugger
-            var resp = await response.json();
-            var calendarEl = document.getElementById('calendar');
-            var calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth',
-                locale: 'es',
-                selectable: true,
-
-                hiddenDays: JSON.parse(resp.str_days),
-                events: JSON.parse(resp.locks_days),
-                validRange: {
-                    start: new Date()
-                },
-                dateClick: function(info) {
-                    $('.date-view-fsc').html(info.dateStr);
-                    $('#date_quote').val(info.dateStr);
-                    if ($('#date_quote').val() != '') {
-                        $(".btn_send_calendar").prop('disabled', false);
-                    }
-                },
-                eventClick: function (info) {
-                    var eventObj = info.event;
-                    if (eventObj.url) {
-                        console.log(eventObj.url)
-                        $.post(eventObj.url, {
-                            _token: $("meta[name='csrf-token']").attr("content")
-                        }, function (data) {
-                            $('.box_info_cite').html(data);
-                            $('.btn_cita_show').trigger('click');
-                        }, "html");
-                        //window.open(eventObj.url);
-                        info.jsEvent.preventDefault(); // prevents browser from following link in current tab.
-                    }
-                },
-            });
-
-            calendar.render();*/
             doctor.addEventListener('change', async function() {
                 op = doctor.options[doctor.selectedIndex];
                 var value = op.value;
@@ -335,6 +223,24 @@
                     console.log(html_options);
                 }
             });
+
+            async function get_days(data) {
+
+            var response = await fetch('/patients/get_habailable_days', {
+                    method: "POST", // *GET, POST, PUT, DELETE, etc.
+                    mode: "cors", // no-cors, *cors, same-origin
+                    cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+                    credentials: "same-origin", // include, *same-origin, omit
+                    headers: {
+                        "Content-Type": "application/json",
+                        // 'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    redirect: "follow", // manual, *follow, error
+                    referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+                    body: JSON.stringify(data)
+                });
+            return response.json();
+            }
         });
     </script>
 @endsection

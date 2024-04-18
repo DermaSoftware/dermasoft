@@ -57,7 +57,7 @@
 </div>
 
 <div class="columns is-multiline">
-	
+
 	<!--Field-->
 	<?php $face = (!empty($o->gender) AND $o->gender == 'Femenino')?2:1; ?>
 	<div class="column is-6"><img src="<?= asset('assets/images/face'.$face.'.jpg') ?>" style="max-width: 100%;width: 100%;height: auto;"></div>
@@ -70,7 +70,7 @@
 				<select name="<?= $t_att ?>[]" class="input">
 					<option value="" selected disabled >--Seleccione--</option>
 					<?php $options = ['Corrugador', 'Frontal', 'Procerus', 'Orbicular de ojo derecho', 'Orbicular de ojo izquierdo', 'Orbicular subpalpebral derecho', 'Orbicular subpalpebral Izquierdo', 'Región nasal', 'Orbicular de los labios', 'Platisma', 'Región del mentón']; ?>
-					<?php $select_old = $is_records?$o_hcp->$t_att:''; ?>
+					<?php $select_old = $is_records and isset($o_hcp) ? $o_hcp->$t_att:''; ?>
 					<?php foreach($options as $key => $row){ ?>
 					<option value="<?= $row ?>"><?= $row ?></option>
 					<?php } ?>
@@ -89,16 +89,16 @@
 			</div>
 		</div>
 	</div>
-	
+
 	<div class="column is-12 box_treatment is-hidden"></div>
-	
+
 	<div class="column is-12"><hr></div>
 	<div class="column is-12">
 		<a href="javascript:void(0)" class="button h-button is-primary is-dark-outlined btn_add_treatment_fsc">Agregar</a>
 	</div>
 	<div class="column is-12"><hr></div>
-	
-	
+
+
 	<!--Field-->
 	<div class="column is-6">
 		<div class="field">
@@ -109,7 +109,7 @@
 				<select name="<?= $t_att ?>" class="input sel_complications">
 					<option value="" selected disabled >--Seleccione--</option>
 					<?php $options = ['Si','No']; ?>
-					<?php $select_old = $is_records?$o_hcp->$t_att:''; ?>
+					<?php $select_old = $is_records and isset($o_hcp)?$o_hcp->$t_att:''; ?>
 					<?php foreach($options as $key => $row){ ?>
 					<option value="<?= $row ?>" <?= $select_old==$row?'selected':'' ?> ><?= $row ?></option>
 					<?php } ?>
@@ -135,7 +135,7 @@
 				<?php $t_att = 'participants'; ?>
 				<?php $n_att = 'Datos de quienes participaron en el procedimiento'; ?>
 				<label><?= $n_att ?></label>
-				<textarea name="<?= $t_att ?>" class="textarea" rows="2" placeholder="<?= $n_att ?>"><?= old($t_att) ?><?= $is_records?$o_hcp->$t_att:'' ?></textarea>
+				<textarea name="<?= $t_att ?>" class="textarea" rows="2" placeholder="<?= $n_att ?>"><?= old($t_att) ?><?= $is_records and isset($o_hcp)?$o_hcp->$t_att:'' ?></textarea>
 			</div>
 		</div>
 	</div>
@@ -146,11 +146,11 @@
 				<?php $t_att = 'comments'; ?>
 				<?php $n_att = 'Comentarios adicionales'; ?>
 				<label><?= $n_att ?></label>
-				<textarea name="<?= $t_att ?>" class="textarea" rows="2" placeholder="<?= $n_att ?>"><?= old($t_att) ?><?= $is_records?$o_hcp->$t_att:'' ?></textarea>
+				<textarea name="<?= $t_att ?>" class="textarea" rows="2" placeholder="<?= $n_att ?>"><?= old($t_att) ?><?= $is_records and isset($o_hcp)?$o_hcp->$t_att:'' ?></textarea>
 			</div>
 		</div>
 	</div>
-	
+
 </div>
 
 

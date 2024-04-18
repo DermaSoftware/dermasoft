@@ -19,6 +19,6 @@ class Vitalsigns extends Model
     }
     public function appointment()
     {
-        return $this->belongsTo(Appointments::class,'appointment_id');
+        return $this->belongsTo(Appointments::class);
     }
 }

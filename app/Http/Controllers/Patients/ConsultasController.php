@@ -7,7 +7,16 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\Dermatology;
 use App\Models\Companies;
+use App\Models\Hcdermdiagnostics;
+use App\Models\Hcdermindications;
+use App\Models\Hcdermsolexams;
+use App\Models\Hcdermsolpath;
+use App\Models\Hcdermsolproc;
+use App\Models\Hcprocedure;
+use App\Models\Hcsuture;
+use App\Models\Prescriptions;
 use App\Models\User;
+use App\Models\Vitalsigns;
 use PDF;
 
 class ConsultasController extends Controller
@@ -22,7 +31,7 @@ class ConsultasController extends Controller
 	private $o_model = User::class;
 	private $hc_view = 'consultas';
 	private $hc_type = 'Resumen';
-	
+
 	private function gdata($t = '')
     {
         $data['menu'] = $this->r_name;
@@ -40,7 +49,7 @@ class ConsultasController extends Controller
 	public function __construct(){
         $this->middleware('checkRole:5');
     }
-	
+
 	//PDF Historial de todos las consultas
 	public function index()
     {
@@ -53,7 +62,7 @@ class ConsultasController extends Controller
 		$data['o_all'] = Dermatology::where(['user' => $o->id])->orderBy('id', 'asc')->get();
 		return view($this->v_name.'.'.$this->hc_view.'.records',$data);
     }
-	
+
 	//PDF Historial de todos las consultas
 	public function records()
     {
@@ -76,7 +85,7 @@ class ConsultasController extends Controller
 		$data['company_name'] = $o_company->name;
 		$data['full_name'] = $full_name;
 		$data['o_vitalsigns'] = Vitalsigns::where(['user' => $o->id])->orderBy('id', 'DESC')->first();
-		
+
 		$arr = [];
 		$derm_all = Dermatology::where(['user' => $o->id,'hc_type' => $this->hc_type])->orderBy('id', 'asc')->get();
 		foreach($derm_all as $key => $o_derm){

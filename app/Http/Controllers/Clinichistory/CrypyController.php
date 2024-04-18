@@ -68,7 +68,7 @@ class CrypyController extends Controller
 		}
 		$o = $this->o_model::where(['uuid' => $id])->first();
         $o_vitalsigns = Vitalsigns::where(['user' => $o->id])
-                        ->where(['hc_type' => 'Crioterapia'])
+                        // ->where(['hc_type' => 'Crioterapia'])
                         ->orderBy('id', 'DESC')->first();
 		if(empty($o->id)){
 			return redirect($this->r_name);

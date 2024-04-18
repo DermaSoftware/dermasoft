@@ -68,7 +68,7 @@ class BiopsiesController extends Controller
 		}
 		$o = $this->o_model::where(['uuid' => $id])->first();
         $o_vitalsigns = Vitalsigns::where(['user' => $o->id])
-                        ->where(['hc_type' => 'Biopsías y/o procedimientos'])
+                        // ->where(['hc_type' => 'Biopsías y/o procedimientos'])
                         ->orderBy('id', 'DESC')->first();
 		if(empty($o->id)){
 			return redirect($this->r_name);
@@ -80,21 +80,22 @@ class BiopsiesController extends Controller
 		$data = $this->gdata('HC - '.$this->hc_type, false);
         $data['o'] = $o;
 		$data['o_vitalsigns'] = $o_vitalsigns; // Vitalsigns::where(['user' => $o->id])->orderBy('id', 'DESC')->first();
-		$data['o_diagnoses'] = Diagnoses::where(['status' => 'active'])->orderBy('id', 'asc')->get();
-		$data['o_diagnosesty'] = Diagnosestype::where(['status' => 'active'])->orderBy('id', 'asc')->get();
-		$data['o_indications'] = Indications::where(['status' => 'active'])->orderBy('id', 'asc')->get();
-		$data['o_medicines'] = Medicines::where(['status' => 'active'])->orderBy('id', 'asc')->get();
-		$data['o_labexams'] = Laboratoryexams::where(['status' => 'active'])->orderBy('id', 'asc')->get();
-		$data['o_procs'] = Procedures::where(['status' => 'active'])->orderBy('id', 'asc')->get();
-		$data['o_paths'] = Pathologies::where(['status' => 'active'])->orderBy('id', 'asc')->get();
+		$data['o_diagnoses'] = Diagnoses::where(['status' => 'active'])->orderBy('id', 'asc')->get(['name','id','code']);
+		$data['o_diagnosesty'] = Diagnosestype::where(['status' => 'active'])->orderBy('id', 'asc')->get(['name','id']);
+		$data['o_indications'] = Indications::where(['status' => 'active'])->orderBy('id', 'asc')->get(['description','id','uuid']);
+		$data['o_medicines'] = Medicines::where(['status' => 'active'])->orderBy('id', 'asc')->get(['name','id','description']);
+		$data['o_labexams'] = Laboratoryexams::where(['status' => 'active'])->orderBy('id', 'asc')->get(['name','id','description']);
+		$data['o_procs'] = Procedures::where(['status' => 'active'])->orderBy('id', 'asc')->get(['name','id','description']);
+		$data['o_paths'] = Pathologies::where(['status' => 'active'])->orderBy('id', 'asc')->get(['name','id','description']);
 
 		//Historial
-		$t = Dermatology::where(['user' => $o->id,'hc_type' => $this->hc_type])->count();
+		// $t = Dermatology::where(['user' => $o->id,'hc_type' => $this->hc_type])->count();
+		$t = Dermatology::where(['user' => $o->id])->count();
 		$is_records = !empty($t)?$t > 0:false;
 		if($is_records){
-			$o_derm = Dermatology::where(['user' => $o->id,'hc_type' => $this->hc_type])->orderBy('id', 'DESC')->first();
+			$o_derm = Dermatology::where(['user' => $o->id])->orderBy('id', 'DESC')->first();
 			$data['o_derm'] = $o_derm;
-			$o_hcp = Hcprocedure::where(['hc' => $o_derm->id,'user' => $o->id])->orderBy('id', 'DESC')->first();
+			$o_hcp = Hcprocedure::where(['hc' => $o_derm->id,'user' => $o->id])->orderBy('id', 'DESC')->first(['disinfection','id','uuid']);
 			$data['o_hcp'] = $o_hcp;
 		}
 		$data['t_records'] = $t;

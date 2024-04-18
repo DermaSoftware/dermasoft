@@ -1,6 +1,10 @@
 <!--Field-->
 <div class="columns is-multiline">
     <div class="column is-12">
+        <button id="diag_view" type="button"
+            class="button is-primary is-elevated btn_diagnoses_sel_fn">Ver diagnosticos registrados</span></button>
+    </div>
+    <div class="column is-5">
         <div class="field">
             <div class="control">
                 <label>Diagnóstico</label>
@@ -12,7 +16,7 @@
             </div>
         </div>
     </div>
-    <div class="column is-10">
+    <div class="column is-5">
         <div class="field">
             <div class="control">
                 <label>Tipo de Diagnóstico</label>

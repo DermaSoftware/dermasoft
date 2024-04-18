@@ -270,15 +270,48 @@ Route::middleware(['auth'])->group(function () {
 		//Clinichistory
 		Route::get('/', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'index'])->name('index');
 		Route::post('/codes', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'codes'])->name('codes');
-		Route::get('/dermatology/{id}', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'dermatology'])->name('dermatology');
-		Route::post('/dermatology/{id}', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'sdermatology'])->name('sdermatology');
+		Route::get('/dermatology/{id}/{appointment}', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'dermatology'])->name('dermatology');
+		Route::post('/dermatology/{id}/{appointment}', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'sdermatology'])->name('sdermatology');
 		Route::get('/dermatology', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'shdermatology'])->name('shdermatology');
 		Route::get('/listrecords/{id}', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'listrecords'])->name('listrecords');
 		Route::get('/dermrecords/{id}', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'dermrecords'])->name('dermrecords');
 		Route::post('/search_dermatology', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'shvs_dermatology'])->name('shvs_dermatology');
 		Route::get('/hcdermpdf/{id}', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'hcdermpdf'])->name('hcdermpdf');
 
-		//Biopsies
+        Route::get('/backgrounds/{hc}/{appointment}', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'backgrounds'])->name('backgrounds');
+        Route::match(['get', 'post'],'/backgrounds/{hc}/{appointment}/add', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'add_backgrounds'])->name('add_backgrounds');
+        Route::match(['get', 'post'],'/backgrounds/{hc}/{id}/{appointment}/edit', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'edit_backgrounds'])->name('edit_backgrounds');
+
+        Route::get('/diagnostics/{hc}/{appointment}', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'diagnostics'])->name('diagnostics');
+        Route::match(['get', 'post'],'/diagnostics/{hc}/{appointment}/add', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'add_diagnostic'])->name('add_diagnostic');
+        Route::match(['get', 'post'],'/diagnostics/{hc}/{id/{appointment}}/edit', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'edit_diagnostic'])->name('edit_diagnostic');
+
+        Route::get('/indications/{hc}/{appointment}', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'indications'])->name('indications');
+        Route::match(['get', 'post'],'/indications/{hc}/{appointment}/add', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'add_indication'])->name('add_indication');
+        Route::match(['get', 'post'],'/indications/{hc}/{id}/{appointment}/edit', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'edit_indication'])->name('edit_indication');
+
+        Route::get('/biops/{hc}/{appointment}', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'biopsies'])->name('biopsies');
+		Route::match(['get', 'post'],'/biopsies/{hc}/{appointment}/add', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'add_biopsie'])->name('add_biopsie');
+        Route::match(['get', 'post'],'/biopsies/{hc}/{id}/{appointment}/edit', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'edit_biopsie'])->name('edit_biopsie');
+
+        Route::get('/cryotherapies/{hc}/{appointment}', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'cryotherapies'])->name('cryotherapies');
+		Route::match(['get', 'post'],'/cryotherapies/{hc}/{appointment}/add', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'add_cryotherapy'])->name('add_cryotherapy');
+        // Route::match(['get', 'post'],'/biopsies/{hc}/{id}/edit', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'edit_biopsie'])->name('edit_biopsie');
+
+        Route::get('/aesthetics/{hc}/{appointment}', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'aesthetics'])->name('aesthetics');
+		Route::match(['get', 'post'],'/aesthetics/{hc}/{appointment}/add', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'add_aesthetic'])->name('add_aesthetic');
+        // Route::match(['get', 'post'],'/aesthetics/{hc}/{id}/edit', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'edit_biopsie'])->name('edit_biopsie');
+
+        Route::get('/surgicals/{hc}/{appointment}', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'surgicals'])->name('surgicals');
+		Route::match(['get', 'post'],'/surgicals/{hc}/{appointment}/add', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'add_surgical'])->name('add_surgical');
+
+        Route::get('/appointments_reason/{hc}/{appointment}', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'appointments_reason'])->name('appointments_reason');
+		Route::match(['get', 'post'],'/appointments_reason/{hc}/{appointment}/add', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'add_appointment_reason'])->name('add_appointment_reason');
+
+
+        Route::get('/anamnesis/{hc}/{appointment}', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'anamnesis'])->name('anamnesis');
+		Route::match(['get', 'post'],'/anamnesis/{hc}/{appointment}/add', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'add_anamnesis'])->name('add_anamnesis');
+        //Biopsies
 		Route::group([
 			'prefix' => 'biopsies'
 		], function () {
