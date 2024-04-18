@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit7f6626274ca7ebdb9d1907bc906bd0c4
+class ComposerStaticInitdde1745039ee396dc524798e3486d809
 {
     public static $files = array (
         'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
@@ -38,6 +38,7 @@ class ComposerStaticInit7f6626274ca7ebdb9d1907bc906bd0c4
         'f0906e6318348a765ffb6eb24e0d0938' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Foundation/helpers.php',
         '58571171fd5812e6e447dce228f52f4d' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Support/helpers.php',
         'ec07570ca5a812141189b1fa81503674' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/Assert/Functions.php',
+        '0b47d6d4a00ca9112ba3953b49e7c9a4' => __DIR__ . '/..' . '/yajra/laravel-datatables-oracle/src/helper.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -56,6 +57,10 @@ class ComposerStaticInit7f6626274ca7ebdb9d1907bc906bd0c4
         'Z' => 
         array (
             'ZipStream\\' => 10,
+        ),
+        'Y' => 
+        array (
+            'Yajra\\DataTables\\' => 17,
         ),
         'W' => 
         array (
@@ -231,6 +236,10 @@ class ComposerStaticInit7f6626274ca7ebdb9d1907bc906bd0c4
         'ZipStream\\' => 
         array (
             0 => __DIR__ . '/..' . '/maennchen/zipstream-php/src',
+        ),
+        'Yajra\\DataTables\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/yajra/laravel-datatables-oracle/src',
         ),
         'Whoops\\' => 
         array (
@@ -710,7 +719,6 @@ class ComposerStaticInit7f6626274ca7ebdb9d1907bc906bd0c4
         'App\\Http\\Controllers\\Clinichistory\\AestheticController' => __DIR__ . '/../..' . '/app/Http/Controllers/Clinichistory/AestheticController.php',
         'App\\Http\\Controllers\\Clinichistory\\BiopsiesController' => __DIR__ . '/../..' . '/app/Http/Controllers/Clinichistory/BiopsiesController.php',
         'App\\Http\\Controllers\\Clinichistory\\ChecklistController' => __DIR__ . '/../..' . '/app/Http/Controllers/Clinichistory/ChecklistController.php',
-        'App\\Http\\Controllers\\Clinichistory\\ConsentController' => __DIR__ . '/../..' . '/app/Http/Controllers/Clinichistory/ConsentController.php',
         'App\\Http\\Controllers\\Clinichistory\\CrypyController' => __DIR__ . '/../..' . '/app/Http/Controllers/Clinichistory/CrypyController.php',
         'App\\Http\\Controllers\\Clinichistory\\General\\HomeController' => __DIR__ . '/../..' . '/app/Http/Controllers/Clinichistory/General/HomeController.php',
         'App\\Http\\Controllers\\Clinichistory\\ResumeController' => __DIR__ . '/../..' . '/app/Http/Controllers/Clinichistory/ResumeController.php',
@@ -780,6 +788,9 @@ class ComposerStaticInit7f6626274ca7ebdb9d1907bc906bd0c4
         'App\\Mail\\ProdsMail' => __DIR__ . '/../..' . '/app/Mail/ProdsMail.php',
         'App\\Mail\\PthsMail' => __DIR__ . '/../..' . '/app/Mail/PthsMail.php',
         'App\\Mail\\QuotesMail' => __DIR__ . '/../..' . '/app/Mail/QuotesMail.php',
+        'App\\Models\\Anamnesis' => __DIR__ . '/../..' . '/app/Models/Anamnesis.php',
+        'App\\Models\\Antecedente' => __DIR__ . '/../..' . '/app/Models/Antecedente.php',
+        'App\\Models\\AppointmentReason' => __DIR__ . '/../..' . '/app/Models/AppointmentReason.php',
         'App\\Models\\Appointments' => __DIR__ . '/../..' . '/app/Models/Appointments.php',
         'App\\Models\\Categories' => __DIR__ . '/../..' . '/app/Models/Categories.php',
         'App\\Models\\Catfaqs' => __DIR__ . '/../..' . '/app/Models/Catfaqs.php',
@@ -815,6 +826,8 @@ class ComposerStaticInit7f6626274ca7ebdb9d1907bc906bd0c4
         'App\\Models\\Hctreatment' => __DIR__ . '/../..' . '/app/Models/Hctreatment.php',
         'App\\Models\\Hctumors' => __DIR__ . '/../..' . '/app/Models/Hctumors.php',
         'App\\Models\\Headquarters' => __DIR__ . '/../..' . '/app/Models/Headquarters.php',
+        'App\\Models\\Hprocedure' => __DIR__ . '/../..' . '/app/Models/Hprocedure.php',
+        'App\\Models\\Htreatment' => __DIR__ . '/../..' . '/app/Models/Htreatment.php',
         'App\\Models\\Indications' => __DIR__ . '/../..' . '/app/Models/Indications.php',
         'App\\Models\\Laboratoryexams' => __DIR__ . '/../..' . '/app/Models/Laboratoryexams.php',
         'App\\Models\\Locks' => __DIR__ . '/../..' . '/app/Models/Locks.php',
@@ -852,6 +865,7 @@ class ComposerStaticInit7f6626274ca7ebdb9d1907bc906bd0c4
         'App\\Models\\Thematic' => __DIR__ . '/../..' . '/app/Models/Thematic.php',
         'App\\Models\\Ticket' => __DIR__ . '/../..' . '/app/Models/Ticket.php',
         'App\\Models\\Ticketmsj' => __DIR__ . '/../..' . '/app/Models/Ticketmsj.php',
+        'App\\Models\\TipoAntecedente' => __DIR__ . '/../..' . '/app/Models/TipoAntecedente.php',
         'App\\Models\\Tplmails' => __DIR__ . '/../..' . '/app/Models/Tplmails.php',
         'App\\Models\\Trainings' => __DIR__ . '/../..' . '/app/Models/Trainings.php',
         'App\\Models\\Trainingsroles' => __DIR__ . '/../..' . '/app/Models/Trainingsroles.php',
@@ -7482,6 +7496,22 @@ class ComposerStaticInit7f6626274ca7ebdb9d1907bc906bd0c4
         'Whoops\\Util\\Misc' => __DIR__ . '/..' . '/filp/whoops/src/Whoops/Util/Misc.php',
         'Whoops\\Util\\SystemFacade' => __DIR__ . '/..' . '/filp/whoops/src/Whoops/Util/SystemFacade.php',
         'Whoops\\Util\\TemplateHelper' => __DIR__ . '/..' . '/filp/whoops/src/Whoops/Util/TemplateHelper.php',
+        'Yajra\\DataTables\\ApiResourceDataTable' => __DIR__ . '/..' . '/yajra/laravel-datatables-oracle/src/ApiResourceDataTable.php',
+        'Yajra\\DataTables\\CollectionDataTable' => __DIR__ . '/..' . '/yajra/laravel-datatables-oracle/src/CollectionDataTable.php',
+        'Yajra\\DataTables\\Contracts\\DataTable' => __DIR__ . '/..' . '/yajra/laravel-datatables-oracle/src/Contracts/DataTable.php',
+        'Yajra\\DataTables\\Contracts\\Formatter' => __DIR__ . '/..' . '/yajra/laravel-datatables-oracle/src/Contracts/Formatter.php',
+        'Yajra\\DataTables\\DataTableAbstract' => __DIR__ . '/..' . '/yajra/laravel-datatables-oracle/src/DataTableAbstract.php',
+        'Yajra\\DataTables\\DataTables' => __DIR__ . '/..' . '/yajra/laravel-datatables-oracle/src/DataTables.php',
+        'Yajra\\DataTables\\DataTablesServiceProvider' => __DIR__ . '/..' . '/yajra/laravel-datatables-oracle/src/DataTablesServiceProvider.php',
+        'Yajra\\DataTables\\EloquentDataTable' => __DIR__ . '/..' . '/yajra/laravel-datatables-oracle/src/EloquentDataTable.php',
+        'Yajra\\DataTables\\Exceptions\\Exception' => __DIR__ . '/..' . '/yajra/laravel-datatables-oracle/src/Exceptions/Exception.php',
+        'Yajra\\DataTables\\Facades\\DataTables' => __DIR__ . '/..' . '/yajra/laravel-datatables-oracle/src/Facades/DataTables.php',
+        'Yajra\\DataTables\\Processors\\DataProcessor' => __DIR__ . '/..' . '/yajra/laravel-datatables-oracle/src/Processors/DataProcessor.php',
+        'Yajra\\DataTables\\Processors\\RowProcessor' => __DIR__ . '/..' . '/yajra/laravel-datatables-oracle/src/Processors/RowProcessor.php',
+        'Yajra\\DataTables\\QueryDataTable' => __DIR__ . '/..' . '/yajra/laravel-datatables-oracle/src/QueryDataTable.php',
+        'Yajra\\DataTables\\Utilities\\Config' => __DIR__ . '/..' . '/yajra/laravel-datatables-oracle/src/Utilities/Config.php',
+        'Yajra\\DataTables\\Utilities\\Helper' => __DIR__ . '/..' . '/yajra/laravel-datatables-oracle/src/Utilities/Helper.php',
+        'Yajra\\DataTables\\Utilities\\Request' => __DIR__ . '/..' . '/yajra/laravel-datatables-oracle/src/Utilities/Request.php',
         'ZipStream\\Bigint' => __DIR__ . '/..' . '/maennchen/zipstream-php/src/Bigint.php',
         'ZipStream\\DeflateStream' => __DIR__ . '/..' . '/maennchen/zipstream-php/src/DeflateStream.php',
         'ZipStream\\Exception' => __DIR__ . '/..' . '/maennchen/zipstream-php/src/Exception.php',
@@ -7647,10 +7677,10 @@ class ComposerStaticInit7f6626274ca7ebdb9d1907bc906bd0c4
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit7f6626274ca7ebdb9d1907bc906bd0c4::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit7f6626274ca7ebdb9d1907bc906bd0c4::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit7f6626274ca7ebdb9d1907bc906bd0c4::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit7f6626274ca7ebdb9d1907bc906bd0c4::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitdde1745039ee396dc524798e3486d809::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitdde1745039ee396dc524798e3486d809::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitdde1745039ee396dc524798e3486d809::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInitdde1745039ee396dc524798e3486d809::$classMap;
 
         }, null, ClassLoader::class);
     }

@@ -307,7 +307,7 @@
 								<div class="pricing-plan is-featured">
 									<div class="name"><?= $row->name ?></div>
 									<img src="<?= !empty($row->photo)?$row->photo:asset('assets/img/logos/logo/logo-platinum.svg') ?>" alt="">
-									<div class="price money_to_fsc"><?= intval($row->price) ?></div>
+									<div class="price money_to_fsc"><?= intval($row->price)/intval($row->month) ?></div>
 									<div class="trial"><?= $row->subtitle ?></div>
 									<hr>
 									<ul>
