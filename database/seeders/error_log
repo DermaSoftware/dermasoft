@@ -1,0 +1,4 @@
+[20-Feb-2024 20:43:28 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Seeder" not found in /home/claudiar/public_html/app.dermasoft.mysoftware.live/database/seeders/DatabaseSeeder.php:8
+Stack trace:
+#0 {main}
+  thrown in /home/claudiar/public_html/app.dermasoft.mysoftware.live/database/seeders/DatabaseSeeder.php on line 8
