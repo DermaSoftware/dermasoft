@@ -1106,6 +1106,54 @@ class HomeController extends Controller
         }
     }
 
+    /////////////// Appointment Reason /////////////////////////
+    public function anamnesis(Request $request,$hc,$appointment){
+
+        $anamnesis= Anamnesis::with([
+            'doctor_class' => function ($query) {
+                $query->select('id','name','lastname'); # Uno a muchos
+            }
+            ])
+        ->where('dermatology_id',$hc)->get(['id','doctor','reason','current_illness','physical_exam',
+                'analysis','medical_history','surgical_history','allergic_history','drug_history','family_history',
+                    'other_history','evoluction','system_revition','is_control','created_at']);
+
+         return DataTables::of($anamnesis)->make(true);
+    }
+    public function add_anamnesis(Request $request,$hc,$appointment){
+
+        if($request->method() === 'GET'){
+
+            $data = [];
+            $data['post_url'] = $this->r_name . '/anamnesis/' . $hc .'/' .$appointment. '/add';
+            $appoint = Appointments::where('id',$appointment)->first();
+            $data["hc_type"] = $appoint->hc_type;
+            $data['is_records'] = false;
+            $data['is_other'] = false;
+            return view($this->v_name . '.form.modals.modal_anamnesis', $data);
+        }
+        else{
+            $data = request()->except(['_token', '_method']);
+            $derma= Dermatology::where('id',$hc)->first();
+            $appoint = Appointments::where('id',$appointment)->first();
+            $aux_params = [
+                'dermatology_id' => $derma->id,
+                'doctor' => Auth::user()->id,
+                'appointments_id' => $appointment,
+                'is_control' => $appoint->hc_type == 'Dermatología general' ? false : true,
+            ];
+            $all_params = ['current_illness','reason','physical_exam','analysis','medical_history','surgical_history','allergic_history','drug_history','family_history','other_history','evoluction','system_revition'];
+            foreach($all_params as $key => $row){
+                $aux_params[$row] = !empty($data[$row])?$data[$row]:'';
+            }
+
+            $reason = Anamnesis::create($aux_params);
+            return [
+                "Success" => true,
+                "Message" => "Adición exitosa"
+            ];
+        }
+    }
     /////////////// Medical Prescription /////////////////////////
     public function medical_prescription(Request $request,$hc,$appointment){
 
