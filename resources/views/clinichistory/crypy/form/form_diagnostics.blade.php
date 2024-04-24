@@ -57,7 +57,7 @@
 </div>
 
 <div class="columns is-multiline">
-	
+
 	<!--Field-->
 	<div class="column is-12"><img src="<?= asset('assets/images/fototipos.png') ?>" style="max-width: 100%;width: 100%;height: auto;"></div>
 	<div class="column is-6">
@@ -139,9 +139,9 @@
 			</div>
 		</div>
 	</div>
-	
-	
-	
+
+
+
 	<div class="column is-12"><hr></div>
 	<div class="column is-12">
 		<div class="columns is-multiline">
@@ -154,7 +154,7 @@
 						<label><?= $n_att ?></label>
 						<select name="<?= $t_att ?>[]" class="input">
 							<option value="" selected disabled >--Seleccione--</option>
-							<?php $options = ['Frente', 'Espalda']; ?>
+							<?php $options = ['Cuerpo de frente', 'Cuerpo de espalda']; ?>
 							<?php foreach($options as $key => $row){ ?>
 							<option value="<?= $row ?>"><?= $row ?></option>
 							<?php } ?>
@@ -341,18 +341,18 @@
 					</div>
 				</div>
 			</div>
-			
-			
+
+
 		</div>
 	</div>
-	
+
 	<div class="column is-12 box_lesion is-hidden"></div>
-	
+
 	<div class="column is-12"><hr></div>
 	<div class="column is-12">
 		<a href="javascript:void(0)" class="button h-button is-primary is-dark-outlined btn_add_lesion_fsc">Agregar</a>
 	</div>
-	
+
 </div>
 
 

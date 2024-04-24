@@ -340,7 +340,7 @@ class HomeController extends Controller
 		if($company > 0){
 			$company = ','.$company;
 		}
-		$sql = "SELECT t.* FROM trainings t LEFT JOIN trainingsroles tr on(tr.trainings_id = t.id) LEFT JOIN trainingsusers tu on(tu.trainings_id = t.id) WHERE t.status='active' AND t.company IN(0".$company.") AND (tr.roles_id=".$role." OR tu.user_id=".$id." OR t.directed_to='Todos') ORDER BY t.id ASC;";
+		$sql = "SELECT t.* FROM trainings t LEFT JOIN trainingsroles tr on(tr.trainings_id = t.id) LEFT JOIN trainingsusers tu on(tu.trainings_id = t.id) WHERE t.status='active' AND t.company IN(0".$company.") AND (tr.roles_id=".$role." OR tu.user_id=".$id." OR t.directed_to='Todos') ORDER BY t.created_at DESC;";
 		$o_all = DB::select($sql);
 		$data['o_all'] = $o_all;
 		//$data['o_all'] = Trainings::where(['status' => 'active'])->orderBy('id', 'DESC')->get();
