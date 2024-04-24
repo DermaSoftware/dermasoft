@@ -1,6 +1,6 @@
 $(function () {
 
-    $('#indic_tab').on('click', function () {
+    $('#pathologies_request_btn').on('click', function () {
 
         if ($('#pathologies_request_table').length > 0) {
             $('#pathologies_request_table').DataTable().destroy();

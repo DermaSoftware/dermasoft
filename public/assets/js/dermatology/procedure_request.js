@@ -1,6 +1,6 @@
 $(function () {
 
-    $('#indic_tab').on('click', function () {
+    $('#procedure_request_btn').on('click', function () {
 
         if ($('#procedures_request_table').length > 0) {
             $('#procedures_request_table').DataTable().destroy();

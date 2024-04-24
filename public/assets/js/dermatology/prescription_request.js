@@ -1,6 +1,6 @@
 $(function () {
 
-    $('#indic_tab').on('click', function () {
+    $('#prescriptions_btn').on('click', function () {
 
         if ($('#medical_prescriptions_table').length > 0) {
             $('#medical_prescriptions_table').DataTable().destroy();
