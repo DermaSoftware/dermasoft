@@ -75,7 +75,7 @@
                                             @if ($hc_type === 'Descripción Quirúrgica')
                                                 <li id="surgical_tab" data-tab="surg_tab"><a>Procedimientos</a></li>
                                             @endif
-                                            <li id="indic_tab" data-tab="indications_tab"><a>Indicaciones</a></li>
+                                            <li id="indic_tab" data-tab="indications_tab"><a>Indicaciones/Solicitudes</a></li>
                                         </ul>
                                     </div>
                                 </div>

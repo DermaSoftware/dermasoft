@@ -30,12 +30,15 @@
             </div>
         </div>
 
+        <div class="column is-12 mt-5">
+            <h4 class="panel-heading">Solicitudes</h4>
+        </div>
         <div class="column is-12">
             <div class="tabs-wrapper">
                 <div class="tabs-inner">
                     <div class="tabs">
                         <ul>
-                            <li id="prescriptions_btn" data-tab="prescriptions_tab" class="is-active">
+                            <li id="prescriptions_btn" data-tab="prescriptions_tab">
                                 <a>Prescripciones</a></li>
                             <li id="examns_request_btn" data-tab="examns_request_tab"><a>Solisitud de
                                     exámenes</a></li>
