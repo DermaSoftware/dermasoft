@@ -262,6 +262,7 @@ Route::middleware(['auth'])->group(function () {
         Route::match(["POST","GET"],'/appointments/{id}/edit', [App\Http\Controllers\Patients\PatientsController::class, 'update_appointment']);
         Route::get('/appointments_calendar', [App\Http\Controllers\Patients\PatientsController::class, 'appointments_calendar']);
         Route::post('/appointments_calendar/events', [App\Http\Controllers\Patients\PatientsController::class, 'appointments_calendar_events']);
+        Route::get('/appointment_detail/{id}', [App\Http\Controllers\Patients\PatientsController::class, 'appointment_detail']);
 
 	});
 	Route::group([
@@ -311,6 +312,20 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/anamnesis/{hc}/{appointment}', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'anamnesis'])->name('anamnesis');
 		Route::match(['get', 'post'],'/anamnesis/{hc}/{appointment}/add', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'add_anamnesis'])->name('add_anamnesis');
+
+        Route::get('/medical_prescription/{hc}/{appointment}', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'medical_prescription'])->name('medical_prescription');
+		Route::match(['get', 'post'],'/medical_prescription/{hc}/{appointment}/add', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'add_medical_prescription'])->name('add_medical_prescription');
+        Route::match(['get', 'post'],'/medical_prescription/{hc}/{id}/{appointment}/edit', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'edit_medical_prescription'])->name('edit_medical_prescription');
+
+        Route::get('/procedure_request/{hc}/{appointment}', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'procedure_request'])->name('procedure_request');
+		Route::match(['get', 'post'],'/procedure_request/{hc}/{appointment}/add', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'add_procedure_request'])->name('add_procedure_request');
+        Route::match(['get', 'post'],'/procedure_request/{hc}/{id}/{appointment}/edit', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'edit_procedure_request'])->name('edit_procedure_request');
+
+        Route::get('/exam_request/{hc}/{appointment}', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'exam_request'])->name('exam_request');
+		Route::match(['get', 'post'],'/exam_request/{hc}/{appointment}/add', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'add_exam_request'])->name('add_exam_request');
+
+        Route::get('/patology_request/{hc}/{appointment}', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'patology_request'])->name('patology_request');
+		Route::match(['get', 'post'],'/patology_request/{hc}/{appointment}/add', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'add_patology_request'])->name('add_patology_request');
         //Biopsies
 		Route::group([
 			'prefix' => 'biopsies'

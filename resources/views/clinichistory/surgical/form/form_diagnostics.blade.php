@@ -160,8 +160,8 @@
 			</div>
 		</div>
 	</div>
-	
-	
+
+
 	<!--Field-->
 	<div class="column is-12 biopsy_method_cll is-hidden">
 		<div class="columns is-multiline">
@@ -250,7 +250,7 @@
 						<label><?= $n_att ?></label>
 						<select name="<?= $t_att ?>" class="input">
 							<option value="" selected disabled >--Seleccione--</option>
-							<?php $options = ['Frente', 'Espalda']; ?>
+							<?php $options = ['Cuerpo de frente', 'Cuerpo de espalda']; ?>
 							<?php $select_old = $is_records?$o_hcp->$t_att:''; ?>
 							<?php foreach($options as $key => $row){ ?>
 							<option value="<?= $row ?>" <?= $select_old==$row?'selected':'' ?> ><?= $row ?></option>
@@ -277,11 +277,11 @@
 					</div>
 				</div>
 			</div>
-			
+
 		</div>
 	</div>
-	
-	
+
+
 	<!--Field-->
 	<div class="column is-2">
 		<div class="field">
@@ -345,12 +345,12 @@
 			<div class="control"><label>&nbsp;</label><a class="button is-primary btn_add_surgical"><i class="fa fa-plus"></i></a></div>
 		</div>
 	</div>
-	
+
 	<div class="column is-12 box_surgical is-hidden"></div>
-	
-	
-	
-	
+
+
+
+
 	<!--Field-->
 	<div class="column is-3">
 		<div class="field">
@@ -402,7 +402,7 @@
 			</div>
 		</div>
 	</div>
-	
+
 	<!--Field-->
 	<div class="column is-12"><h3 class="subtitle">Datos de quienes participaron en el procedimiento</h3></div>
 	<div class="column is-3">
@@ -445,7 +445,7 @@
 			</div>
 		</div>
 	</div>
-	
+
 </div>
 
 

@@ -298,7 +298,7 @@
 										<?php $t_att = 'attendant'; ?>
 										<?php $n_att = 'Acudiente'; ?>
 										<label><?= $n_att ?></label>
-										<input <?= $company->$t_att.'_active' =='no' ? 'disabled' : ''?> <?= $company->$t_att.'_required' =='si' ? 'required' : ''?> name="{{$t_att}}" type="text" class="input" placeholder="<?= $n_att ?>" value="{{ isset($o->$t_att)?$o->$t_att:old($t_att) }}" />
+										<input <?= $company->attendant_active =='no' ? 'disabled' : ''?> <?= $company->attendant_required =='si' ? 'required' : ''?> name="{{$t_att}}" type="text" class="input" placeholder="<?= $n_att ?>" value="{{ isset($o->$t_att)?$o->$t_att:old($t_att) }}" />
 									</div>
 								</div>
 							</div>
@@ -320,7 +320,7 @@
 										<?php $t_att = 'relationship'; ?>
 										<?php $n_att = 'Parentesco'; ?>
 										<label><?= $n_att ?></label>
-										<input <?= $company->$t_att.'_active' =='no' ? 'disabled' : ''?> <?= $company->$t_att.'_required' =='si' ? 'required' : ''?> name="{{$t_att}}" type="text" class="input" placeholder="<?= $n_att ?>" value="{{ isset($o->$t_att)?$o->$t_att:old($t_att) }}" />
+										<input <?= $company->relationship_active =='no' ? 'disabled' : ''?> <?= $company->_required =='si' ? 'required' : ''?> name="{{$t_att}}" type="text" class="input" placeholder="<?= $n_att ?>" value="{{ isset($o->$t_att)?$o->$t_att:old($t_att) }}" />
 									</div>
 								</div>
 							</div>
@@ -331,7 +331,7 @@
 										<?php $t_att = 'fix_phone_attendant'; ?>
 										<?php $n_att = 'Código del país'; ?>
 										<label><?= $n_att ?></label>
-										<select <?= $company->$t_att.'_active' =='no' ? 'disabled' : ''?> <?= $company->$t_att.'_required' =='si' ? 'required' : ''?>  name="<?= $t_att ?>" class="countrieskeys_fn" style="width: 100%;" data-url="<?= url('patients/codes') ?>" data-select_id="<?= isset($o->$t_att)?$o->$t_att:'' ?>"></select>
+										<select <?= $company->fix_phone_attendant_active =='no' ? 'disabled' : ''?> <?= $company->fix_phone_attendant_required =='si' ? 'required' : ''?>  name="<?= $t_att ?>" class="countrieskeys_fn" style="width: 100%;" data-url="<?= url('patients/codes') ?>" data-select_id="<?= isset($o->$t_att)?$o->$t_att:'' ?>"></select>
 									</div>
 								</div>
 							</div>
@@ -342,7 +342,7 @@
 										<?php $t_att = 'phone_attendant'; ?>
 										<?php $n_att = 'Teléfono acudiente'; ?>
 										<label><?= $n_att ?></label>
-										<input <?= $company->$t_att.'_active' =='no' ? 'disabled' : ''?> <?= $company->$t_att.'_required' =='si' ? 'required' : ''?> name="{{$t_att}}" type="text" class="input" placeholder="<?= $n_att ?>" value="{{ isset($o->$t_att)?$o->$t_att:old($t_att) }}" />
+										<input <?= $company->phone_attendant_active =='no' ? 'disabled' : ''?> <?= $company->phone_attendant_required =='si' ? 'required' : ''?> name="{{$t_att}}" type="text" class="input" placeholder="<?= $n_att ?>" value="{{ isset($o->$t_att)?$o->$t_att:old($t_att) }}" />
 									</div>
 								</div>
 							</div>
@@ -364,7 +364,7 @@
 										<?php $t_att = 'affiliate_type'; ?>
 										<?php $n_att = 'Tipo de Afiliado'; ?>
 										<label><?= $n_att ?></label>
-										<input <?= $company->$t_att.'_active' =='no' ? 'disabled' : ''?> <?= $company->$t_att.'_required' =='si' ? 'required' : ''?> name="{{$t_att}}" type="text" class="input" value="{{ isset($o->$t_att)?$o->$t_att:old($t_att) }}" />
+										<input <?= $company->affiliate_type_active =='no' ? 'disabled' : ''?> <?= $company->affiliate_type_required =='si' ? 'required' : ''?> name="{{$t_att}}" type="text" class="input" value="{{ isset($o->$t_att)?$o->$t_att:old($t_att) }}" />
 									</div>
 								</div>
 							</div>
@@ -375,7 +375,7 @@
 										<?php $t_att = 'affiliate_type_ssg'; ?>
 										<?php $n_att = 'Tipo de Afiliado SSG'; ?>
 										<label><?= $n_att ?></label>
-										<input <?= $company->$t_att.'_active' =='no' ? 'disabled' : ''?> <?= $company->$t_att.'_required' =='si' ? 'required' : ''?> name="{{$t_att}}" type="text" class="input" value="{{ isset($o->$t_att)?$o->$t_att:old($t_att) }}"/>
+										<input <?= $company->affiliate_type_ssg_active =='no' ? 'disabled' : ''?> <?= $company->affiliate_type_ssg_required =='si' ? 'required' : ''?> name="{{$t_att}}" type="text" class="input" value="{{ isset($o->$t_att)?$o->$t_att:old($t_att) }}"/>
 									</div>
 								</div>
 							</div>
@@ -387,7 +387,7 @@
 										<?php $n_att = 'Nivel de educación'; ?>
 										<?php $education_type = ['primaria','bachillerato','tecnológica','técnica','universitaria','postgrado','doctorado']; ?>
 										<label><?= $n_att ?></label>
-                                        <select <?= $company->$t_att.'_active' =='no' ? 'disabled' : ''?> <?= $company->$t_att.'_required' =='si' ? 'required' : ''?> name="<?= $t_att ?>" class="input">
+                                        <select <?= $company->education_active =='no' ? 'disabled' : ''?> <?= $company->education_required =='si' ? 'required' : ''?> name="<?= $t_att ?>" class="input">
 											<option value="0" selected disabled >--Seleccione--</option>
 											<?php foreach($education_type as $key => $row){ ?>
 											<option value="<?= $row ?>" <?= (isset($o->$t_att) AND $o->$t_att==$row)?'selected':'' ?>><?= $row ?></option>
@@ -404,7 +404,7 @@
 										<?php $n_att = 'Grupo étnico'; ?>
 										<?php $ethnic_group_type = ['Mestizos','Caucásicos','Afrocolombianos','Indígenas','Otros Grupos']; ?>
 										<label><?= $n_att ?></label>
-                                        <select <?= $company->$t_att.'_active' =='no' ? 'disabled' : ''?> <?= $company->$t_att.'_required' =='si' ? 'required' : ''?> name="<?= $t_att ?>" class="input">
+                                        <select <?= $company->ethnic_group_active == 'no' ? 'disabled' : ''?> <?= $company->ethnic_group_required =='si' ? 'required' : ''?> name="<?= $t_att ?>" class="input">
 											<option value="0" selected disabled >--Seleccione--</option>
 											<?php foreach($ethnic_group_type as $key => $row){ ?>
 											<option value="<?= $row ?>" <?= (isset($o->$t_att) AND $o->$t_att==$row)?'selected':'' ?>><?= $row ?></option>
@@ -420,7 +420,7 @@
 										<?php $t_att = 'population_group'; ?>
 										<?php $n_att = 'Grupo poblacional'; ?>
 										<label><?= $n_att ?></label>
-										<input <?= $company->$t_att.'_active' =='no' ? 'disabled' : ''?> <?= $company->$t_att.'_required' =='si' ? 'required' : ''?> name="{{$t_att}}" type="text" class="input" value="{{ isset($o->$t_att)?$o->$t_att:old($t_att) }}"/>
+										<input <?= $company->population_group_active =='no' ? 'disabled' : ''?> <?= $company->population_group_required =='si' ? 'required' : ''?> name="{{$t_att}}" type="text" class="input" value="{{ isset($o->$t_att)?$o->$t_att:old($t_att) }}"/>
 									</div>
 								</div>
 							</div>
@@ -431,7 +431,7 @@
 										<?php $t_att = 'eps'; ?>
 										<?php $n_att = 'EPS'; ?>
 										<label><?= $n_att ?></label>
-										<input <?= $company->$t_att.'_active' =='no' ? 'disabled' : ''?> <?= $company->$t_att.'_required' =='si' ? 'required' : ''?> name="{{$t_att}}" type="text" class="input" value="{{ isset($o->$t_att)?$o->$t_att:old($t_att) }}"/>
+										<input <?= $company->eps_active =='no' ? 'disabled' : ''?> <?= $company->eps_required =='si' ? 'required' : ''?> name="{{$t_att}}" type="text" class="input" value="{{ isset($o->$t_att)?$o->$t_att:old($t_att) }}"/>
 									</div>
 								</div>
 							</div>
@@ -442,7 +442,7 @@
 										<?php $t_att = 'date_affiliation'; ?>
 										<?php $n_att = 'Fecha de afiliación'; ?>
 										<label><?= $n_att ?></label>
-										<input <?= $company->$t_att.'_active' =='no' ? 'disabled' : ''?> <?= $company->$t_att.'_required' =='si' ? 'required' : ''?> name="{{$t_att}}" type="date" class="input" value="{{ isset($o->$t_att)?$o->$t_att:old($t_att) }}"/>
+										<input <?= $company->date_affiliation_active =='no' ? 'disabled' : ''?> <?= $company->date_affiliation_required =='si' ? 'required' : ''?> name="{{$t_att}}" type="date" class="input" value="{{ isset($o->$t_att)?$o->$t_att:old($t_att) }}"/>
 									</div>
 								</div>
 							</div>
@@ -453,7 +453,7 @@
 										<?php $t_att = 'prepaid'; ?>
 										<?php $n_att = 'Prepagada'; ?>
 										<label><?= $n_att ?></label>
-										<input <?= $company->$t_att.'_active' =='no' ? 'disabled' : ''?> <?= $company->$t_att.'_required' =='si' ? 'required' : ''?> name="{{$t_att}}" type="text" class="input" value="{{ isset($o->$t_att)?$o->$t_att:old($t_att) }}"/>
+										<input <?= $company->prepaid_active =='no' ? 'disabled' : ''?> <?= $company->prepaid_required =='si' ? 'required' : ''?> name="{{$t_att}}" type="text" class="input" value="{{ isset($o->$t_att)?$o->$t_att:old($t_att) }}"/>
 									</div>
 								</div>
 							</div>
@@ -464,7 +464,7 @@
 										<?php $t_att = 'benefits_plan'; ?>
 										<?php $n_att = 'Plan de beneficios'; ?>
 										<label><?= $n_att ?></label>
-										<input <?= $company->$t_att.'_active' =='no' ? 'disabled' : ''?> <?= $company->$t_att.'_required' =='si' ? 'required' : ''?> name="{{$t_att}}" type="text" class="input" value="{{ isset($o->$t_att)?$o->$t_att:old($t_att) }}"/>
+										<input <?= $company->benefits_plan_active =='no' ? 'disabled' : ''?> <?= $company->benefits_plan_required =='si' ? 'required' : ''?> name="{{$t_att}}" type="text" class="input" value="{{ isset($o->$t_att)?$o->$t_att:old($t_att) }}"/>
 									</div>
 								</div>
 							</div>
@@ -475,7 +475,7 @@
 										<?php $t_att = 'health_care'; ?>
 										<?php $n_att = 'Prog. de Atención en salud'; ?>
 										<label><?= $n_att ?></label>
-										<input <?= $company->$t_att.'_active' =='no' ? 'disabled' : ''?> <?= $company->$t_att.'_required' =='si' ? 'required' : ''?> name="{{$t_att}}" type="text" class="input" value="{{ isset($o->$t_att)?$o->$t_att:old($t_att) }}"/>
+										<input <?= $company->health_care_active =='no' ? 'disabled' : ''?> <?= $company->_required =='si' ? 'required' : ''?> name="{{$t_att}}" type="text" class="input" value="{{ isset($o->$t_att)?$o->$t_att:old($t_att) }}"/>
 									</div>
 								</div>
 							</div>
@@ -486,7 +486,7 @@
 										<?php $t_att = 'notes'; ?>
 										<?php $n_att = 'Notas generales de atención'; ?>
 										<label><?= $n_att ?></label>
-										<input <?= $company->$t_att.'_active' =='no' ? 'disabled' : ''?> <?= $company->$t_att.'_required' =='si' ? 'required' : ''?> name="{{$t_att}}" type="text" class="input" value="{{ isset($o->$t_att)?$o->$t_att:old($t_att) }}"/>
+										<input <?= $company->notes_active =='no' ? 'disabled' : ''?> <?= $company->notes_active_required =='si' ? 'required' : ''?> name="{{$t_att}}" type="text" class="input" value="{{ isset($o->$t_att)?$o->$t_att:old($t_att) }}"/>
 									</div>
 								</div>
 							</div>
@@ -497,7 +497,7 @@
 										<?php $t_att = 'contract_number'; ?>
 										<?php $n_att = 'Número de contrato'; ?>
 										<label><?= $n_att ?></label>
-										<input <?= $company->$t_att.'_active' =='no' ? 'disabled' : ''?> <?= $company->$t_att.'_required' =='si' ? 'required' : ''?> name="{{$t_att}}" type="text" class="input" value="{{ isset($o->$t_att)?$o->$t_att:old($t_att) }}"/>
+										<input <?= $company->contract_number_active =='no' ? 'disabled' : ''?> <?= $company->_required =='si' ? 'required' : ''?> name="{{$t_att}}" type="text" class="input" value="{{ isset($o->$t_att)?$o->$t_att:old($t_att) }}"/>
 									</div>
 								</div>
 							</div>
@@ -508,7 +508,7 @@
 										<?php $t_att = 'occupational_hazards'; ?>
 										<?php $n_att = 'Admin. de riesgos laborales'; ?>
 										<label><?= $n_att ?></label>
-										<input <?= $company->$t_att.'_active' =='no' ? 'disabled' : ''?> <?= $company->$t_att.'_required' =='si' ? 'required' : ''?> name="{{$t_att}}" type="text" class="input" value="{{ isset($o->$t_att)?$o->$t_att:old($t_att) }}"/>
+										<input <?= $company->occupational_hazards_active =='no' ? 'disabled' : ''?> <?= $company->occupational_hazards_required =='si' ? 'required' : ''?> name="{{$t_att}}" type="text" class="input" value="{{ isset($o->$t_att)?$o->$t_att:old($t_att) }}"/>
 									</div>
 								</div>
 							</div>
@@ -519,7 +519,7 @@
 										<?php $t_att = 'pension_funds'; ?>
 										<?php $n_att = 'Admin. de fondos de pensiones'; ?>
 										<label><?= $n_att ?></label>
-										<input <?= $company->$t_att.'_active' =='no' ? 'disabled' : ''?> <?= $company->$t_att.'_required' =='si' ? 'required' : ''?> name="{{$t_att}}" type="text" class="input" value="{{ isset($o->$t_att)?$o->$t_att:old($t_att) }}"/>
+										<input <?= $company->pension_funds_active =='no' ? 'disabled' : ''?> <?= $company->pension_funds_required =='si' ? 'required' : ''?> name="{{$t_att}}" type="text" class="input" value="{{ isset($o->$t_att)?$o->$t_att:old($t_att) }}"/>
 									</div>
 								</div>
 							</div>
