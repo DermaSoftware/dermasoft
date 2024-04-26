@@ -116,9 +116,15 @@ class HomeController extends Controller
 		if(empty($o_pay->id)){
 			$plan_uuid = $_POST['extra1'];//Plan
 			$user_uuid = $_POST['extra2'];//Usuario
-			$company_id = $_POST['extra3'];//Empresa
-			$o_plan = Plans::where(['uuid' => $plan_uuid])->first();
-			$o_comp = Companies::where(['id' => $company_id])->first();
+
+
+            $plan_uuid = $_POST['extra1'];
+            $o_plan = Plans::where(['uuid' => $plan_uuid])->first();
+
+            $company_id = $_POST['extra3'];//Empresa
+            $o_comp = Companies::where(['id' => $company_id])->first();
+
+            $o_comp->update(["plan_id" => $o_plan->id]);
 			$o_user = User::where(['uuid' => $user_uuid])->first();
 			$expiration = $this->plusMonth($o_plan->month);
 			$amount = $_POST['monto'];
@@ -334,7 +340,7 @@ class HomeController extends Controller
 		if($company > 0){
 			$company = ','.$company;
 		}
-		$sql = "SELECT t.* FROM trainings t LEFT JOIN trainingsroles tr on(tr.trainings_id = t.id) LEFT JOIN trainingsusers tu on(tu.trainings_id = t.id) WHERE t.status='active' AND t.company IN(0".$company.") AND (tr.roles_id=".$role." OR tu.user_id=".$id." OR t.directed_to='Todos') ORDER BY t.id ASC;";
+		$sql = "SELECT t.* FROM trainings t LEFT JOIN trainingsroles tr on(tr.trainings_id = t.id) LEFT JOIN trainingsusers tu on(tu.trainings_id = t.id) WHERE t.status='active' AND t.company IN(0".$company.") AND (tr.roles_id=".$role." OR tu.user_id=".$id." OR t.directed_to='Todos') ORDER BY t.created_at DESC;";
 		$o_all = DB::select($sql);
 		$data['o_all'] = $o_all;
 		//$data['o_all'] = Trainings::where(['status' => 'active'])->orderBy('id', 'DESC')->get();

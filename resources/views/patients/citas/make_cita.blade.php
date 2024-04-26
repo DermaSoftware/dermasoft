@@ -56,6 +56,31 @@
             </div>
         </div>
     </div>
+    <div>
+        <a class="button h-button is-rounded h-modal-trigger is-hidden btn_cita_show" data-modal="cita_modal">Right Actions</a>
+    </div>
+
+
+    <div id="cita_modal" class="modal h-modal">
+        <div class="modal-background  h-modal-close"></div>
+        <div class="modal-content">
+            <div class="modal-card">
+                <header class="modal-card-head">
+                    <h3>Detalles de cita</h3>
+                    <button type="button" class="h-modal-close ml-auto" aria-label="close"><i data-feather="x"></i></button>
+                </header>
+                <div class="modal-card-body">
+                    <div class="inner-content">
+                        <div class="r-card-advanced box_info">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-card-foot is-end">
+                    <a class="button h-button is-rounded h-modal-close">Cerrar</a>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection('content')
 @section('js')
     @parent
@@ -137,17 +162,15 @@
                         eventClick: function(info) {
                             var eventObj = info.event;
                             if (eventObj.url) {
-                                console.log(eventObj.url)
-                                $.post(eventObj.url, {
-                                    _token: $("meta[name='csrf-token']").attr(
-                                        "content")
-                                }, function(data) {
-                                    $('.box_info_cite').html(data);
-                                    $('.btn_cita_show').trigger('click');
-                                }, "html");
-                                //window.open(eventObj.url);
-                                info.jsEvent
-                                    .preventDefault(); // prevents browser from following link in current tab.
+                                var resp = get_detail(eventObj.url).then(resp => {
+                                        debugger
+                                        $('.btn_cita_show').trigger('click');
+                                        $('.box_info').html(resp);
+
+                                    });
+                                    //window.open(eventObj.url);
+                                    info.jsEvent
+                                .preventDefault();; // prevents browser from following link in current tab.
                             }
                         },
                     });
@@ -196,6 +219,25 @@
                     console.log(html_options);
                 }
             });
+            async function get_detail(url) {
+
+            var response = await fetch(url, {
+                method: "GET", // *GET, POST, PUT, DELETE, etc.
+                mode: "cors", // no-cors, *cors, same-origin
+                cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+                credentials: "same-origin", // include, *same-origin, omit
+                headers: {
+                    "Content-Type": "application/json",
+                    // 'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                redirect: "follow", // manual, *follow, error
+                referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+                // body: JSON.stringify(data)
+            })
+            console.log(response);
+            return response.text();
+
+            }
         });
     </script>
 @endsection

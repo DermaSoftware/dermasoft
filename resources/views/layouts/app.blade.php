@@ -2266,13 +2266,13 @@ if (Auth::user()->company != 0 && Auth::user()->company_class->plan && Auth::use
         }
 
 
-        if ($('.btn_plan_price_epayco').length) {
-            $('.btn_plan_price_epayco').on('click', function (e) {
-                e.preventDefault();
-                var btn_item = $(this);
-                btn_item.parent().parent().find('.epayco-button-render').click();
-            });
-        }
+        // if ($('.btn_plan_price_epayco').length) {
+        //     $('.btn_plan_price_epayco').on('click', function (e) {
+        //         e.preventDefault();
+        //         var btn_item = $(this);
+        //         btn_item.parent().parent().find('.epayco-button-render').click();
+        //     });
+        // }
 
         if ($('.money_to_fsc').length) {
             $('.money_to_fsc').each(function () {

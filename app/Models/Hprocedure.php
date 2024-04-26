@@ -22,8 +22,8 @@ class Hprocedure extends Model
     public function type_procedure_class(){
         return $this->belongsTo(Procedures::class,'type_procedure');
     }
-    public function diagnostic(){
-        return $this->belongsTo(Hcdermdiagnostics::class);
+    public function prequest_nprocedure(){
+        return $this->belongsTo(PRequest_NProcedure::class);
     }
 
     public function hcsuture(){

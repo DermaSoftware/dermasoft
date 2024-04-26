@@ -220,7 +220,7 @@
                                             <label><?= $n_att ?></label>
                                             <select name="<?= $t_att ?>" class="input">
                                                 <option value="" selected disabled >--Seleccione--</option>
-                                                <?php $options = ['Frente', 'Espalda']; ?>
+                                                <?php $options = ['Cuerpo de frente', 'Cuerpo de espalda']; ?>
                                                 <?php $select_old = $is_records?$o_hcp->$t_att:''; ?>
                                                 <?php foreach($options as $key => $row){ ?>
                                                 <option value="<?= $row ?>" <?= $select_old==$row?'selected':'' ?> ><?= $row ?></option>

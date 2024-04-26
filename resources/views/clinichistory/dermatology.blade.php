@@ -132,7 +132,7 @@
     </div>
     <div id="derma_modal" class="modal">
         <div class="modal-background  h-modal-close"></div>
-        <div class="modal-card"></div>
+        <div class="modal-card" style="width: 900px; !important"></div>
     </div>
 @endsection
 @section('js')
@@ -150,4 +150,8 @@
     <script src="{{ asset('assets/js/dermatology/surgical.js') }}"></script>
     <script src="{{ asset('assets/js/dermatology/appointments_reason.js') }}"></script>
     <script src="{{ asset('assets/js/dermatology/anamnesis.js') }}"></script>
+    <script src="{{ asset('assets/js/dermatology/prescription_request.js') }}"></script>
+    <script src="{{ asset('assets/js/dermatology/exam_request.js') }}"></script>
+    <script src="{{ asset('assets/js/dermatology/procedure_request.js') }}"></script>
+    <script src="{{ asset('assets/js/dermatology/patology_request.js') }}"></script>
 @endsection

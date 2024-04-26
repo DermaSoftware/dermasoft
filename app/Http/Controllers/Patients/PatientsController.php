@@ -795,8 +795,9 @@ class PatientsController extends Controller
         if (count($pts_all) > 0) {
             foreach ($pts_all as $key => $row) {
                 $date = new DateTime($row->date_quote . ' ' . $row->time_quote);
+                $url = ',"url": "'.url("/patients/appointment_detail/".$row->uuid).'"';
                 $date_end = $date->add(new DateInterval('PT30M'));
-                $locks_event = '{"id": "' . $row->uuid . '","start": "' . $row->date_quote . 'T' . $row->time_quote . ':00", "end": "' . $date_end->format('Y-m-d H:i:s') . '","overlap": false,"title": "Cita ' . $row->query_type . '","display": "auto","backgroundColor": "#79f392","color": "#79f392"}'; //Event
+                $locks_event = '{"id": "' . $row->uuid . '"'.$url.',"start": "' . $row->date_quote . 'T' . $row->time_quote . ':00", "end": "' . $date_end->format('Y-m-d H:i:s') . '","overlap": false,"title": "Cita ' . $row->query_type . '","display": "auto","backgroundColor": "#79f392","color": "#79f392"}'; //Event
                 $locks_days .= !empty($locks_days) ? ', ' . $locks_event : $locks_event;
             }
         }
@@ -843,9 +844,10 @@ class PatientsController extends Controller
             if (count($pts_all) > 0) {
                 foreach ($pts_all as $key => $row) {
                     $date = new DateTime($row->date_quote . ' ' . $row->time_quote);
+                    $url = ',"url": "'.url("/patients/appointment_detail/".$row->uuid).'"';
                     $resourceId = '[' . $row->doctor . ',' . $row->campus . ']';
                     $date_end = $date->add(new DateInterval('PT30M'));
-                    $locks_event = '{"id": "' . $row->uuid . '","start": "' . $row->date_quote . 'T' . $row->time_quote . ':00", "end": "' . $date_end->format('Y-m-d H:i:s') . '","overlap": false,"title": "Cita ' . $row->query_type . '","display": "auto","backgroundColor": "#79f392","color": "#79f392","resourceId":' . $resourceId . '}'; //Event
+                    $locks_event = '{"id": "' . $row->uuid .'"'.$url.',"start": "' . $row->date_quote . 'T' . $row->time_quote . ':00", "end": "' . $date_end->format('Y-m-d H:i:s') . '","overlap": false,"title": "Cita ' . $row->query_type . '","display": "auto","backgroundColor": "#79f392","color": "#79f392","resourceId":' . $resourceId . '}'; //Event
                     $locks_days .= !empty($locks_days) ? ', ' . $locks_event : $locks_event;
                 }
             }
@@ -858,5 +860,33 @@ class PatientsController extends Controller
             return $data;
         }
         return redirect('/');
+    }
+
+    public function appointment_detail(Request $request, $id)
+    {
+		$o = Appointments::where(['uuid' => $id])->first();
+		$o_user = User::where(['id' => $o->user])->first();
+		$o_doctor = User::where(['id' => $o->doctor])->first();
+		$url = '';
+		//$today = date('Y-m-d');
+		//if($o->modality == 'Teleconsulta' AND $o->date_quote == $today){
+		if($o->modality == 'Teleconsulta'){
+			$url = '<a href="https://meet.jit.si/'.$o->uuid.'" target="_blank" class="button is-primary is-raised">Iniciar</a>';
+		}
+		$resend = '<a href="'.url('dcitas/resend/'.$o->uuid).'" class="button is-info is-raised">Re-enviar</a>';
+		$pfull_name = $o_user->name.' '.$o_user->scd_name.' '.$o_user->lastname.' '.$o_user->scd_lastname;
+		$dfull_name = $o_doctor->name.' '.$o_doctor->scd_name.' '.$o_doctor->lastname.' '.$o_doctor->scd_lastname;
+		$photo = !empty($o->photo)?$o->photo:asset('assets/images/user.png');
+		$img = '<img class="avatar" src="'.$photo.'" data-demo-src="'.$photo.'" alt="" data-user-popover="17">';
+		$out = '<div class="card-head">';
+		$out .= '<div class="left"><div class="tags"><span class="tag is-rounded is-solid">'.$o->query_type.'</span><span class="tag is-rounded is-success">'.$o->modality.'</span><span class="tag is-rounded is-solid">Costo: '.$o->amount.'</span></div></div>';
+		$out .= '<div class="right">'.$url.'</div>';
+		$out .= '</div>';
+		$out .= '<div class="card-body"><p>Cita del paciente <b>'.$pfull_name.'</b> para el día <b>'.$o->date_quote.'</b> a la hora <b>'.$o->time_quote.'</b></p></div>';
+		$out .= '<div class="card-foot"><div class="left">';
+		$out .= '<div class="media-flex-center no-margin">';
+		$out .= '<div class="h-avatar">'.$img.'</div>';
+		$out .= '<div class="flex-meta"><span>'.$dfull_name.'</span><span>Doctor(a)</span></div></div></div><div class="right">'.$resend.'</div></div>';
+		echo $out;
     }
 }

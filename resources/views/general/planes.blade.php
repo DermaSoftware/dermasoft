@@ -89,7 +89,7 @@
                     <img
                         src="<?= !empty($row->photo) ? $row->photo : asset('assets/img/logos/logo/logo-platinum.svg') ?>"
                         alt="">
-                    <div class="price money_to_fscx"><?= intval($row->price) / intval($row->month) ?></div>
+                    <div class="price money_to_fscx"><?= round(intval($row->price) / intval($row->month),2) ?></div>
                     <div class="trial"><?= $row->subtitle ?></div>
                     <hr>
                     <ul>
