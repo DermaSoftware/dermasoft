@@ -8,6 +8,8 @@ $(function () {
         var table = $('#exams_request_table').DataTable({
             ordering: true,
             paging: true,
+            scrollCollapse: true,
+            scrollY: '200px',
             oLanguage: {
                 oAria: {
                     sSortAscending: ": activate to sort column ascending",
@@ -70,47 +72,38 @@ $(function () {
                 "data": "uuid",
             },
             {
-                "data": "total",
-                render: function (data, type, row) {
-                    return data ? data : '';
-                }
-            },
-            {
                 "data": "doctor_class",
                 render: function (data, type, row) {
                     return data ? data.name : '';
                 }
             },
-            // {
-            //     "data": "hctumors",
-            //     render: function (data, type, row) {
-            //         console.log(data)
-            //         var html = '<ul>';
-            //         data.forEach(element => {
-            //             html += `<li>
-            //                         <div style="display: flex;flex-direction: column;box-shadow: 0px 25px 20px -20px rgba(0, 0, 0, 0.45);
-            //                         padding: 5px;
-            //                         font-size: 10px;">
-            //                             <span>
-            //                                 Tamaño: ${element.size}
-            //                             </span>
-            //                             <span>
-            //                                 Margen: ${element.margin}
-            //                             </span>
-            //                             <span>
-            //                                 Patología: ${element.pathology}
-            //                             </span>
-            //                             <span>
-            //                                 Observaciones: ${element.observations}
-            //                             </span>
-            //                         </div>
-            //                     </li>
-            //             `
-            //         });
-            //         html+= '</ul>';
-            //         return html;
-            //     }
-            // },
+            {
+                "data": "laboratoryexams",
+                render: function (data, type, row) {
+                    console.log(data)
+                    var html = '<ul>';
+                    data.forEach(element => {
+                        html += `<li>
+                                    <div style="display: flex;flex-direction: column;box-shadow: 0px 25px 20px -20px rgba(0, 0, 0, 0.45);
+                                    padding: 5px;
+                                    font-size: 10px;">
+                                        <span>
+                                            Exámen: ${element.name} - ${element.description}
+                                        </span>
+                                    </div>
+                                </li>
+                        `
+                    });
+                    html+= '</ul>';
+                    return html;
+                }
+            },
+            {
+                "data": "total",
+                render: function (data, type, row) {
+                    return data ? data : '';
+                }
+            },
             {
                 "data": "created_at",
                 render: function (data, type, row) {
@@ -128,54 +121,54 @@ $(function () {
             //         return fechaFormateada;
             //     }
             // },
-            // {
-            //     "data": "buttons",
-            //     render: function (data, type, row) {
-            //         let derm = derma_id;
-            //         let url_update =
-            //             `/clinichistory/indications/${derm}/${row.id}/edit`;
-            //         // let url_delete = `{% url 'nomenclador:delete_anexo' 0 %}`;
-            //         // url_update = url_update.replace(0, row.id);
-            //         // url_delete = url_delete.replace(0, row.id);
-            //         let html = `
-            //         <div>
-            //             <a href="${url_update}" data-toggle="modal" data-modal="derma_modal"
-            //                 class="h-modal-trigger btn btn-primary">
-            //                             <div class="icon">
-            //                                 <i class="lnil lnil-pencil-alt"></i>
-            //                             </div>
-            //             </a>
-            //         </div>
-            //     `
+            {
+                "data": "buttons",
+                render: function (data, type, row) {
+                    let derm = derma_id;
+                    let url_update =
+                        `/clinichistory/exam_request/${derm}/${row.id}/${appointment}/edit`;
+                    // let url_delete = `{% url 'nomenclador:delete_anexo' 0 %}`;
+                    // url_update = url_update.replace(0, row.id);
+                    // url_delete = url_delete.replace(0, row.id);
+                    let html = `
+                    <div>
+                        <a href="${url_update}" data-toggle="modal" data-modal="derma_modal"
+                            class="h-modal-trigger btn btn-primary">
+                                        <div class="icon">
+                                            <i class="lnil lnil-pencil-alt"></i>
+                                        </div>
+                        </a>
+                    </div>
+                `
 
-            //         return html;
-            //         ////}
-            //         //return data;
-            //     }
-            // }
+                    return html;
+                    ////}
+                    //return data;
+                }
+            }
             ]
         })
-        $('#add_surgical').on('click', function (e) {
+        $('#add_exam_request').on('click', function (e) {
             e.preventDefault();
             var url = $(this).attr('href');
             $('#derma_modal div[class="modal-card"]').load(url, function () {
                 $('#derma_modal #salvar').on('click',function(){
-                    $('#surgical_form').submit();
+                    $('#exam_request_form').submit();
                 })
-                $('#surgical_form').on('submit', function (e) {
+                $('#exam_request_form').on('submit', function (e) {
                     e.preventDefault();
                     url2 = $(this).attr('action')
                     var formData = new FormData(document.getElementById(
-                        'surgical_form'));
+                        'exam_request_form'));
                     $.ajax({
                         url: url2,
                         async: false,
-                        data: $('#surgical_form')
+                        data: $('#exam_request_form')
                             .serializeArray(),
                         type: "post",
                         success: function (data) {
                             if (data.Success == true) {
-                                var table = $('#medical_prescriptions_table')
+                                var table = $('#exams_request_table')
                                     .DataTable();
                                 $('#delete-modal').trigger('click')
                                 table.ajax.reload();
@@ -211,7 +204,7 @@ $(function () {
 
             });
         });
-        var tabla_tem = $("#surgicals_table");
+        var tabla_tem = $("#exams_request_table");
         tabla_tem.on('click', "a[data-toggle='modal']", function (e) {
 
             e.preventDefault();
@@ -220,20 +213,20 @@ $(function () {
             $('#derma_modal').addClass('is-active')
             $('#derma_modal div[class="modal-card"]').load(url, function () {
                 $('#derma_modal #salvar').on('click',function(){
-                    $('#surgical_form').submit();
+                    $('#exam_request_form').submit();
                 })
-                $('#surgical_form').on('submit', function (event) {
+                $('#exam_request_form').on('submit', function (event) {
                     event.preventDefault();
                     var $form = $(this);
                     url2 = $(this).attr('action')
-                    var formData = new FormData(document.getElementById('surgical_form'))
+                    var formData = new FormData(document.getElementById('exam_request_form'))
                     $.ajax({
                         url: url2,
                         async: false,
-                        data: $('#surgical_form').serializeArray(),
+                        data: $('#exam_request_form').serializeArray(),
                         type: "post",
                         success: function (data) {
-                            var table = $('#surgicals_table').DataTable();
+                            var table = $('#exams_request_table').DataTable();
                             $('#delete-modal').trigger('click');
                             table.ajax.reload();
                             // $('#derma_modal').removeClass('is-active')

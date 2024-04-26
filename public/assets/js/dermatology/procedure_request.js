@@ -8,6 +8,8 @@ $(function () {
         var table = $('#procedures_request_table').DataTable({
             ordering: true,
             paging: true,
+            scrollCollapse: true,
+            scrollY: '200px',
             oLanguage: {
                 oAria: {
                     sSortAscending: ": activate to sort column ascending",
@@ -82,7 +84,7 @@ $(function () {
                 }
             },
             {
-                "data": "prequest_nprocedure",
+                "data": "procedures",
                 render: function (data, type, row) {
                     console.log(row)
                     var html = '<ul>';
@@ -92,10 +94,10 @@ $(function () {
                                     padding: 5px;
                                     font-size: 10px;">
                                         <span>
-                                            Observaciones: ${element.note}
+                                            Observaciones: ${element.pivot.note}
                                         </span>
                                         <span>
-                                            Procedimiento: ${element.procedures.name} - ${element.procedures.description}
+                                            Procedimiento: ${element.name} - ${element.description}
                                         </span>
                                     </div>
                                 </li>

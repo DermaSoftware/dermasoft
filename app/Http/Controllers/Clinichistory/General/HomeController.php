@@ -41,10 +41,12 @@ use App\Models\Hctumors;
 use App\Models\Hprocedure;
 use App\Models\Htreatment;
 use App\Models\PathologyRequest;
+use App\Models\PathologyRequestPathologies;
 use App\Models\PRequest_NProcedure;
 use App\Models\Prescription;
 use App\Models\PrescriptionMedicine;
 use App\Models\ProcedureRequest;
+use App\Models\RexamLaboratoryexams;
 use App\Models\TipoAntecedente;
 use Yajra\DataTables\DataTables;
 class HomeController extends Controller
@@ -1299,13 +1301,7 @@ class HomeController extends Controller
             'appointments' => function ($query) {
                 $query->select('id','uuid','date_quote','time_quote'); # Uno a muchos
             },
-            'prequest_nprocedure' => function ($query) {
-                $query->with([
-                    'procedures' => function ($query) {
-                        $query->select('id','uuid','name','description'); # Uno a muchos
-                    },
-                ])->select('note','procedures_id'); # Uno a muchos
-            }
+            'procedures'
             ])
         ->where('dermatology_id',$hc)->get(['id','doctor','appointments_id','uuid','created_at']);
 
@@ -1365,13 +1361,7 @@ class HomeController extends Controller
 
             $data = [];
             $procedure_request = ProcedureRequest::with([
-                'prequest_nprocedure' => function ($query) {
-                    $query->with([
-                        'procedures' => function ($query) {
-                            $query->select('id','uuid','name','description'); # Uno a muchos
-                        },
-                    ])->select('note','procedures_id'); # Uno a muchos
-                }
+                'procedures'
             ])->find($id);
             $data['procedure_request'] = $procedure_request;
             $o = $this->o_model::where(['uuid' => $hc])->first();
@@ -1392,7 +1382,7 @@ class HomeController extends Controller
             $data = request()->except(['_token', '_method']);
             $derma= Dermatology::where('id',$hc)->first();
             $appoint = Appointments::where('id',$appointment)->first();
-            $procedure_request = ProcedureRequest::with(['prequest_nprocedure'])->find($id);
+            $procedure_request = ProcedureRequest::with(['procedures'])->find($id);
             $aux_params = [
                 'dermatology_id' => $derma->id,
                 'doctor' => Auth::user()->id,
@@ -1401,10 +1391,7 @@ class HomeController extends Controller
             ];
             $procedure_request->update($aux_params);
             if(!empty($data['procedure'])){
-                $prequeprocest_nprocedure = $procedure_request->prequest_nprocedure;
-                foreach ($prequeprocest_nprocedure as $key => $value) {
-                    $value->delete();
-                }
+                $procedure_request->procedures()->detach();
                 foreach($data['procedure'] as $key => $row){
 
                     $proced = Procedures::find($row);
@@ -1421,15 +1408,19 @@ class HomeController extends Controller
         }
     }
 
-    /////////////// Medical Prescription /////////////////////////
+    /////////////// Exam request /////////////////////////
     public function exam_request(Request $request,$hc,$appointment){
 
         $exams= ExamRequest::with([
             'doctor_class' => function ($query) {
                 $query->select('id','uuid','name','lastname'); # Uno a muchos
-            }
+            },
+            'appointments' => function ($query) {
+                $query->select('id','uuid','date_quote','time_quote'); # Uno a muchos
+            },
+            'laboratoryexams'
             ])
-        ->where('dermatology_id',$hc)->get(['id','doctor','total','uuid','created_at']);
+        ->where('dermatology_id',$hc)->get(['id','doctor','appointments_id','total','uuid','created_at']);
 
          return DataTables::of($exams)->make(true);
     }
@@ -1438,12 +1429,15 @@ class HomeController extends Controller
         if($request->method() === 'GET'){
 
             $data = [];
-            $data['post_url'] = $this->r_name . '/anamnesis/' . $hc .'/' .$appointment. '/add';
+            $data['post_url'] = $this->r_name . '/exam_request/' . $hc .'/' .$appointment. '/add';
             $appoint = Appointments::where('id',$appointment)->first();
             $data["hc_type"] = $appoint->hc_type;
             $data['is_records'] = false;
             $data['is_other'] = false;
-            return view($this->v_name . '.form.modals.modal_anamnesis', $data);
+            $data['o_labexams'] = Laboratoryexams::where(['status' => 'active'])->orderBy('id', 'asc')->get();
+            $data['diagnoses'] = Hcdermdiagnostics::
+                        where(['hc' => $hc])->orderBy('created_at', 'desc')->get(['code','diagnostic','type_diagnostic','id','uuid']);
+            return view($this->v_name . '.form.modals.modal_exam_request', $data);
         }
         else{
             $data = request()->except(['_token', '_method']);
@@ -1453,14 +1447,21 @@ class HomeController extends Controller
                 'dermatology_id' => $derma->id,
                 'doctor' => Auth::user()->id,
                 'appointments_id' => $appointment,
-                'is_control' => $appoint->hc_type == 'Dermatología general' ? false : true,
+                'hcdermdiagnostics_id' => $data['hcdermdiagnostics_id'],
             ];
-            $all_params = ['current_illness','reason','physical_exam','analysis','medical_history','surgical_history','allergic_history','drug_history','family_history','other_history','evoluction','system_revition'];
-            foreach($all_params as $key => $row){
-                $aux_params[$row] = !empty($data[$row])?$data[$row]:'';
-            }
+            $total = 0;
+            $exam_request = ExamRequest::create($aux_params);
+            if(!empty($data['solexams_exam'])){
+                foreach($data['solexams_exam'] as $key => $row){
 
-            $reason = Anamnesis::create($aux_params);
+                    $exam = Laboratoryexams::find($row);
+                    $aux_params = ['exam_request_id' => $exam_request->id];
+                    $aux_params['laboratoryexams_id'] = $exam->id;
+                    $o_x = RexamLaboratoryexams::create($aux_params);
+                    $total = $total + 1;
+                }
+                $exam_request->update(['total'=> $total]);
+            }
             return [
                 "Success" => true,
                 "Message" => "Adición exitosa"
@@ -1468,31 +1469,38 @@ class HomeController extends Controller
         }
     }
 
-    /////////////// Medical Prescription /////////////////////////
-    public function patology_request(Request $request,$hc,$appointment){
-
-        $anamnesis= PathologyRequest::with([
-            'doctor_class' => function ($query) {
-                $query->select('id','uuid','name','lastname'); # Uno a muchos
-            }
-            ])
-        ->where('dermatology_id',$hc)->get(['id','doctor','annexes','uuid','created_at']);
-
-         return DataTables::of($anamnesis)->make(true);
-    }
-    public function add_patology_request(Request $request,$hc,$appointment){
+    public function edit_exam_request(Request $request,$hc,$id,$appointment){
 
         if($request->method() === 'GET'){
 
             $data = [];
-            $data['post_url'] = $this->r_name . '/anamnesis/' . $hc .'/' .$appointment. '/add';
+            $exam= ExamRequest::with([
+                'doctor_class' => function ($query) {
+                    $query->select('id','uuid','name','lastname'); # Uno a muchos
+                },
+                'appointments' => function ($query) {
+                    $query->select('id','uuid','date_quote','time_quote'); # Uno a muchos
+                },
+                'laboratoryexams'
+                ])
+            ->find($id);
+            $data['exam'] = $exam;
+            $o = $this->o_model::where(['uuid' => $hc])->first();
+            $data['post_url'] = $this->r_name . '/exam_request/' . $hc . '/' . $id .'/'.$appointment . '/edit';
             $appoint = Appointments::where('id',$appointment)->first();
+            $data['o'] = $o;
+            $data['o_labexams'] = Laboratoryexams::where(['status' => 'active'])->orderBy('id', 'asc')->get();
+            $data['diagnoses'] = Hcdermdiagnostics::
+                        where(['hc' => $hc])->orderBy('created_at', 'desc')->get(['code','diagnostic','type_diagnostic','id','uuid']);
+            //Doctores
+            $data['o_dts'] = $this->o_model::where(['status' => 'active','role' => 3])->orderBy('id', 'asc')->get();
             $data["hc_type"] = $appoint->hc_type;
             $data['is_records'] = false;
             $data['is_other'] = false;
-            return view($this->v_name . '.form.modals.modal_anamnesis', $data);
+            return view($this->v_name . '.form.modals.modal_exam_request', $data);
         }
         else{
+            $exam = ExamRequest::with(['laboratoryexams'])->where('id',$id)->first();
             $data = request()->except(['_token', '_method']);
             $derma= Dermatology::where('id',$hc)->first();
             $appoint = Appointments::where('id',$appointment)->first();
@@ -1500,16 +1508,146 @@ class HomeController extends Controller
                 'dermatology_id' => $derma->id,
                 'doctor' => Auth::user()->id,
                 'appointments_id' => $appointment,
-                'is_control' => $appoint->hc_type == 'Dermatología general' ? false : true,
+                'hcdermdiagnostics_id' => $data['hcdermdiagnostics_id'],
             ];
-            $all_params = ['current_illness','reason','physical_exam','analysis','medical_history','surgical_history','allergic_history','drug_history','family_history','other_history','evoluction','system_revition'];
-            foreach($all_params as $key => $row){
-                $aux_params[$row] = !empty($data[$row])?$data[$row]:'';
-            }
+            $total = 0;
+            $uexam = $exam->update($aux_params);
+            if(!empty($data['solexams_exam'])){
+                $exam->laboratoryexams()->detach();
+                foreach($data['solexams_exam'] as $key => $row){
 
-            $reason = Anamnesis::create($aux_params);
+                    $lexam = Laboratoryexams::where('id',$row)->first();
+                    $aux_params = ['exam_request_id' => $exam->id];
+                    $aux_params['laboratoryexams_id'] = $lexam->id;//
+                    $o_x = RexamLaboratoryexams::create($aux_params);
+                    $total = $total + 1;
+                }
+                $exam->update(['total'=> $total]);
+            }
+            return [
+                    "Success" => true,
+                "Message" => "Adición exitosa"
+            ];
+        }
+    }
+    /////////////// Pathologies /////////////////////////
+    public function patology_request(Request $request,$hc,$appointment){
+
+        $path_r= PathologyRequest::with([
+            'doctor_class' => function ($query) {
+                $query->select('id','uuid','name','lastname'); # Uno a muchos
+            },
+            'appointments' => function ($query) {
+                $query->select('id','uuid','date_quote','time_quote'); # Uno a muchos
+            },
+            'pathologies'
+            ])
+        ->where('dermatology_id',$hc)->get(['id','doctor','annexes','appointments_id','uuid','created_at']);
+
+         return DataTables::of($path_r)->make(true);
+    }
+    public function add_patology_request(Request $request,$hc,$appointment){
+
+        if($request->method() === 'GET'){
+
+            $data = [];
+            $data['o_paths'] = Pathologies::where(['status' => 'active'])->orderBy('id', 'asc')->get();
+            $data['diagnoses'] = Hcdermdiagnostics::
+                        where(['hc' => $hc])->orderBy('created_at', 'desc')->get(['code','diagnostic','type_diagnostic','id','uuid']);
+            $data['post_url'] = $this->r_name . '/patology_request/' . $hc .'/' .$appointment. '/add';
+            $appoint = Appointments::where('id',$appointment)->first();
+            $data["hc_type"] = $appoint->hc_type;
+            $data['is_records'] = false;
+            $data['is_other'] = false;
+            $data['pathology_request'] = null;
+            return view($this->v_name . '.form.modals.modal_pathology_request', $data);
+        }
+        else{
+            $data = request()->except(['_token', '_method']);
+            $validatedData = $request->validate([
+                'annexes' => 'required',
+            ],[
+                'annexes.required' => 'Las Observaciones y/o anexos es requerido',
+            ]);
+            $derma= Dermatology::where('id',$hc)->first();
+            $appoint = Appointments::where('id',$appointment)->first();
+            $aux_params = [
+                'dermatology_id' => $derma->id,
+                'doctor' => Auth::user()->id,
+                'appointments_id' => $appointment,
+                'hcdermdiagnostics_id' => $data['hcdermdiagnostics_id'],
+                'annexes' => !empty($data['annexes'])?$data['annexes']:'',
+            ];
+            $pathology_request = PathologyRequest::create($aux_params);
+            if(!empty($data['code'])){
+                foreach($data['code'] as $key => $row){
+
+                    $path = Pathologies::find($row);
+                    $aux_params = ['patology_request_id' => $pathology_request->id];
+                    $aux_params['pathologies_id'] = $path->id;
+                    $aux_params['code'] = $path->name;
+                    $aux_params['pathologie'] = $path->description;
+                    $aux_params['note'] = !empty($data['note'][$key])?$data['note'][$key]:'';
+                    $o_x = PathologyRequestPathologies::create($aux_params);
+                }
+            }
             return [
                 "Success" => true,
+                "Message" => "Adición exitosa"
+            ];
+        }
+    }
+
+    public function edit_pathology_request(Request $request,$hc,$id,$appointment){
+
+        if($request->method() === 'GET'){
+
+            $data = [];
+            $pathology = PathologyRequest::with([
+                'pathologies'
+            ])->find($id);
+            $data['pathology'] = $pathology;
+            $data['o_paths'] = Pathologies::where(['status' => 'active'])->orderBy('id', 'asc')->get();
+            $data['diagnoses'] = Hcdermdiagnostics::
+                        where(['hc' => $hc])->orderBy('created_at', 'desc')->get(['code','diagnostic','type_diagnostic','id','uuid']);
+            $data['post_url'] = $this->r_name . '/patology_request/' . $hc . '/' . $id .'/'.$appointment . '/edit';
+            return view($this->v_name . '.form.modals.modal_pathology_request', $data);
+        }
+        else{
+            $data = request()->except(['_token', '_method']);
+            $validatedData = $request->validate([
+                'annexes' => 'required',
+            ],[
+                'annexes.required' => 'Las Observaciones y/o anexos es requerido',
+            ]);
+            $pathology = PathologyRequest::with([
+                'pathologies'
+            ])->find($id);
+            $derma= Dermatology::where('id',$hc)->first();
+            $aux_params = [
+                'dermatology_id' => $derma->id,
+                'doctor' => Auth::user()->id,
+                'appointments_id' => $appointment,
+                'hcdermdiagnostics_id' => $data['hcdermdiagnostics_id'],
+                'annexes' => !empty($data['annexes'])?$data['annexes']:'',
+            ];
+
+            $uexam = $pathology->update($aux_params);
+            if(!empty($data['code'])){
+                $pathology->pathologies()->detach();
+                foreach($data['code'] as $key => $row){
+
+                    $path = Pathologies::find($row);
+                    $aux_params = ['patology_request_id' => $pathology->id];
+                    $aux_params['pathologies_id'] = $path->id;
+                    $aux_params['code'] = $path->name;
+                    $aux_params['pathologie'] = $path->description;
+                    $aux_params['note'] = !empty($data['note'][$key])?$data['note'][$key]:'';
+                    $o_x = PathologyRequestPathologies::create($aux_params);
+                }
+            }
+            return [
+                    "Success" => true,
                 "Message" => "Adición exitosa"
             ];
         }

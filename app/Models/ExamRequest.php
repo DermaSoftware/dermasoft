@@ -27,9 +27,16 @@ class ExamRequest extends Model
     {
         return $this->belongsTo(User::class, 'user');
     }
+    public function appointments()
+    {
+        return $this->belongsTo(Appointments::class);
+    }
 
     public function doctor_class()
     {
         return $this->belongsTo(User::class, 'doctor');
+    }
+    public function laboratoryexams(){
+        return $this->belongsToMany(Laboratoryexams::class,'rexam_laboratoryexams','exam_request_id','laboratoryexams_id');
     }
 }

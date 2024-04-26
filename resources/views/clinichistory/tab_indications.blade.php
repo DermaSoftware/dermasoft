@@ -104,10 +104,11 @@
                                             <th>#</th>
                                             <th>UUID</th>
                                             <th>Doctor</th>
+                                            <th>Exámen</th>
                                             <th>Total</th>
                                             <th>Creado</th>
                                             {{-- <th>Actualizado</th> --}}
-                                            {{-- <th class="is-end">Acciones</th> --}}
+                                            <th class="is-end">Acciones</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -172,10 +173,11 @@
                                             <th>#</th>
                                             <th>UUID</th>
                                             <th>Doctor</th>
+                                            <th>Patholgies</th>
                                             <th>Observaciones</th>
                                             <th>Creado</th>
                                             {{-- <th>Actualizado</th> --}}
-                                            {{-- <th class="is-end">Acciones</th> --}}
+                                            <th class="is-end">Acciones</th>
                                         </tr>
                                     </thead>
                                     <tbody>

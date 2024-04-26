@@ -71,12 +71,12 @@
 											</th>
 										</tr>
                                         @isset($procedure_request)
-                                            @foreach ($procedure_request->prequest_nprocedure as $item)
+                                            @foreach ($procedure_request->procedures as $item)
                                                 <tr>
-                                                    <td><input type="hidden" name="prescription_med[]"
-                                                            value="{{ $item->procedures->id }}">{{ $item->procedures->name }} - {{ $item->procedures->description }}</td>
+                                                    <td><input type="hidden" name="procedure[]"
+                                                            value="{{ $item->id }}">{{ $item->name }} - {{ $item->description }}</td>
 
-                                                    <td><input type="hidden" name="note[]">{{ $item->note }}</input></td>
+                                                    <td><input type="hidden" name="note[]">{{ $item->pivot->note }}</input></td>
                                                     <td class="is-end">
                                                         <div><button type="button"
                                                                 class="button is-danger is-circle is-elevated btn_rprod_trash"><span

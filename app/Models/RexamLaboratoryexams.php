@@ -32,4 +32,8 @@ class RexamLaboratoryexams extends Model
     {
         return $this->belongsTo(User::class, 'doctor');
     }
+
+    public function exam(){
+        return $this->belongsTo(Laboratoryexams::class,'laboratoryexams_id');
+    }
 }

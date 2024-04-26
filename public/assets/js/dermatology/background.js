@@ -7,6 +7,8 @@ $(function () {
         var table = $('#backgrouns').DataTable({
             ordering: true,
             paging: true,
+            scrollCollapse: true,
+            scrollY: '200px',
             oLanguage: {
                 oAria: {
                     sSortAscending: ": activate to sort column ascending",

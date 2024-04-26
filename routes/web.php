@@ -323,9 +323,11 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/exam_request/{hc}/{appointment}', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'exam_request'])->name('exam_request');
 		Route::match(['get', 'post'],'/exam_request/{hc}/{appointment}/add', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'add_exam_request'])->name('add_exam_request');
+        Route::match(['get', 'post'],'/exam_request/{hc}/{id}/{appointment}/edit', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'edit_exam_request'])->name('edit_exam_requestt');
 
         Route::get('/patology_request/{hc}/{appointment}', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'patology_request'])->name('patology_request');
 		Route::match(['get', 'post'],'/patology_request/{hc}/{appointment}/add', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'add_patology_request'])->name('add_patology_request');
+        Route::match(['get', 'post'],'/patology_request/{hc}/{id}/{appointment}/edit', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'edit_pathology_request'])->name('edit_pathology_request');
         //Biopsies
 		Route::group([
 			'prefix' => 'biopsies'

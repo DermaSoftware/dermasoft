@@ -32,7 +32,7 @@ class ExamordersController extends Controller
 	private $o_model = User::class;
 	private $hc_view = 'examorders';
 	private $hc_type = 'Órden de exámenes';
-	
+
 	private function gdata($t = '')
     {
         $data['menu'] = $this->r_name;
@@ -50,7 +50,7 @@ class ExamordersController extends Controller
 	public function __construct(){
         $this->middleware('checkRole:2_3');
     }
-	
+
 	public function index($id)
     {
         if(empty($id)){
@@ -67,7 +67,7 @@ class ExamordersController extends Controller
 		$data['o_labexams'] = Laboratoryexams::where(['status' => 'active'])->orderBy('id', 'asc')->get();
 		//Doctores
 		$data['o_dts'] = $this->o_model::where(['status' => 'active','role' => 3])->orderBy('id', 'asc')->get();
-		
+
 		//Historial
 		$t = Examorders::where(['user' => $o->id])->count();
 		$is_records = !empty($t)?$t > 0:false;
@@ -75,7 +75,7 @@ class ExamordersController extends Controller
 		$data['is_records'] = $is_records;
 		return view($this->v_name.'.'.$this->hc_view.'.index',$data);
     }
-	
+
 	public function store(Request $request, $id)
     {
         $data = request()->except(['_token','_method']);
@@ -101,7 +101,7 @@ class ExamordersController extends Controller
 		$params['total'] = !empty($data['solexams_exam'])?count($data['solexams_exam']):0;
 		//path_pdf
 		$o = Examorders::create($params);
-		
+
 		//Guardamos el diagnostico
 		if(!empty($data['diagnostics'])){
 			foreach($data['diagnostics'] as $key => $row){
@@ -124,7 +124,7 @@ class ExamordersController extends Controller
 				$o_x = Eoexams::create($aux_params);
 			}
 		}
-		
+
 		$pdfFilePath = $this->getpdfhc($o->uuid,true);
 		$pdfFilePath = storage_path($pdfFilePath);
 		$path = Storage::disk('public')->putFile('temp', new File($pdfFilePath), 'public');
@@ -134,7 +134,7 @@ class ExamordersController extends Controller
 		$attach_file = storage_path('app/public/' . $path);
 		$fullpath = asset('storage/'.$path);
 		$o->update(['path_pdf' => $fullpath]);
-		
+
 		//notificamos al correo
 		if(!empty($data['notification_email']) AND $data['notification_email'] == 'yes'){
 			$full_name = $ox->name.' '.$ox->scd_name.' '.$ox->lastname.' '.$ox->scd_lastname;
@@ -142,18 +142,18 @@ class ExamordersController extends Controller
 		}
 		//notificamos al whatsapp
 		if(!empty($data['notification_whatsapp']) AND $data['notification_whatsapp'] == 'yes'){
-			
+
 		}
 		$request->session()->flash('msj_success', 'El '.$this->c_name.' ha sido registrado correctamente.');
 		return redirect($this->hc_view.'/list/'.$id);
     }
-	
+
 	public function show()
     {
 		$data = $this->gdata('Buscar paciente');
 		return view($this->v_name.'.'.$this->hc_view.'.search',$data);
     }
-	
+
 	public function search(Request $request)
     {
 		$data = request()->except(['_token','_method']);
@@ -171,8 +171,8 @@ class ExamordersController extends Controller
 		$request->session()->flash('msj_error', 'No se han encontrado resultados');
 		return redirect($this->hc_view);
     }
-	
-	
+
+
 	//PDF
 	public function hcpdf($id)
     {
@@ -202,7 +202,7 @@ class ExamordersController extends Controller
 		$signature = !empty($o_doctor->signature_pp)?$o_doctor->signature_pp:public_path('assets/images/firma.png');
 		$all_items = Eodiagnostics::where(['eo' => $o_obj_item->id])->orderBy('id', 'asc')->get();//Items
 		$all_exams = Eoexams::where(['eo' => $o_obj_item->id])->orderBy('id', 'asc')->get();//Items
-		
+
 		$data['o'] = $o;
 		$data['o_obj_item'] = $o_obj_item;
 		$data['all_items'] = $all_items;
@@ -225,7 +225,7 @@ class ExamordersController extends Controller
 		return $pdf->stream('document.pdf');
 		exit();
     }
-	
+
 	//PDF Historial de todos las consultas
 	public function listrecords($id)
     {
