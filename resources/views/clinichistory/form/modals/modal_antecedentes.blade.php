@@ -16,17 +16,6 @@
                         <div class="column is-12">
                             <div class="field">
                                 <div class="control">
-                                    <?php $t_att = 'resumen'; ?>
-                                    <?php $n_att = 'Resumen'; ?>
-                                    <label class="label">{{ $n_att }}</label>
-                                    <textarea name="<?= $t_att ?>" class="textarea" rows="2" placeholder="<?= $n_att ?>"><?= isset($obj) ? $obj->$t_att : '' ?></textarea>
-                                    {{-- <textarea name="resumen" class="input" type="text" placeholder="Dosis" value="" /> --}}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="column is-12">
-                            <div class="field">
-                                <div class="control">
                                     <label class="label">Tipo de antecedente</label>
                                     <select name="type_id" class="input modal_f1_med">
                                         <option value="0" selected disabled>--Seleccione--</option>
@@ -42,6 +31,17 @@
                                         @endempty
                                         <?php } ?>
                                     </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column is-12">
+                            <div class="field">
+                                <div class="control">
+                                    <?php $t_att = 'resumen'; ?>
+                                    <?php $n_att = 'Resumen'; ?>
+                                    <label class="label">{{ $n_att }}</label>
+                                    <textarea name="<?= $t_att ?>" class="textarea" rows="2" placeholder="<?= $n_att ?>"><?= isset($obj) ? $obj->$t_att : '' ?></textarea>
+                                    {{-- <textarea name="resumen" class="input" type="text" placeholder="Dosis" value="" /> --}}
                                 </div>
                             </div>
                         </div>

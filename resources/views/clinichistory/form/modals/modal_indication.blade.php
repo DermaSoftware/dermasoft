@@ -43,7 +43,7 @@
                         <div class="column is-12" id="other-box">
                             <div class="field">
                                 <div class="control">
-                                    <textarea name="other_indication" id="other_indication" rows="2"><?= ($is_other == true and isset($obj)) ? $obj->indication : '' ?></textarea>
+                                    <textarea class="textarea" name="other_indication" id="other_indication" rows="2"><?= ($is_other == true and isset($obj)) ? $obj->indication : '' ?></textarea>
                                 </div>
                             </div>
                         </div>
@@ -62,6 +62,13 @@
 
 <script>
     $(function() {
+        if ($(".select2_fsc").length) {
+                $('.select2_fsc').each(function() {
+                    $(this).select2({
+                        theme: "classic",
+                    });
+                });
+            }
         const toggleButton = document.getElementById('is_other');
         const elementoToggle = document.getElementById('other-box');
         const indicationToggle = document.getElementById('indication-box');

@@ -124,7 +124,6 @@ $(function () {
         })
         $('#add_anexo').on('click', function (e) {
             e.preventDefault();
-            alert('asas')
             var url = $(this).attr('href');
             $('#derma_modal div[class="modal-card"]').load(url, function () {
                 $('#derma_modal #salvar').on('click',function(){

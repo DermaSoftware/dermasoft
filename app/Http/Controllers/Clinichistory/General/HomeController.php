@@ -275,6 +275,7 @@ class HomeController extends Controller
 	public function shvs_dermatology(Request $request)
     {
 		$data = request()->except(['_token','_method']);
+        $user_loged = Auth::user();
 		$validatedData = $request->validate([
 			'document_type' => 'required',
 			'document_number' => 'required',
@@ -285,8 +286,10 @@ class HomeController extends Controller
 			'hc_type.required' => 'El tipo de consulta es requerido',
 		]);
 		$data['company'] = Auth::user()->company;
+        # El usuario debe de pertenecer a la misma compañia qie el doctor
 		$o = $this->o_model::where('document_type',$data['document_type'])
                     ->where('document_number',$data['document_number'])
+                    ->where('company',$data['company'])
                     ->first();
         $appintment = null;
 		if(!empty($o->id)){
@@ -556,7 +559,10 @@ class HomeController extends Controller
             'type_class' => function ($query) {
                 $query->select('id','name'); # Uno a muchos
             }
-        ])->where('hc',$hc)->get(['id','uuid','resumen','type_id' ,'created_at','updated_at']);
+        ])->where('hc',$hc)
+        ->orderBy('created_at','DESC')
+        ->orderBy('updated_at','DESC')
+        ->get(['id','uuid','resumen','type_id' ,'created_at','updated_at']);
 
          return DataTables::of($backgrounds)->make(true);
     }
@@ -610,7 +616,10 @@ class HomeController extends Controller
     /////////////// DIAGNOSTICOS /////////////////////////
     public function diagnostics(Request $request,$hc,$appointment){
 
-        $diagnostics= Hcdermdiagnostics::where('hc',$hc)->get(['id','uuid','code','diagnostic','type_diagnostic' ,'created_at','updated_at']);
+        $diagnostics= Hcdermdiagnostics::where('hc',$hc)
+        ->orderBy('created_at','DESC')
+        ->orderBy('updated_at','DESC')
+        ->get(['id','uuid','code','diagnostic','type_diagnostic' ,'created_at','updated_at']);
 
          return DataTables::of($diagnostics)->make(true);
     }
@@ -685,8 +694,10 @@ class HomeController extends Controller
     /////////////// INDICATIONS /////////////////////////
     public function indications(Request $request,$hc,$appointment){
 
-        $indications= Hcdermindications::where('hc',$hc)->get(['id','uuid','indication','created_at','updated_at']);
-
+        $indications= Hcdermindications::where('hc',$hc)
+        ->orderBy('created_at','DESC')
+        ->orderBy('updated_at','DESC')
+        ->get(['id','uuid','indication','created_at','updated_at']);
          return DataTables::of($indications)->make(true);
     }
     public function add_indication(Request $request,$hc,$appointment){
@@ -706,7 +717,7 @@ class HomeController extends Controller
             $derma= Dermatology::where('id',$hc)->first();
             $aux_params = ['hc' => $derma->id,'user' => $derma->id,'company' => $derma->company,
                         'campus' => $derma->campus,
-                        'indication' => !empty($data["indication"]) ? $data["indication"] : $data["other_indication"],
+                        'indication' => !isset($data["is_other"]) ? $data["indication"] : $data["other_indication"],
                         'hc_type' => $appointment->hc_type];
 			$o_x = Hcdermindications::create($aux_params);
             return [
@@ -764,6 +775,7 @@ class HomeController extends Controller
             // })
             ->where('hc',$hc)
             ->orderBy('created_at', 'desc')
+            ->orderBy('updated_at', 'desc')
             ->get(['id','uuid','prequest_nprocedure_id','type_procedure','created_at','updated_at']);
 
          return DataTables::of($biopsies)->make(true);
@@ -873,7 +885,10 @@ class HomeController extends Controller
                 $query->select('id','procedures_id'); # Uno a muchos
             }
             ])
-        ->where('hc',$hc)->get(['id','uuid','type_procedure','prequest_nprocedure_id','created_at','updated_at']);
+        ->where('hc',$hc)
+        ->orderBy('created_at','DESC')
+        ->orderBy('updated_at','DESC')
+        ->get(['id','uuid','type_procedure','prequest_nprocedure_id','created_at','updated_at']);
 
          return DataTables::of($biopsies)->make(true);
     }
@@ -926,7 +941,10 @@ class HomeController extends Controller
                 $query->select('id','muscle','units','product_dates','product_name','lot','dilution','injectable','hprocedure_id'); # Uno a muchos
             }
             ])
-        ->where('hc',$hc)->get(['id','uuid','type_procedure','prequest_nprocedure_id','created_at']);
+        ->where('hc',$hc)
+        ->orderBy('created_at','DESC')
+        ->orderBy('updated_at','DESC')
+        ->get(['id','uuid','type_procedure','prequest_nprocedure_id','created_at']);
 
          return DataTables::of($biopsies)->make(true);
     }
@@ -1005,6 +1023,7 @@ class HomeController extends Controller
             })
             ->where('hc',$hc)
             ->orderBy('created_at', 'desc')
+            ->orderBy('upadted_at', 'desc')
             ->get(['id','uuid','type_procedure','prequest_nprocedure_id','created_at']);
 
          return DataTables::of($biopsies)->make(true);
@@ -1075,7 +1094,10 @@ class HomeController extends Controller
                 $query->select('id','name','lastname'); # Uno a muchos
             }
             ])
-        ->where('dermatology_id',$hc)->get(['id','doctor','consultation_purpose','external_cause','created_at']);
+        ->where('dermatology_id',$hc)
+        ->orderBy('created_at','DESC')
+        ->orderBy('updated_at','DESC')
+        ->get(['id','doctor','consultation_purpose','external_cause','created_at']);
 
          return DataTables::of($appointment_reason)->make(true);
     }
@@ -1116,7 +1138,10 @@ class HomeController extends Controller
                 $query->select('id','name','lastname'); # Uno a muchos
             }
             ])
-        ->where('dermatology_id',$hc)->get(['id','doctor','reason','current_illness','physical_exam',
+        ->where('dermatology_id',$hc)
+        ->orderBy('created_at','DESC')
+        ->orderBy('updated_at','DESC')
+        ->get(['id','doctor','reason','current_illness','physical_exam',
                 'analysis','medical_history','surgical_history','allergic_history','drug_history','family_history',
                     'other_history','evoluction','system_revition','is_control','created_at']);
 
@@ -1171,7 +1196,10 @@ class HomeController extends Controller
                 'route_administration','duration','indications'); # Uno a muchos
             }
             ])
-        ->where('dermatology_id',$hc)->get(['id','doctor','appointments_id','validity','uuid','created_at']);
+        ->where('dermatology_id',$hc)
+        ->orderBy('created_at','DESC')
+        ->orderBy('updated_at','DESC')
+        ->get(['id','doctor','appointments_id','validity','uuid','created_at']);
 
          return DataTables::of($prescriptions)->make(true);
     }
@@ -1303,7 +1331,10 @@ class HomeController extends Controller
             },
             'procedures'
             ])
-        ->where('dermatology_id',$hc)->get(['id','doctor','appointments_id','uuid','created_at']);
+        ->where('dermatology_id',$hc)
+        ->orderBy('created_at','DESC')
+        ->orderBy('updated_at','DESC')
+        ->get(['id','doctor','appointments_id','uuid','created_at']);
 
          return DataTables::of($procedures_requests)->make(true);
     }
@@ -1420,7 +1451,10 @@ class HomeController extends Controller
             },
             'laboratoryexams'
             ])
-        ->where('dermatology_id',$hc)->get(['id','doctor','appointments_id','total','uuid','created_at']);
+        ->where('dermatology_id',$hc)
+        ->orderBy('created_at','DESC')
+        ->orderBy('updated_at','DESC')
+        ->get(['id','doctor','appointments_id','total','uuid','created_at']);
 
          return DataTables::of($exams)->make(true);
     }
@@ -1542,7 +1576,10 @@ class HomeController extends Controller
             },
             'pathologies'
             ])
-        ->where('dermatology_id',$hc)->get(['id','doctor','annexes','appointments_id','uuid','created_at']);
+        ->where('dermatology_id',$hc)
+        ->orderBy('created_at','DESC')
+        ->orderBy('updated_at','DESC')
+        ->get(['id','doctor','annexes','appointments_id','uuid','created_at']);
 
          return DataTables::of($path_r)->make(true);
     }

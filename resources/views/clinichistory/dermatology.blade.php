@@ -62,7 +62,7 @@
                                             @endif
                                             <li id="antecedentes" data-tab="history_tab"><a>Antecedentes</a></li>
                                             <li id="diag_tab" data-tab="diagnostics_tab"><a>Diagnósticos</a></li>
-
+                                            <li id="indic_tab" data-tab="indications_tab"><a>Indicaciones/Solicitudes</a></li>
                                             @if ($hc_type === 'Biopsías y/o procedimientos')
                                                 <li id="biop_tab" data-tab="biopsies_tab"><a>Procedimientos</a></li>
                                             @endif
@@ -72,10 +72,11 @@
                                             @if ($hc_type === 'Procedimientos Estéticos')
                                                 <li id="aest_tab" data-tab="aesthtic_tab"><a>Procedimientos</a></li>
                                             @endif
+
                                             @if ($hc_type === 'Descripción Quirúrgica')
                                                 <li id="surgical_tab" data-tab="surg_tab"><a>Procedimientos</a></li>
                                             @endif
-                                            <li id="indic_tab" data-tab="indications_tab"><a>Indicaciones/Solicitudes</a></li>
+
                                         </ul>
                                     </div>
                                 </div>

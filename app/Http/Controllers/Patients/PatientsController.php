@@ -24,6 +24,7 @@ use App\Models\Locks;
 use App\Models\Solicitude;
 use DateInterval;
 use DateTime;
+use Illuminate\Database\Query\Builder;
 use PDF;
 use Illuminate\Http\File;
 use Illuminate\Support\Facades\DB;
@@ -539,7 +540,9 @@ class PatientsController extends Controller
                 $query->select('id', 'name');
             }
         ])->where('user', $user->id)
-            ->where('company', Auth::user()->company);
+            ->where('company', Auth::user()->company)
+        ->orderBy('created_at','DESC')
+        ->orderBy('updated_at','DESC');
 
         if (Auth::user()->role_class->name == 'Doctor') {
             $appointments = $appointments->where('doctor', Auth::user()->id);
@@ -719,7 +722,8 @@ class PatientsController extends Controller
                     $o_user = User::where(['id' => $o->user])->first();
                     Mail::to($o_user->email)->send(new Ntfs('Cita agendada', 'Hola ' . $o_user->name . ', su cita de ' . $o->query_type . ' ha sido agendada correctamente para el día ' . $o->date_quote . ' a la hora ' . $o->time_quote . ' en la modalidad ' . $o->modality . ', recuerde estar puntual y realizar el pago de forma precencial en el lugar de la cita.', $o_user->name, $o_user->email));
                 }
-                return redirect('finalized'); //finalized
+                $request->session()->flash('msj_success', 'Cita agenda satisfactoriamente.');
+                return redirect('patients/appoinments/'.$o_user->uuid); //finalized
             }
             return redirect('/');
         }
@@ -813,13 +817,15 @@ class PatientsController extends Controller
 
     public function appointments_calendar(Request $request)
     {
+        $doctor = Auth::user();
         $doctors = DB::table('users')
                 ->join('roles', function ($join) {
                     $join->on('users.role', '=', 'roles.id')
                         ->where('roles.name', '=', 'Medico');
                 })
+                ->where('company',$doctor->company_class->id)
                 ->get(['users.id', 'users.name']);
-        $campus = Headquarters::all();
+        $campus = Headquarters::where('company',$doctor->company_class->id)->get(['id','name']);
 
         $data = $this->gdata('Agenda de citas');
         $data['doctors'] = $doctors;
@@ -833,7 +839,12 @@ class PatientsController extends Controller
             $data = request()->except(['_token', '_method']);
             $locks_days = ''; //
             //Agendas programadas
-            $pts_all = Appointments::whereNotIn('status', ['deleted'])->orderBy('id', 'asc');
+            $doct_company = Auth::user()->company_class->id;
+            $pts_all = Appointments::whereNotIn('status', ['deleted'])
+                ->whereHas('user_class',function ($query) use ($doct_company){
+                    $query->where('company',$doct_company);
+                })
+                ->orderBy('id', 'asc');
             if (!empty($data['doctor']) && $data['doctor'] !== '0') {
                 $pts_all = $pts_all->where(['doctor' => $data['doctor']]);
             }
@@ -874,6 +885,7 @@ class PatientsController extends Controller
 			$url = '<a href="https://meet.jit.si/'.$o->uuid.'" target="_blank" class="button is-primary is-raised">Iniciar</a>';
 		}
 		$resend = '<a href="'.url('dcitas/resend/'.$o->uuid).'" class="button is-info is-raised">Re-enviar</a>';
+		$vsigns = '<a href="'.url('patients/vitalsigns/' . $o_user->uuid. '/' .$o->uuid).'" class="button is-warning is-raised ml-2">Registrar signos vitales</a>';
 		$pfull_name = $o_user->name.' '.$o_user->scd_name.' '.$o_user->lastname.' '.$o_user->scd_lastname;
 		$dfull_name = $o_doctor->name.' '.$o_doctor->scd_name.' '.$o_doctor->lastname.' '.$o_doctor->scd_lastname;
 		$photo = !empty($o->photo)?$o->photo:asset('assets/images/user.png');
@@ -886,7 +898,8 @@ class PatientsController extends Controller
 		$out .= '<div class="card-foot"><div class="left">';
 		$out .= '<div class="media-flex-center no-margin">';
 		$out .= '<div class="h-avatar">'.$img.'</div>';
-		$out .= '<div class="flex-meta"><span>'.$dfull_name.'</span><span>Doctor(a)</span></div></div></div><div class="right">'.$resend.'</div></div>';
+		$out .= '<div class="flex-meta"><span>'.$dfull_name.'</span><span>Doctor(a)</span></div></div></div><div class="right">'.$resend.$vsigns.'</div></div>';
+		// $out .= '<div class="flex-meta"><span>'.$dfull_name.'</span><span>Doctor(a)</span></div></div></div><div class="right">'.$vsigns.'</div></div>';
 		echo $out;
     }
 }

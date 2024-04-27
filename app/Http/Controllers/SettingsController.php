@@ -59,11 +59,11 @@ class SettingsController extends Controller
 		'relationship' => 'Parentesco del acudiente',
 		'phone_attendant' => 'Teléfono del acudiente',
 
-        'hours_quotes' => 'Cantidad de horas que tiene el paciente antes de la cita para pagar la consulta',
-		'hours_scheduling_web' => 'Cantidad de horas antes para notificar recordatorio de pago de consulta cuando se toma cita por la web',
-		'time_consultation' => 'Tiempo de duración de consulta',
-		'time_consultation_text' => 'Texto de tiempo de duración de consulta',
-		'hours_ntf' => 'Cantidad de horas antes para notificar recordatorio de cita por whatsapp, correo electrónico y mini mensaje de texto'
+        // 'hours_quotes' => 'Cantidad de horas que tiene el paciente antes de la cita para pagar la consulta',
+		// 'hours_scheduling_web' => 'Cantidad de horas antes para notificar recordatorio de pago de consulta cuando se toma cita por la web',
+		// 'time_consultation' => 'Tiempo de duración de consulta',
+		// 'time_consultation_text' => 'Texto de tiempo de duración de consulta',
+		// 'hours_ntf' => 'Cantidad de horas antes para notificar recordatorio de cita por whatsapp, correo electrónico y mini mensaje de texto'
 	];
 
 	private function gdata($t = 'Lista de')
