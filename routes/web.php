@@ -53,8 +53,8 @@ Route::middleware(['guest'])->group(function () {
 	Route::group([
         'prefix' => 'register'
     ], function () {
-        Route::get('/', [App\Http\Controllers\RegisterController::class, 'index'])->name('register.index');
-        Route::post('/', [App\Http\Controllers\RegisterController::class, 'store'])->name('register.store');
+        Route::get('/{company?}', [App\Http\Controllers\RegisterController::class, 'index'])->name('register.index');
+        Route::post('/{company?}', [App\Http\Controllers\RegisterController::class, 'store'])->name('register.store');
     });
 	//Recovery
     Route::group([
