@@ -13,6 +13,7 @@ use App\Mail\Ntfs;
 use Illuminate\Support\Str;
 use App\Http\Requests\CreateCompanyRequest;
 use App\Models\Plans;
+use App\Models\Roles;
 
 class RegisterController extends Controller
 {
@@ -97,6 +98,7 @@ class RegisterController extends Controller
             ]);
         }
         else{
+            $role = Roles::where('name','Paciente')->first();
             $twofa = !empty($data['twofa']) ? 'yes' : 'not';
             $o = User::create([
                 'name' => $data['name'],
@@ -113,6 +115,7 @@ class RegisterController extends Controller
                 'photo_pp' => $photo_pp,
                 'company' => $comp->id,
                 'campus' => $comp->campus[0]->id,
+                'role' => $role->id,
             ]);
         }
 
