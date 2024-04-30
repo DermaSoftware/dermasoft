@@ -71,6 +71,26 @@
 
 
 
+<style>
+
+    .pricing-wrapper .pricing-plan .price::after {
+    content: "" !important;
+
+    font-size: 1rem;
+
+    font-weight: normal;
+
+    color: #a2a5b9;
+
+    }
+    .pricing-wrapper .pricing-plan .price .tiempo {
+    font-size: 1rem;
+    font-weight: normal;
+
+    color: #a2a5b9;
+
+    }
+</style>
 
     <div class="section has-bg-dots">
         <div class="container">
@@ -89,7 +109,14 @@
                     <img
                         src="<?= !empty($row->photo) ? $row->photo : asset('assets/img/logos/logo/logo-platinum.svg') ?>"
                         alt="">
-                    <div class="price money_to_fscx"><?= round(intval($row->price) / intval($row->month),2) ?></div>
+                    <div class="price money_to_fscx">
+                        @if ($row->validity == "Mensual")
+                        <?= $row->price  ?><span class="tiempo"><?= $row->month <= 1 ? '/por mes': '/' . $row->month . ' meses' ?></span>
+                        @else
+                            <?= $row->price  ?><span class="tiempo"><?= $row->month <= 1 ? '/por año' : '/' . $row->month . ' años'?></span>
+                        @endif
+
+                    </div>
                     <div class="trial"><?= $row->subtitle ?></div>
                     <hr>
                     <ul>

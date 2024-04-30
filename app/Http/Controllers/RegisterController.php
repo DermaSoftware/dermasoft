@@ -18,7 +18,7 @@ use App\Models\Roles;
 class RegisterController extends Controller
 {
 
-    public function index($company)
+    public function index($company=null)
     {
         $comp = null;
         if (isset($company)) {
@@ -30,7 +30,7 @@ class RegisterController extends Controller
         return view('auth.register', $data);
     }
 
-    public function store(CreateCompanyRequest $request, $company)
+    public function store(CreateCompanyRequest $request, $company=null)
     {
 
         $comp = null;
@@ -104,6 +104,9 @@ class RegisterController extends Controller
                 'name' => $data['name'],
                 'lastname' => $data['lastname'],
                 'scd_name' => $data['scd_name'],
+                'scd_lastname' => $data['scd_lastname'],
+                'document_type' => $data['document_type'],
+                'document_number' => $data['document_number'],
                 'scd_lastname' => $data['scd_lastname'],
                 'email' => $data['email'],
                 'phone' => $data['phone'],

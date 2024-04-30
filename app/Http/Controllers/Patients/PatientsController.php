@@ -45,7 +45,7 @@ class PatientsController extends Controller
         'email' => 'Correo', 'phone' => 'Telefono'
     ];
     private $o_model = User::class;
-    private $hctype = ['Dermatología general', 'Biopsías y/o procedimientos', 'Procedimientos Estéticos', 'Descripción Quirúrgica'];
+    private $hctype = ['Dermatología general','Dermatología general Control', 'Biopsías y/o procedimientos', 'Procedimientos Estéticos', 'Descripción Quirúrgica'];
 
     private function gdata($t = 'Historial de', $tfinal = true)
     {
@@ -723,7 +723,7 @@ class PatientsController extends Controller
                     Mail::to($o_user->email)->send(new Ntfs('Cita agendada', 'Hola ' . $o_user->name . ', su cita de ' . $o->query_type . ' ha sido agendada correctamente para el día ' . $o->date_quote . ' a la hora ' . $o->time_quote . ' en la modalidad ' . $o->modality . ', recuerde estar puntual y realizar el pago de forma precencial en el lugar de la cita.', $o_user->name, $o_user->email));
                 }
                 $request->session()->flash('msj_success', 'Cita agenda satisfactoriamente.');
-                return redirect('patients/appoinments/'.$o_user->uuid); //finalized
+                return redirect('patients/appointments/'.$o_user->uuid); //finalized
             }
             return redirect('/');
         }

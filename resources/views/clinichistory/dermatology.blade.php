@@ -57,7 +57,7 @@
                                         <ul>
                                             <li data-tab="dermatology_tab" class="is-active"><a>Información general</a></li>
 
-                                            @if ($hc_type === 'Dermatología general')
+                                            @if ($hc_type === 'Dermatología general' || $hc_type == 'Dermatología general Control')
                                                 <li id="anamnesis_tab" data-tab="anam_tab"><a>Anamnesis</a></li>
                                             @endif
                                             <li id="antecedentes" data-tab="history_tab"><a>Antecedentes</a></li>
@@ -83,7 +83,7 @@
                                 <div id="dermatology_tab" class="tab-content is-active">
                                     @include($v_name . '.form.form_dermatology', ['modo' => 'create'])
                                 </div>
-                                @if ($hc_type == 'Dermatología general')
+                                @if ($hc_type == 'Dermatología general' || $hc_type == 'Dermatología general Control')
                                     <div id="anam_tab" class="tab-content">
                                         @include($v_name . '.tab_anamnesis', ['modo' => 'create'])
                                     </div>

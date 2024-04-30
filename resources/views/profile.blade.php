@@ -161,7 +161,7 @@
 
                                     </div>
                                 </div>
-                                <?php if(Auth::user()->role_cass == 'Medico'){ ?>
+                                <?php if($o->role_class->name == 'Medico'){ ?>
                                 <hr>
                                 <!--Fieldset-->
                                 <div class="fieldset">

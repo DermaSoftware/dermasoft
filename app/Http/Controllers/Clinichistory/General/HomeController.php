@@ -60,7 +60,7 @@ class HomeController extends Controller
 	private $list_tbl_fsc = ['name' => 'Nombre'];
 	private $o_model = User::class;
 	private $hc_type = 'Dermatología general';
-    private $o_hctype = ['Dermatología general', 'Biopsías y/o procedimientos', 'Procedimientos Estéticos', 'Descripción Quirúrgica'];
+    private $o_hctype = ['Dermatología general','Dermatología general Control', 'Biopsías y/o procedimientos', 'Procedimientos Estéticos', 'Descripción Quirúrgica'];
 	private function gdata($t = '')
     {
         $data['menu'] = $this->r_name;
@@ -785,11 +785,13 @@ class HomeController extends Controller
         if($request->method() === 'GET'){
 
             $appoint = Appointments::find($appointment);
-            $diagnoses = Hcdermdiagnostics::where("hc",$hc)
-                        ->where('hc_type',$appoint->hc_type)
-                        ->where('appointments_id',$appointment)
-                        ->where('hc',$hc)
-                        ->get();
+            $procedures_requests= ProcedureRequest::with([
+                'procedures'
+                ])
+            ->where('dermatology_id',$hc)
+            ->orderBy('created_at','DESC')
+            ->orderBy('updated_at','DESC')
+            ->get(['id','uuid','created_at']);
 
             $data = [];
             $data['post_url'] = $this->r_name . '/biopsies/' . $hc .'/' .$appointment. '/add';
@@ -1319,7 +1321,7 @@ class HomeController extends Controller
             ];
         }
     }
-    /////////////// Medical Prescription /////////////////////////
+    /////////////// Procedure Request /////////////////////////
     public function procedure_request(Request $request,$hc,$appointment){
 
         $procedures_requests= ProcedureRequest::with([
