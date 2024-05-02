@@ -41,18 +41,18 @@ $(function () {
                 "visible": false,
                 "targets": [0, 1]
             },
-            // {
-            //     searchable: false,
-            //     "targets": [0, 2, 3, 4, 5]
-            // },
-            // {
-            //     orderable: false,
-            //     targets: [5]
-            // }
-            // {
-            //     className: 'is-end',
-            //     targets: 3
-            // },
+                // {
+                //     searchable: false,
+                //     "targets": [0, 2, 3, 4, 5]
+                // },
+                // {
+                //     orderable: false,
+                //     targets: [5]
+                // }
+                // {
+                //     className: 'is-end',
+                //     targets: 3
+                // },
                 //{className: 'text-center', targets: [3, 4, 8, 10, 11, 19]},
                 //{searchable: false, targets: [0,4]},
                 //{orderable: false, targets: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]}
@@ -101,7 +101,7 @@ $(function () {
                                 </li>
                         `
                     });
-                    html+= '</ul>';
+                    html += '</ul>';
                     return html;
                 }
             },
@@ -114,51 +114,56 @@ $(function () {
                 }
             },
 
-            // {
-            //     "data": "updated_at",
-            //     render: function (data, type, row) {
-            //         let fechaActual = new Date(data);
-            //         let fechaFormateada = fechaActual.toLocaleDateString()
-            //         return fechaFormateada;
-            //     }
-            // },
-            // {
-            //     "data": "buttons",
-            //     render: function (data, type, row) {
-            //         let derm = derma_id;
-            //         let url_update =
-            //             `/clinichistory/indications/${derm}/${row.id}/edit`;
-            //         // let url_delete = `{% url 'nomenclador:delete_anexo' 0 %}`;
-            //         // url_update = url_update.replace(0, row.id);
-            //         // url_delete = url_delete.replace(0, row.id);
-            //         let html = `
-            //         <div>
-            //             <a href="${url_update}" data-toggle="modal" data-modal="derma_modal"
-            //                 class="h-modal-trigger btn btn-primary">
-            //                             <div class="icon">
-            //                                 <i class="lnil lnil-pencil-alt"></i>
-            //                             </div>
-            //             </a>
-            //         </div>
-            //     `
+                // {
+                //     "data": "updated_at",
+                //     render: function (data, type, row) {
+                //         let fechaActual = new Date(data);
+                //         let fechaFormateada = fechaActual.toLocaleDateString()
+                //         return fechaFormateada;
+                //     }
+                // },
+                // {
+                //     "data": "buttons",
+                //     render: function (data, type, row) {
+                //         let derm = derma_id;
+                //         let url_update =
+                //             `/clinichistory/indications/${derm}/${row.id}/edit`;
+                //         // let url_delete = `{% url 'nomenclador:delete_anexo' 0 %}`;
+                //         // url_update = url_update.replace(0, row.id);
+                //         // url_delete = url_delete.replace(0, row.id);
+                //         let html = `
+                //         <div>
+                //             <a href="${url_update}" data-toggle="modal" data-modal="derma_modal"
+                //                 class="h-modal-trigger btn btn-primary">
+                //                             <div class="icon">
+                //                                 <i class="lnil lnil-pencil-alt"></i>
+                //                             </div>
+                //             </a>
+                //         </div>
+                //     `
 
-            //         return html;
-            //         ////}
-            //         //return data;
-            //     }
-            // }
+                //         return html;
+                //         ////}
+                //         //return data;
+                //     }
+                // }
             ]
         })
         $('#add_aesthetics').on('click', function (e) {
             e.preventDefault();
             var url = $(this).attr('href');
             $('#derma_modal div[class="modal-card"]').load(url, function () {
-                $('#derma_modal #salvar').on('click',function(){
-                    $('#aesthetic_form').submit();
+                $('#derma_modal #salvar').on('click', function () {
+                    $('#salvar').hide();
+                    $('button.is-loading').removeClass('is-hidden');
+                    setTimeout(function(){
+                        $('#aesthetic_form').submit();
+                    },10)
                 })
                 $('#aesthetic_form').on('submit', function (e) {
                     e.preventDefault();
-                    url2 = $(this).attr('action')
+                    url2 = $(this).attr('action');
+
                     var formData = new FormData(document.getElementById(
                         'aesthetic_form'));
                     $.ajax({
@@ -168,6 +173,8 @@ $(function () {
                             .serializeArray(),
                         type: "post",
                         success: function (data) {
+                            $('button.is-loading').addClass('is-hidden');
+                            $('#salvar').show();
                             if (data.Success == true) {
                                 var table = $('#aesthetics_table')
                                     .DataTable();
@@ -181,6 +188,8 @@ $(function () {
                             return;
                         }
                     }).fail(function (request, status, aa, a) {
+                        $('button.is-loading').addClass('is-hidden');
+                        $('#salvar').show();
                         try {
                             let keys = Object.keys(request
                                 .responseJSON)
@@ -194,6 +203,8 @@ $(function () {
                                 }
                             }
                         } catch {
+                            $('button.is-loading').addClass('is-hidden');
+                            $('#salvar').show();
                             console.log(aa);
                         }
                     });
@@ -213,8 +224,12 @@ $(function () {
             // let operation = $(this).data('operation');
             $('#derma_modal').addClass('is-active')
             $('#derma_modal div[class="modal-card"]').load(url, function () {
-                $('#derma_modal #salvar').on('click',function(){
-                    $('#aesthetic_form').submit();
+                $('#derma_modal #salvar').on('click', function () {
+                    $('#salvar').hide();
+                    $('button.is-loading').removeClass('is-hidden');
+                    setTimeout(function(){
+                        $('#aesthetic_form').submit();
+                    },10)
                 })
                 $('#aesthetic_form').on('submit', function (event) {
                     event.preventDefault();
@@ -227,6 +242,8 @@ $(function () {
                         data: $('#aesthetic_form').serializeArray(),
                         type: "post",
                         success: function (data) {
+                            $('button.is-loading').addClass('is-hidden');
+                            $('#salvar').show();
                             var table = $('#aesthetics_table').DataTable();
                             $('#delete-modal').trigger('click');
                             table.ajax.reload();
@@ -236,7 +253,8 @@ $(function () {
                             return;
                         }
                     }).fail(function (request, status, aa, a) {
-
+                        $('button.is-loading').addClass('is-hidden');
+                        $('#salvar').show();
                     });
                     return false;
                 });

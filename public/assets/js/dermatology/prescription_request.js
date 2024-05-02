@@ -1,10 +1,10 @@
 $(function () {
 
     $('#prescriptions_btn,#indic_tab').on('click', function () {
-        if ($('#procedures_request_table').length > 0) {
-            $('#procedures_request_table').DataTable().destroy();
+        if ($('#medical_prescriptions_table').length > 0) {
+            $('#medical_prescriptions_table').DataTable().destroy();
         }
-        var table = $('#procedures_request_table').DataTable({
+        var table = $('#medical_prescriptions_table').DataTable({
             ordering: true,
             paging: true,
             scrollCollapse: true,
@@ -61,7 +61,7 @@ $(function () {
                 //{responsivePriority: 2, targets: [0,1,2, 4,7,8,10,15]},
             ],
             "ajax": {
-                "url": `/clinichistory/procedure_request/${derma_id}`,
+                "url": `/clinichistory/medical_prescription/${derma_id}`,
                 "type": 'GET',
             },
             "columns": [{
@@ -83,9 +83,9 @@ $(function () {
                 }
             },
             {
-                "data": "procedures",
+                "data": "prescriptionmedicines",
                 render: function (data, type, row) {
-                    console.log(row)
+                    console.log(data)
                     var html = '<ul>';
                     data.forEach(element => {
                         html += `<li>
@@ -93,10 +93,16 @@ $(function () {
                                     padding: 5px;
                                     font-size: 10px;">
                                         <span>
-                                            Observaciones: ${element.pivot.note}
+                                            Medicina: ${element.medicine_name}
                                         </span>
                                         <span>
-                                            Procedimiento: ${element.name} - ${element.description}
+                                            Dosis: ${element.dose}
+                                        </span>
+                                        <span>
+                                            Frecuencia: ${element.frequency}
+                                        </span>
+                                        <span>
+                                            Duracion: ${element.duration}
                                         </span>
                                     </div>
                                 </li>
@@ -105,6 +111,9 @@ $(function () {
                     html+= '</ul>';
                     return html;
                 }
+            },
+            {
+                "data": "validity",
             },
             {
                 "data": "created_at",
@@ -129,7 +138,7 @@ $(function () {
                     let derm = derma_id;
                     let appointment = row.appointments_id;
                     let url_update =
-                        `/clinichistory/procedure_request/${derm}/${row.id}/${appointment}/edit`;
+                        `/clinichistory/medical_prescription/${derm}/${row.id}/${appointment}/edit`;
                     // let url_delete = `{% url 'nomenclador:delete_anexo' 0 %}`;
                     // url_update = url_update.replace(0, row.id);
                     // url_delete = url_delete.replace(0, row.id);
@@ -151,25 +160,33 @@ $(function () {
             }
             ]
         })
-        $('#add_procedure_request').on('click', function (e) {
+        $('#add_medical_prescription').on('click', function (e) {
             e.preventDefault();
             var url = $(this).attr('href');
             $('#derma_modal div[class="modal-card"]').load(url, function () {
                 $('#derma_modal #salvar').on('click',function(){
-                    $('#procedure_request_form').submit();
+                    $('#salvar').hide();
+                    $('button.is-loading').removeClass('is-hidden');
+                    setTimeout(function(){
+                        $('#medical_prescription_form').submit();
+                    },10)
+
                 })
-                $('#procedure_request_form').on('submit', function (e) {
+                $('#medical_prescription_form').on('submit', function (e) {
                     e.preventDefault();
-                    url2 = $(this).attr('action')
+                    url2 = $(this).attr('action');
+
                     var formData = new FormData(document.getElementById(
-                        'procedure_request_form'));
+                        'medical_prescription_form'));
                     $.ajax({
                         url: url2,
                         async: false,
-                        data: $('#procedure_request_form')
+                        data: $('#medical_prescription_form')
                             .serializeArray(),
                         type: "post",
                         success: function (data) {
+                            $('button.is-loading').addClass('is-hidden');
+                            $('#salvar').show();
                             if (data.Success == true) {
                                 var table = $('#medical_prescriptions_table')
                                     .DataTable();
@@ -183,6 +200,8 @@ $(function () {
                             return;
                         }
                     }).fail(function (request, status, aa, a) {
+                        $('button.is-loading').addClass('is-hidden');
+                        $('#salvar').show();
                         try {
                             let keys = Object.keys(request
                                 .responseJSON)
@@ -196,6 +215,8 @@ $(function () {
                                 }
                             }
                         } catch {
+                            $('button.is-loading').addClass('is-hidden');
+                            $('#salvar').show();
                             console.log(aa);
                         }
                     });
@@ -207,7 +228,7 @@ $(function () {
 
             });
         });
-        var tabla_tem = $("#procedures_request_table");
+        var tabla_tem = $("#medical_prescriptions_table");
         tabla_tem.on('click', "a[data-toggle='modal']", function (e) {
 
             e.preventDefault();
@@ -216,20 +237,26 @@ $(function () {
             $('#derma_modal').addClass('is-active')
             $('#derma_modal div[class="modal-card"]').load(url, function () {
                 $('#derma_modal #salvar').on('click',function(){
-                    $('#procedure_request_form').submit();
+                    $('#salvar').hide();
+                    $('button.is-loading').removeClass('is-hidden');
+                    setTimeout(function(){
+                        $('#medical_prescription_form').submit();
+                    },10)
                 })
-                $('#procedure_request_form').on('submit', function (event) {
+                $('#medical_prescription_form').on('submit', function (event) {
                     event.preventDefault();
                     var $form = $(this);
                     url2 = $(this).attr('action')
-                    var formData = new FormData(document.getElementById('procedure_request_form'))
+                    var formData = new FormData(document.getElementById('medical_prescription_form'))
                     $.ajax({
                         url: url2,
                         async: false,
-                        data: $('#procedure_request_form').serializeArray(),
+                        data: $('#medical_prescription_form').serializeArray(),
                         type: "post",
                         success: function (data) {
-                            var table = $('#procedures_request_table').DataTable();
+                            $('button.is-loading').addClass('is-hidden');
+                            $('#salvar').show();
+                            var table = $('#medical_prescriptions_table').DataTable();
                             $('#delete-modal').trigger('click');
                             table.ajax.reload();
                             // $('#derma_modal').removeClass('is-active')
@@ -238,7 +265,8 @@ $(function () {
                             return;
                         }
                     }).fail(function (request, status, aa, a) {
-
+                        $('button.is-loading').addClass('is-hidden');
+                        $('#salvar').show();
                     });
                     return false;
                 });

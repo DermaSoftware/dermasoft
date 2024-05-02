@@ -18,6 +18,8 @@
                                 <th>#</th>
                                 <th>UUID</th>
                                 <th>Descripción</th>
+                                <th>Consulta</th>
+                                <th>Tipo de consulta</th>
                                 <th>Creado</th>
                                 {{-- <th>Actualizado</th> --}}
                                 {{-- <th class="is-end">Acciones</th> --}}

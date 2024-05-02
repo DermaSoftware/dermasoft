@@ -127,11 +127,17 @@ $(function () {
             var url = $(this).attr('href');
             $('#derma_modal div[class="modal-card"]').load(url, function () {
                 $('#derma_modal #salvar').on('click',function(){
-                    $('#backgrouns_form').submit();
+                    $('#salvar').hide();
+                    $('button.is-loading').removeClass('is-hidden');
+                    setTimeout(function(){
+                        $('#backgrouns_form').submit();
+                    },10)
+
                 })
                 $('#backgrouns_form').on('submit', function (e) {
                     e.preventDefault();
-                    url2 = $(this).attr('action')
+                    url2 = $(this).attr('action');
+
                     var formData = new FormData(document.getElementById(
                         'backgrouns_form'));
                     $.ajax({
@@ -141,6 +147,8 @@ $(function () {
                             .serializeArray(),
                         type: "post",
                         success: function (data) {
+                            $('button.is-loading').addClass('is-hidden');
+                            $('#salvar').show();
                             if (data.Success == true) {
                                 var table = $('#backgrouns')
                                     .DataTable();
@@ -154,6 +162,8 @@ $(function () {
                             return;
                         }
                     }).fail(function (request, status, aa, a) {
+                        $('button.is-loading').addClass('is-hidden');
+                        $('#salvar').show();
                         try {
                             let keys = Object.keys(request
                                 .responseJSON)
@@ -167,6 +177,8 @@ $(function () {
                                 }
                             }
                         } catch {
+                            $('button.is-loading').addClass('is-hidden');
+                            $('#salvar').show();
                             console.log(aa);
                         }
                     });
@@ -187,7 +199,11 @@ $(function () {
             $('#derma_modal').addClass('is-active')
             $('#derma_modal div[class="modal-card"]').load(url, function () {
                 $('#derma_modal #salvar').on('click',function(){
-                    $('#backgrouns_form').submit();
+                    $('#salvar').hide();
+                    $('button.is-loading').removeClass('is-hidden');
+                    setTimeout(function(){
+                        $('#backgrouns_form').submit();
+                    },10)
                 })
                 $('#backgrouns_form').on('submit', function (event) {
                     event.preventDefault();
@@ -200,6 +216,8 @@ $(function () {
                         data: $('#backgrouns_form').serializeArray(),
                         type: "post",
                         success: function (data) {
+                            $('button.is-loading').addClass('is-hidden');
+                            $('#salvar').show();
                             var table = $('#backgrouns').DataTable();
                             $('#delete-modal').trigger('click');
                             table.ajax.reload();
@@ -209,7 +227,8 @@ $(function () {
                             return;
                         }
                     }).fail(function (request, status, aa, a) {
-
+                        $('button.is-loading').addClass('is-hidden');
+                        $('#salvar').show();
                     });
                     return false;
                 });

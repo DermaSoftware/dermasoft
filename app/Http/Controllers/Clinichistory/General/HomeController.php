@@ -702,10 +702,15 @@ class HomeController extends Controller
     /////////////// INDICATIONS /////////////////////////
     public function indications(Request $request,$hc,$appointment = null){
 
-        $indications= Hcdermindications::where('hc',$hc)
+        $indications= Hcdermindications::with([
+            'appointments' => function ($query) {
+                $query->select('id','uuid','date_quote','time_quote','created_at'); # Uno a muchos
+            },
+        ])
+           -> where('hc',$hc)
         ->orderBy('created_at','DESC')
         ->orderBy('updated_at','DESC')
-        ->get(['id','uuid','indication','created_at','updated_at']);
+        ->get(['id','uuid','indication','created_at','updated_at','appointments_id','hc_type']);
          return DataTables::of($indications)->make(true);
     }
     public function add_indication(Request $request,$hc,$appointment = null){
@@ -720,14 +725,39 @@ class HomeController extends Controller
             return view($this->v_name . '.form.modals.modal_indication', $data);
         }
         else{
+
             $data = request()->except(['_token', '_method']);
             $appointment = Appointments::find($appointment);
-            $derma= Dermatology::where('id',$hc)->first();
+            $derma= Dermatology::with([
+                'user_class',
+            ])->where('id',$hc)->first();
             $aux_params = ['hc' => $derma->id,'user' => $derma->id,'company' => $derma->company,
-                        'campus' => $derma->campus,
-                        'indication' => !isset($data["is_other"]) ? $data["indication"] : $data["other_indication"],
-                        'hc_type' => $appointment->hc_type];
-			$o_x = Hcdermindications::create($aux_params);
+            'campus' => $derma->campus,
+            // 'indication' => !isset($data["is_other"]) ? $data["indication"] : $data["other_indication"],
+            'hc_type' => $appointment->hc_type,
+            'appointments_id' => $appointment->id];
+            $indd = '';
+            if(isset($data["is_other"])){
+                $aux_params['indication'] = $data["other_indication"];
+                $o_x = Hcdermindications::create($aux_params);
+                $indd .= '<br>'.$aux_params['indication'];
+            }
+            else{
+                $indications = $data["indication"];
+                foreach ($indications as $key => $value) {
+
+                    $aux_params['indication'] = $value;
+                    $o_x = Hcdermindications::create($aux_params);
+                    $indd .= '<br>'.$value;
+                }
+            }
+            if(!empty($data['notification_email']) AND $data['notification_email'] == 'yes' AND !empty($indd)){
+                Mail::to($derma->user_class->email)->send(new Ntfs('Indicaciones','Hola '.$derma->user_class->name.', en su consulta ha recibido las siguientes indicaciones: '.$indd,$derma->user_class->name,$derma->user_class->email));
+            }
+            //notificamos al whatsapp
+            if(!empty($data['notification_whatsapp']) AND $data['notification_whatsapp'] == 'yes'){
+
+            }
             return [
                 "Success" => true,
                 "Message" => "Adición exitosa"

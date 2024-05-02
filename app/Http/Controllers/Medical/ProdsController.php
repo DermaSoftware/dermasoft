@@ -180,7 +180,7 @@ class ProdsController extends Controller
             'doctor_class',
             'procedures'
         ])
-        ->where(['uuid' => $id])->first(['uuid','id','dermatology_id','doctor']);
+        ->where(['uuid' => $id])->first(['uuid','id','dermatology_id','doctor','created_at']);
 
 		if(empty($o_obj_item->id)){
 			return null;
@@ -309,7 +309,7 @@ class ProdsController extends Controller
             },
             'procedures']
             )
-            ->where('dermatology_id',$o_derm->id)->orderBy('id','ASC')->get(['doctor','id','uuid']);
+            ->where('dermatology_id',$o_derm->id)->orderBy('id','ASC')->get(['doctor','id','uuid','created_at']);
 		foreach($proccedure_request as $key => $o_obj_item){
 			$o_doctor = $o_obj_item->doctor_class;
 			$dfull_name = $o_doctor->name.' '.$o_doctor->scd_name.' '.$o_doctor->lastname.' '.$o_doctor->scd_lastname;

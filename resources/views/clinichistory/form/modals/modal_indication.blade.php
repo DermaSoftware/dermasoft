@@ -15,7 +15,7 @@
                             <div class="field">
                                 <div class="control">
                                     <label>Indicación</label>
-                                    <select name="indication" class="input diagnoses select2_fsc">
+                                    <select name="indication[]" multiple="multiple" class="input diagnoses select2_fsc">
                                         <?php foreach($o_indications as $key_sel => $row_sel){ ?>
                                         @isset($obj)
                                             <option <?= $obj->id == $row_sel->id ? 'selected' : '' ?>
@@ -47,6 +47,16 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="field">
+                            <div class="control"><label class="checkbox is-outlined is-info"><input
+                                        name="notification_email" type="checkbox" value="yes"><span></span> Enviar
+                                    indicaciones al correo del paciente</label></div>
+                        </div>
+                        <div class="field">
+                            <div class="control"><label class="checkbox is-outlined is-info"><input
+                                        name="notification_whatsapp" type="checkbox" value="yes"><span></span> Enviar
+                                    indicaciones al No. de whatsapp del paciente</label></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -56,6 +66,7 @@
 <div class="modal-card-foot is-end">
     <div class="buttons">
         <button id="salvar" type="submit" class="button is-success">Salvar</button>
+        <button class="button is-success is-loading is-hidden">Loading</button>
     </div>
 </div>
 
@@ -63,12 +74,12 @@
 <script>
     $(function() {
         if ($(".select2_fsc").length) {
-                $('.select2_fsc').each(function() {
-                    $(this).select2({
-                        theme: "classic",
-                    });
+            $('.select2_fsc').each(function() {
+                $(this).select2({
+                    theme: "classic",
                 });
-            }
+            });
+        }
         const toggleButton = document.getElementById('is_other');
         const elementoToggle = document.getElementById('other-box');
         const indicationToggle = document.getElementById('indication-box');

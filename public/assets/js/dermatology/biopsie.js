@@ -155,11 +155,17 @@ $(function () {
             var url = $(this).attr('href');
             $('#derma_modal div[class="modal-card"]').load(url, function () {
                 $('#derma_modal #salvar').on('click',function(){
-                    $('#biopsie_form').submit();
+                    $('#salvar').hide();
+                    $('button.is-loading').removeClass('is-hidden');
+                    setTimeout(function(){
+                        $('#biopsie_form').submit();
+                    },10)
+
                 })
                 $('#biopsie_form').on('submit', function (e) {
                     e.preventDefault();
-                    url2 = $(this).attr('action')
+                    url2 = $(this).attr('action');
+
                     var formData = new FormData(document.getElementById(
                         'biopsie_form'));
                     $.ajax({
@@ -169,6 +175,8 @@ $(function () {
                             .serializeArray(),
                         type: "post",
                         success: function (data) {
+                            $('button.is-loading').addClass('is-hidden');
+                            $('#salvar').show();
                             if (data.Success == true) {
                                 var table = $('#biopsie_table')
                                     .DataTable();
@@ -182,6 +190,8 @@ $(function () {
                             return;
                         }
                     }).fail(function (request, status, aa, a) {
+                        $('button.is-loading').addClass('is-hidden');
+                        $('#salvar').show();
                         try {
                             let keys = Object.keys(request
                                 .responseJSON)
@@ -195,6 +205,8 @@ $(function () {
                                 }
                             }
                         } catch {
+                            $('button.is-loading').addClass('is-hidden');
+                            $('#salvar').show();
                             console.log(aa);
                         }
                     });
@@ -215,12 +227,17 @@ $(function () {
             $('#derma_modal').addClass('is-active')
             $('#derma_modal div[class="modal-card"]').load(url, function () {
                 $('#derma_modal #salvar').on('click',function(){
-                    $('#biopsie_form').submit();
+                    $('#salvar').hide();
+                    $('button.is-loading').removeClass('is-hidden');
+                    setTimeout(function(){
+                        $('#biopsie_form').submit();
+                    },10)
                 })
                 $('#biopsie_form').on('submit', function (event) {
                     event.preventDefault();
                     var $form = $(this);
-                    url2 = $(this).attr('action')
+                    url2 = $(this).attr('action');
+
                     var formData = new FormData(document.getElementById('biopsie_form'))
                     $.ajax({
                         url: url2,
@@ -228,6 +245,8 @@ $(function () {
                         data: $('#biopsie_form').serializeArray(),
                         type: "post",
                         success: function (data) {
+                            $('button.is-loading').addClass('is-hidden');
+                            $('#salvar').show();
                             $('#delete-modal').trigger('click');
                             var table = $('#biopsie_table').DataTable();
                             table.ajax.reload();
@@ -237,7 +256,8 @@ $(function () {
                             return;
                         }
                     }).fail(function (request, status, aa, a) {
-
+                        $('button.is-loading').addClass('is-hidden');
+                        $('#salvar').show();
                     });
                     return false;
                 });

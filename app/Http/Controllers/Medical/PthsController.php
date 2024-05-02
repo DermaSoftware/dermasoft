@@ -187,7 +187,8 @@ class PthsController extends Controller
             'pathologies'
             ]
             )
-            ->where('uuid',$id)->orderBy('id','ASC')->first(['doctor','id','uuid','dermatology_id','hcdermdiagnostics_id','annexes']);
+            ->where('uuid',$id)->orderBy('id','ASC')->first(['doctor','id','uuid','dermatology_id',
+                    'hcdermdiagnostics_id','annexes','created_at']);
 
 		if(empty($o_obj_item->id)){
 			return null;
@@ -281,7 +282,7 @@ class PthsController extends Controller
             'pathologies'
             ]
             )
-            ->where('dermatology_id',$o_derm->id)->orderBy('id','ASC')->get(['doctor','id','uuid','hcdermdiagnostics_id','annexes']);
+            ->where('dermatology_id',$o_derm->id)->orderBy('id','ASC')->get(['doctor','id','uuid','hcdermdiagnostics_id','annexes','created_at']);
 		foreach($pathologies_request as $key => $o_obj_item){
 			$o_doctor = $o_obj_item->doctor_class;
 			$dfull_name = $o_doctor->name.' '.$o_doctor->scd_name.' '.$o_doctor->lastname.' '.$o_doctor->scd_lastname;

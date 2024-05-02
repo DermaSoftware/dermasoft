@@ -87,6 +87,7 @@
 <div class="modal-card-foot is-end">
     <div class="buttons">
         <button id="salvar" type="submit" class="button is-success">Salvar</button>
+        <button class="button is-success is-loading is-hidden">Loading</button>
     </div>
 </div>
 <script>

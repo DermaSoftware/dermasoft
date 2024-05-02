@@ -313,7 +313,7 @@ class MedicalpController extends Controller
             },
             'medicines']
             )
-            ->where('dermatology_id',$o_derm->id)->orderBy('id','ASC')->get(['doctor','id','uuid','validity']);
+            ->where('dermatology_id',$o_derm->id)->orderBy('id','ASC')->get(['doctor','id','uuid','validity','created_at']);
         foreach($prescription_request as $key => $o_obj_item){
             $o_doctor = $o_obj_item->doctor_class;
             $dfull_name = $o_doctor->name.' '.$o_doctor->scd_name.' '.$o_doctor->lastname.' '.$o_doctor->scd_lastname;

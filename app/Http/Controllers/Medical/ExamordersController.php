@@ -325,7 +325,7 @@ class ExamordersController extends Controller
                     'laboratoryexams'
                     ]
                     )
-                    ->where('dermatology_id',$o_derm->id)->orderBy('id','ASC')->get(['doctor','id','uuid','hcdermdiagnostics_id','total']);
+                    ->where('dermatology_id',$o_derm->id)->orderBy('id','ASC')->get(['doctor','id','uuid','hcdermdiagnostics_id','total','created_at']);
 		foreach($exams_request as $key => $o_obj_item){
 			$o_doctor = $o_obj_item->doctor_class;
 			$dfull_name = $o_doctor->name.' '.$o_doctor->scd_name.' '.$o_doctor->lastname.' '.$o_doctor->scd_lastname;
