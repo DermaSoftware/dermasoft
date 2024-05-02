@@ -1,10 +1,10 @@
 $(function () {
 
     $('#prescriptions_btn,#indic_tab').on('click', function () {
-        if ($('#medical_prescriptions_table').length > 0) {
-            $('#medical_prescriptions_table').DataTable().destroy();
+        if ($('#procedures_request_table').length > 0) {
+            $('#procedures_request_table').DataTable().destroy();
         }
-        var table = $('#medical_prescriptions_table').DataTable({
+        var table = $('#procedures_request_table').DataTable({
             ordering: true,
             paging: true,
             scrollCollapse: true,
@@ -61,7 +61,7 @@ $(function () {
                 //{responsivePriority: 2, targets: [0,1,2, 4,7,8,10,15]},
             ],
             "ajax": {
-                "url": `/clinichistory/medical_prescription/${derma_id}/${appointment}`,
+                "url": `/clinichistory/procedure_request/${derma_id}`,
                 "type": 'GET',
             },
             "columns": [{
@@ -83,9 +83,9 @@ $(function () {
                 }
             },
             {
-                "data": "prescriptionmedicines",
+                "data": "procedures",
                 render: function (data, type, row) {
-                    console.log(data)
+                    console.log(row)
                     var html = '<ul>';
                     data.forEach(element => {
                         html += `<li>
@@ -93,16 +93,10 @@ $(function () {
                                     padding: 5px;
                                     font-size: 10px;">
                                         <span>
-                                            Medicina: ${element.medicine_name}
+                                            Observaciones: ${element.pivot.note}
                                         </span>
                                         <span>
-                                            Dosis: ${element.dose}
-                                        </span>
-                                        <span>
-                                            Frecuencia: ${element.frequency}
-                                        </span>
-                                        <span>
-                                            Duracion: ${element.duration}
+                                            Procedimiento: ${element.name} - ${element.description}
                                         </span>
                                     </div>
                                 </li>
@@ -111,9 +105,6 @@ $(function () {
                     html+= '</ul>';
                     return html;
                 }
-            },
-            {
-                "data": "validity",
             },
             {
                 "data": "created_at",
@@ -136,8 +127,9 @@ $(function () {
                 "data": "buttons",
                 render: function (data, type, row) {
                     let derm = derma_id;
+                    let appointment = row.appointments_id;
                     let url_update =
-                        `/clinichistory/medical_prescription/${derm}/${row.id}/${appointment}/edit`;
+                        `/clinichistory/procedure_request/${derm}/${row.id}/${appointment}/edit`;
                     // let url_delete = `{% url 'nomenclador:delete_anexo' 0 %}`;
                     // url_update = url_update.replace(0, row.id);
                     // url_delete = url_delete.replace(0, row.id);
@@ -159,22 +151,22 @@ $(function () {
             }
             ]
         })
-        $('#add_medical_prescription').on('click', function (e) {
+        $('#add_procedure_request').on('click', function (e) {
             e.preventDefault();
             var url = $(this).attr('href');
             $('#derma_modal div[class="modal-card"]').load(url, function () {
                 $('#derma_modal #salvar').on('click',function(){
-                    $('#medical_prescription_form').submit();
+                    $('#procedure_request_form').submit();
                 })
-                $('#medical_prescription_form').on('submit', function (e) {
+                $('#procedure_request_form').on('submit', function (e) {
                     e.preventDefault();
                     url2 = $(this).attr('action')
                     var formData = new FormData(document.getElementById(
-                        'medical_prescription_form'));
+                        'procedure_request_form'));
                     $.ajax({
                         url: url2,
                         async: false,
-                        data: $('#medical_prescription_form')
+                        data: $('#procedure_request_form')
                             .serializeArray(),
                         type: "post",
                         success: function (data) {
@@ -215,7 +207,7 @@ $(function () {
 
             });
         });
-        var tabla_tem = $("#medical_prescriptions_table");
+        var tabla_tem = $("#procedures_request_table");
         tabla_tem.on('click', "a[data-toggle='modal']", function (e) {
 
             e.preventDefault();
@@ -224,20 +216,20 @@ $(function () {
             $('#derma_modal').addClass('is-active')
             $('#derma_modal div[class="modal-card"]').load(url, function () {
                 $('#derma_modal #salvar').on('click',function(){
-                    $('#medical_prescription_form').submit();
+                    $('#procedure_request_form').submit();
                 })
-                $('#medical_prescription_form').on('submit', function (event) {
+                $('#procedure_request_form').on('submit', function (event) {
                     event.preventDefault();
                     var $form = $(this);
                     url2 = $(this).attr('action')
-                    var formData = new FormData(document.getElementById('medical_prescription_form'))
+                    var formData = new FormData(document.getElementById('procedure_request_form'))
                     $.ajax({
                         url: url2,
                         async: false,
-                        data: $('#medical_prescription_form').serializeArray(),
+                        data: $('#procedure_request_form').serializeArray(),
                         type: "post",
                         success: function (data) {
-                            var table = $('#medical_prescriptions_table').DataTable();
+                            var table = $('#procedures_request_table').DataTable();
                             $('#delete-modal').trigger('click');
                             table.ajax.reload();
                             // $('#derma_modal').removeClass('is-active')

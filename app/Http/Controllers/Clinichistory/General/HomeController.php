@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Clinichistory\General;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Medical\ExamordersController;
+use App\Http\Controllers\Medical\MedicalpController;
+use App\Mail\MpMail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -48,6 +51,11 @@ use App\Models\PrescriptionMedicine;
 use App\Models\ProcedureRequest;
 use App\Models\RexamLaboratoryexams;
 use App\Models\TipoAntecedente;
+use App\Http\Controllers\Medical\ProdsController;
+use App\Http\Controllers\Medical\PthsController;
+use App\Mail\ExamordersMail;
+use App\Mail\ProdsMail;
+use App\Mail\PthsMail;
 use Yajra\DataTables\DataTables;
 class HomeController extends Controller
 {
@@ -553,7 +561,7 @@ class HomeController extends Controller
 		exit();
     }
 
-    public function backgrounds(Request $request,$hc,$appointment){
+    public function backgrounds(Request $request,$hc,$appointment = null){
 
         $backgrounds= Antecedente::with([
             'type_class' => function ($query) {
@@ -566,7 +574,7 @@ class HomeController extends Controller
 
          return DataTables::of($backgrounds)->make(true);
     }
-    public function add_backgrounds(Request $request,$hc,$appointment){
+    public function add_backgrounds(Request $request,$hc,$appointment = null){
 
         if($request->method() === 'GET'){
 
@@ -614,7 +622,7 @@ class HomeController extends Controller
     }
 
     /////////////// DIAGNOSTICOS /////////////////////////
-    public function diagnostics(Request $request,$hc,$appointment){
+    public function diagnostics(Request $request,$hc,$appointment = null){
 
         $diagnostics= Hcdermdiagnostics::where('hc',$hc)
         ->orderBy('created_at','DESC')
@@ -623,7 +631,7 @@ class HomeController extends Controller
 
          return DataTables::of($diagnostics)->make(true);
     }
-    public function add_diagnostic(Request $request,$hc,$appointment){
+    public function add_diagnostic(Request $request,$hc,$appointment = null){
 
         if($request->method() === 'GET'){
 
@@ -692,7 +700,7 @@ class HomeController extends Controller
     }
 
     /////////////// INDICATIONS /////////////////////////
-    public function indications(Request $request,$hc,$appointment){
+    public function indications(Request $request,$hc,$appointment = null){
 
         $indications= Hcdermindications::where('hc',$hc)
         ->orderBy('created_at','DESC')
@@ -700,7 +708,7 @@ class HomeController extends Controller
         ->get(['id','uuid','indication','created_at','updated_at']);
          return DataTables::of($indications)->make(true);
     }
-    public function add_indication(Request $request,$hc,$appointment){
+    public function add_indication(Request $request,$hc,$appointment = null){
 
         if($request->method() === 'GET'){
 
@@ -757,7 +765,7 @@ class HomeController extends Controller
     }
 
     /////////////// BIPSIES /////////////////////////
-    public function biopsies(Request $request,$hc,$appointment){
+    public function biopsies(Request $request,$hc,$appointment = null){
         $appoint = Appointments::find($appointment);
         $biopsies= Hprocedure::with([
             'type_procedure_class' => function ($query) {
@@ -780,7 +788,7 @@ class HomeController extends Controller
 
          return DataTables::of($biopsies)->make(true);
     }
-    public function add_biopsie(Request $request,$hc,$appointment){
+    public function add_biopsie(Request $request,$hc,$appointment = null){
 
         if($request->method() === 'GET'){
 
@@ -877,7 +885,7 @@ class HomeController extends Controller
     }
 
     /////////////// Cryotherapy /////////////////////////
-    public function cryotherapies(Request $request,$hc,$appointment){
+    public function cryotherapies(Request $request,$hc,$appointment = null){
 
         $biopsies= Hprocedure::with([
             'type_procedure_class' => function ($query) {
@@ -894,7 +902,7 @@ class HomeController extends Controller
 
          return DataTables::of($biopsies)->make(true);
     }
-    public function add_cryotherapy(Request $request,$hc,$appointment){
+    public function add_cryotherapy(Request $request,$hc,$appointment = null){
 
         if($request->method() === 'GET'){
 
@@ -930,7 +938,7 @@ class HomeController extends Controller
     }
 
     /////////////// Aesthetic /////////////////////////
-    public function aesthetics(Request $request,$hc,$appointment){
+    public function aesthetics(Request $request,$hc,$appointment = null){
 
         $biopsies= Hprocedure::with([
             'type_procedure_class' => function ($query) {
@@ -950,7 +958,7 @@ class HomeController extends Controller
 
          return DataTables::of($biopsies)->make(true);
     }
-    public function add_aesthetic(Request $request,$hc,$appointment){
+    public function add_aesthetic(Request $request,$hc,$appointment = null){
 
         if($request->method() === 'GET'){
 
@@ -1006,7 +1014,7 @@ class HomeController extends Controller
     }
 
     /////////////// SURGICALS /////////////////////////
-    public function surgicals(Request $request,$hc,$appointment){
+    public function surgicals(Request $request,$hc,$appointment = null){
 
         $appoint = Appointments::find($appointment);
         $biopsies= Hprocedure::with([
@@ -1030,7 +1038,7 @@ class HomeController extends Controller
 
          return DataTables::of($biopsies)->make(true);
     }
-    public function add_surgical(Request $request,$hc,$appointment){
+    public function add_surgical(Request $request,$hc,$appointment = null){
 
         if($request->method() === 'GET'){
 
@@ -1089,7 +1097,7 @@ class HomeController extends Controller
     }
 
     /////////////// Appointment Reason /////////////////////////
-    public function appointments_reason(Request $request,$hc,$appointment){
+    public function appointments_reason(Request $request,$hc,$appointment = null){
 
         $appointment_reason= AppointmentReason::with([
             'doctor_class' => function ($query) {
@@ -1103,7 +1111,7 @@ class HomeController extends Controller
 
          return DataTables::of($appointment_reason)->make(true);
     }
-    public function add_appointment_reason(Request $request,$hc,$appointment){
+    public function add_appointment_reason(Request $request,$hc,$appointment = null){
 
         if($request->method() === 'GET'){
 
@@ -1133,7 +1141,7 @@ class HomeController extends Controller
     }
 
     /////////////// Appointment Reason /////////////////////////
-    public function anamnesis(Request $request,$hc,$appointment){
+    public function anamnesis(Request $request,$hc,$appointment = null){
 
         $anamnesis= Anamnesis::with([
             'doctor_class' => function ($query) {
@@ -1149,7 +1157,7 @@ class HomeController extends Controller
 
          return DataTables::of($anamnesis)->make(true);
     }
-    public function add_anamnesis(Request $request,$hc,$appointment){
+    public function add_anamnesis(Request $request,$hc,$appointment = null){
 
         if($request->method() === 'GET'){
 
@@ -1184,7 +1192,7 @@ class HomeController extends Controller
         }
     }
     /////////////// Medical Prescription /////////////////////////
-    public function medical_prescription(Request $request,$hc,$appointment){
+    public function medical_prescription(Request $request,$hc,$appointment = null){
 
         $prescriptions= Prescription::with([
             'doctor_class' => function ($query) {
@@ -1205,7 +1213,7 @@ class HomeController extends Controller
 
          return DataTables::of($prescriptions)->make(true);
     }
-    public function add_medical_prescription(Request $request,$hc,$appointment){
+    public function add_medical_prescription(Request $request,$hc,$appointment = null){
 
         if($request->method() === 'GET'){
 
@@ -1230,7 +1238,7 @@ class HomeController extends Controller
             ],[
                 'validity.required' => 'La Vigencia es requerida',
             ]);
-            $derma= Dermatology::where('id',$hc)->first();
+            $derma= Dermatology::with(['user_class'])->where('id',$hc)->first();
             $appoint = Appointments::where('id',$appointment)->first();
             $aux_params = [
                 'dermatology_id' => $derma->id,
@@ -1238,14 +1246,14 @@ class HomeController extends Controller
                 'appointments_id' => $appointment,
                 'validity' => !empty($data['validity'])?$data['validity']:1,
             ];
-            $o = Prescription::create($aux_params);
+            $presc = Prescription::create($aux_params);
             //Guardamos la prescripción médica
             if(!empty($data['prescription_med'])){
                 foreach($data['prescription_med'] as $key => $row){
 
                     $medicine = Medicines::find($row);
                     $aux_params = [
-                                    'prescription_id' => $o->id,
+                                    'prescription_id' => $presc->id,
                                     'medicines_id' => $row
                                 ];
                     $aux_params['medicine_name'] = !empty($medicine)?$medicine->name . '-' . $medicine->description : '';//
@@ -1256,6 +1264,25 @@ class HomeController extends Controller
                     $aux_params['indications'] = !empty($data['prescription_ind'][$key])?$data['prescription_ind'][$key]:'';//
                     $o_x = PrescriptionMedicine::create($aux_params);
                 }
+            }
+
+            $medicalController = new MedicalpController();
+            $pdfFilePath = $medicalController->getpdfhc($presc->uuid,true);
+            $pdfFilePath = storage_path($pdfFilePath);
+            $path = Storage::disk('public')->putFile('temp', new File($pdfFilePath), 'public');
+            $pdfFilePathTemp = './storage/app/public/uploads/mp_'.$derma->user.'.pdf';
+            Storage::delete($pdfFilePathTemp);
+            unlink($pdfFilePath);
+            $attach_file = storage_path('app/public/' . $path);
+            $fullpath = asset('storage/'.$path);
+            $presc->update(['path_pdf' => $fullpath]);
+            if(!empty($data['notification_email']) AND $data['notification_email'] == 'yes'){
+                $full_name = $derma->user_class->name.' '.$derma->user_class->scd_name.' '.$derma->user_class->lastname.' '.$derma->user_class->scd_lastname;
+                Mail::to($derma->user_class->email)->send(new MpMail($full_name,$attach_file));
+            }
+            //notificamos al whatsapp
+            if(!empty($data['notification_whatsapp']) AND $data['notification_whatsapp'] == 'yes'){
+
             }
             return [
                 "Success" => true,
@@ -1315,6 +1342,24 @@ class HomeController extends Controller
                     $o_x = PrescriptionMedicine::create($aux_params);
                 }
             }
+            $medicalController = new MedicalpController();
+            $pdfFilePath = $medicalController->getpdfhc($o_pres->uuid,true);
+            $pdfFilePath = storage_path($pdfFilePath);
+            $path = Storage::disk('public')->putFile('temp', new File($pdfFilePath), 'public');
+            $pdfFilePathTemp = './storage/app/public/uploads/mp_'.$derma->user.'.pdf';
+            Storage::delete($pdfFilePathTemp);
+            unlink($pdfFilePath);
+            $attach_file = storage_path('app/public/' . $path);
+            $fullpath = asset('storage/'.$path);
+            $o_pres->update(['path_pdf' => $fullpath]);
+            if(!empty($data['notification_email']) AND $data['notification_email'] == 'yes'){
+                $full_name = $derma->user_class->name.' '.$derma->user_class->scd_name.' '.$derma->user_class->lastname.' '.$derma->user_class->scd_lastname;
+                Mail::to($derma->user_class->email)->send(new MpMail($full_name,$attach_file));
+            }
+            //notificamos al whatsapp
+            if(!empty($data['notification_whatsapp']) AND $data['notification_whatsapp'] == 'yes'){
+
+            }
             return [
                 "Success" => true,
                 "Message" => "Adición exitosa"
@@ -1322,7 +1367,7 @@ class HomeController extends Controller
         }
     }
     /////////////// Procedure Request /////////////////////////
-    public function procedure_request(Request $request,$hc,$appointment){
+    public function procedure_request(Request $request,$hc,$appointment = null){
 
         $procedures_requests= ProcedureRequest::with([
             'doctor_class' => function ($query) {
@@ -1340,7 +1385,7 @@ class HomeController extends Controller
 
          return DataTables::of($procedures_requests)->make(true);
     }
-    public function add_procedure_request(Request $request,$hc,$appointment){
+    public function add_procedure_request(Request $request,$hc,$appointment = null){
 
         if($request->method() === 'GET'){
 
@@ -1362,7 +1407,7 @@ class HomeController extends Controller
         }
         else{
             $data = request()->except(['_token', '_method']);
-            $derma= Dermatology::where('id',$hc)->first();
+            $derma= Dermatology::with(['user_class'])->where('id',$hc)->first();
             $appoint = Appointments::where('id',$appointment)->first();
             $aux_params = [
                 'dermatology_id' => $derma->id,
@@ -1380,6 +1425,24 @@ class HomeController extends Controller
                     $aux_params['note'] = !empty($data['note'][$key])?$data['note'][$key]:'';//
                     $o_x = PRequest_NProcedure::create($aux_params);
                 }
+            }
+            $procdController = new ProdsController();
+            $pdfFilePath = $procdController->getpdfhc($rprocedure->uuid,true);
+            $pdfFilePath = storage_path($pdfFilePath);
+            $path = Storage::disk('public')->putFile('temp', new File($pdfFilePath), 'public');
+            $pdfFilePathTemp = './storage/app/public/uploads/mp_'.$derma->user.'.pdf';
+            Storage::delete($pdfFilePathTemp);
+            unlink($pdfFilePath);
+            $attach_file = storage_path('app/public/' . $path);
+            $fullpath = asset('storage/'.$path);
+            $rprocedure->update(['path_pdf' => $fullpath]);
+            if(!empty($data['notification_email']) AND $data['notification_email'] == 'yes'){
+                $full_name = $derma->user_class->name.' '.$derma->user_class->scd_name.' '.$derma->user_class->lastname.' '.$derma->user_class->scd_lastname;
+                Mail::to($derma->user_class->email)->send(new ProdsMail($full_name,$attach_file));
+            }
+            //notificamos al whatsapp
+            if(!empty($data['notification_whatsapp']) AND $data['notification_whatsapp'] == 'yes'){
+
             }
             return [
                     "Success" => true,
@@ -1434,6 +1497,24 @@ class HomeController extends Controller
                     $o_x = PRequest_NProcedure::create($aux_params);
                 }
             }
+            $procdController = new ProdsController();
+            $pdfFilePath = $procdController->getpdfhc($procedure_request->uuid,true);
+            $pdfFilePath = storage_path($pdfFilePath);
+            $path = Storage::disk('public')->putFile('temp', new File($pdfFilePath), 'public');
+            $pdfFilePathTemp = './storage/app/public/uploads/mp_'.$derma->user.'.pdf';
+            Storage::delete($pdfFilePathTemp);
+            unlink($pdfFilePath);
+            $attach_file = storage_path('app/public/' . $path);
+            $fullpath = asset('storage/'.$path);
+            $procedure_request->update(['path_pdf' => $fullpath]);
+            if(!empty($data['notification_email']) AND $data['notification_email'] == 'yes'){
+                $full_name = $derma->user_class->name.' '.$derma->user_class->scd_name.' '.$derma->user_class->lastname.' '.$derma->user_class->scd_lastname;
+                Mail::to($derma->user_class->email)->send(new ProdsMail($full_name,$attach_file));
+            }
+            //notificamos al whatsapp
+            if(!empty($data['notification_whatsapp']) AND $data['notification_whatsapp'] == 'yes'){
+
+            }
             return [
                     "Success" => true,
                 "Message" => "Adición exitosa"
@@ -1442,7 +1523,7 @@ class HomeController extends Controller
     }
 
     /////////////// Exam request /////////////////////////
-    public function exam_request(Request $request,$hc,$appointment){
+    public function exam_request(Request $request,$hc,$appointment = null){
 
         $exams= ExamRequest::with([
             'doctor_class' => function ($query) {
@@ -1460,7 +1541,7 @@ class HomeController extends Controller
 
          return DataTables::of($exams)->make(true);
     }
-    public function add_exam_request(Request $request,$hc,$appointment){
+    public function add_exam_request(Request $request,$hc,$appointment = null){
 
         if($request->method() === 'GET'){
 
@@ -1497,6 +1578,24 @@ class HomeController extends Controller
                     $total = $total + 1;
                 }
                 $exam_request->update(['total'=> $total]);
+            }
+            $procdController = new ExamordersController();
+            $pdfFilePath = $procdController->getpdfhc($exam_request->uuid,true);
+            $pdfFilePath = storage_path($pdfFilePath);
+            $path = Storage::disk('public')->putFile('temp', new File($pdfFilePath), 'public');
+            $pdfFilePathTemp = './storage/app/public/uploads/mp_'.$derma->user.'.pdf';
+            Storage::delete($pdfFilePathTemp);
+            unlink($pdfFilePath);
+            $attach_file = storage_path('app/public/' . $path);
+            $fullpath = asset('storage/'.$path);
+            $exam_request->update(['path_pdf' => $fullpath]);
+            if(!empty($data['notification_email']) AND $data['notification_email'] == 'yes'){
+                $full_name = $derma->user_class->name.' '.$derma->user_class->scd_name.' '.$derma->user_class->lastname.' '.$derma->user_class->scd_lastname;
+                Mail::to($derma->user_class->email)->send(new ExamordersMail($full_name,$attach_file));
+            }
+            //notificamos al whatsapp
+            if(!empty($data['notification_whatsapp']) AND $data['notification_whatsapp'] == 'yes'){
+
             }
             return [
                 "Success" => true,
@@ -1536,10 +1635,10 @@ class HomeController extends Controller
             return view($this->v_name . '.form.modals.modal_exam_request', $data);
         }
         else{
-            $exam = ExamRequest::with(['laboratoryexams'])->where('id',$id)->first();
+            $exam = ExamRequest::with(['laboratoryexams','appointments','dermatology'])->where('id',$id)->first();
             $data = request()->except(['_token', '_method']);
-            $derma= Dermatology::where('id',$hc)->first();
-            $appoint = Appointments::where('id',$appointment)->first();
+            $derma= $exam->dermatology;
+            $appoint= $exam->appointments;
             $aux_params = [
                 'dermatology_id' => $derma->id,
                 'doctor' => Auth::user()->id,
@@ -1560,6 +1659,24 @@ class HomeController extends Controller
                 }
                 $exam->update(['total'=> $total]);
             }
+            $procdController = new ExamordersController();
+            $pdfFilePath = $procdController->getpdfhc($exam->uuid,true);
+            $pdfFilePath = storage_path($pdfFilePath);
+            $path = Storage::disk('public')->putFile('temp', new File($pdfFilePath), 'public');
+            $pdfFilePathTemp = './storage/app/public/uploads/mp_'.$derma->user.'.pdf';
+            Storage::delete($pdfFilePathTemp);
+            unlink($pdfFilePath);
+            $attach_file = storage_path('app/public/' . $path);
+            $fullpath = asset('storage/'.$path);
+            $exam->update(['path_pdf' => $fullpath]);
+            if(!empty($data['notification_email']) AND $data['notification_email'] == 'yes'){
+                $full_name = $derma->user_class->name.' '.$derma->user_class->scd_name.' '.$derma->user_class->lastname.' '.$derma->user_class->scd_lastname;
+                Mail::to($derma->user_class->email)->send(new ExamordersMail($full_name,$attach_file));
+            }
+            //notificamos al whatsapp
+            if(!empty($data['notification_whatsapp']) AND $data['notification_whatsapp'] == 'yes'){
+
+            }
             return [
                     "Success" => true,
                 "Message" => "Adición exitosa"
@@ -1567,7 +1684,7 @@ class HomeController extends Controller
         }
     }
     /////////////// Pathologies /////////////////////////
-    public function patology_request(Request $request,$hc,$appointment){
+    public function patology_request(Request $request,$hc,$appointment = null){
 
         $path_r= PathologyRequest::with([
             'doctor_class' => function ($query) {
@@ -1585,7 +1702,7 @@ class HomeController extends Controller
 
          return DataTables::of($path_r)->make(true);
     }
-    public function add_patology_request(Request $request,$hc,$appointment){
+    public function add_patology_request(Request $request,$hc,$appointment = null){
 
         if($request->method() === 'GET'){
 
@@ -1629,6 +1746,24 @@ class HomeController extends Controller
                     $aux_params['note'] = !empty($data['note'][$key])?$data['note'][$key]:'';
                     $o_x = PathologyRequestPathologies::create($aux_params);
                 }
+            }
+            $medicalController = new PthsController();
+            $pdfFilePath = $medicalController->getpdfhc($pathology_request->uuid,true);
+            $pdfFilePath = storage_path($pdfFilePath);
+            $path = Storage::disk('public')->putFile('temp', new File($pdfFilePath), 'public');
+            $pdfFilePathTemp = './storage/app/public/uploads/mp_'.$derma->user.'.pdf';
+            Storage::delete($pdfFilePathTemp);
+            unlink($pdfFilePath);
+            $attach_file = storage_path('app/public/' . $path);
+            $fullpath = asset('storage/'.$path);
+            $pathology_request->update(['path_pdf' => $fullpath]);
+            if(!empty($data['notification_email']) AND $data['notification_email'] == 'yes'){
+                $full_name = $derma->user_class->name.' '.$derma->user_class->scd_name.' '.$derma->user_class->lastname.' '.$derma->user_class->scd_lastname;
+                Mail::to($derma->user_class->email)->send(new PthsMail($full_name,$attach_file));
+            }
+            //notificamos al whatsapp
+            if(!empty($data['notification_whatsapp']) AND $data['notification_whatsapp'] == 'yes'){
+
             }
             return [
                 "Success" => true,
@@ -1684,6 +1819,24 @@ class HomeController extends Controller
                     $aux_params['note'] = !empty($data['note'][$key])?$data['note'][$key]:'';
                     $o_x = PathologyRequestPathologies::create($aux_params);
                 }
+            }
+            $medicalController = new PthsController();
+            $pdfFilePath = $medicalController->getpdfhc($pathology->uuid,true);
+            $pdfFilePath = storage_path($pdfFilePath);
+            $path = Storage::disk('public')->putFile('temp', new File($pdfFilePath), 'public');
+            $pdfFilePathTemp = './storage/app/public/uploads/mp_'.$derma->user.'.pdf';
+            Storage::delete($pdfFilePathTemp);
+            unlink($pdfFilePath);
+            $attach_file = storage_path('app/public/' . $path);
+            $fullpath = asset('storage/'.$path);
+            $pathology->update(['path_pdf' => $fullpath]);
+            if(!empty($data['notification_email']) AND $data['notification_email'] == 'yes'){
+                $full_name = $derma->user_class->name.' '.$derma->user_class->scd_name.' '.$derma->user_class->lastname.' '.$derma->user_class->scd_lastname;
+                Mail::to($derma->user_class->email)->send(new PthsMail($full_name,$attach_file));
+            }
+            //notificamos al whatsapp
+            if(!empty($data['notification_whatsapp']) AND $data['notification_whatsapp'] == 'yes'){
+
             }
             return [
                     "Success" => true,

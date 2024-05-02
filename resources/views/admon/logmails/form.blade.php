@@ -97,7 +97,7 @@
         <div class="control">
 			<?php $t_att = 'sel_users'; ?>
 			<?php $n_att = 'Seleccione rol'; ?>
-			<?php $optionsr = ['Todos','Administradores','Medicos','Administrativo','Pacientes']; ?>
+			<?php $optionsr = ['Todos','Administrador','Medico','Administrativo','Paciente']; ?>
 			<label><?= $n_att ?></label>
 			<select name="<?= $t_att ?>" id="roles_uss_fsc" class="input" data-url="<?= url('admon/logmails') ?>" required>
 				{{-- <option value="Todos" >--Todos--</option> --}}

@@ -15,6 +15,7 @@ use Illuminate\Http\File;
 use Illuminate\Support\Facades\Storage;
 use App\Mail\MsjlogmailsWithAttachments;
 use App\Mail\Msjlogmails;
+use App\Models\Companies;
 use App\Models\Roles;
 
 class LogmailsController extends Controller
@@ -315,9 +316,17 @@ class LogmailsController extends Controller
         if ($id > 0) {
             $w['role'] = $id;
         }
-        $o_all = User::where($w)->whereNotIn('status', ['deleted'])->orderBy('id', 'asc')->get();
+        $user_authenticated = Auth::user();
+        $company = Companies::where('id',$user_authenticated->company)->first();
+        $users_filtererd = User::where('company',$company->id)
+                            ->whereNotIn('status', ['deleted'])
+                            ->orderBy('id', 'asc')
+                            ->whereHas('role_class',function($q) use ($id) {
+                                $q->where('name',$id);
+                            })->get(['id','uuid','name','lastname','scd_lastname','scd_name','email']);
+        // $o_all = User::where($w)->whereNotIn('status', ['deleted'])->orderBy('id', 'asc')->get();
         $out = '<option value="0" selected >--Todos--</option>';
-        foreach ($o_all as $key => $row) {
+        foreach ($users_filtererd as $key => $row) {
             $full_name = $row->name . ' ' . $row->scd_name . ' ' . $row->lastname . ' ' . $row->scd_lastname;
             $out .= '<option value="' . $row->id . '">' . $full_name . ' (' . $row->email . ')</option>';
         }
@@ -340,4 +349,16 @@ class LogmailsController extends Controller
             }
         }
     }
+
+    // public function get_users(Request $request)
+    // {
+    //     $data = request()->except(['_token', '_method']);
+    //     $user_authenticated = Auth::user();
+    //     $company = Companies::where('id',$user_authenticated->company)->first();
+    //     $users_filtererd = User::where('company',$company->id)
+    //                         ->whereHas('role_class',function($q) use ($data) {
+    //                             $q->where('name',$data['rol']);
+    //                         })->get(['id','uuid','name']);
+    //     return empty($users_filtererd ? [] : $users_filtererd);
+    // }
 }

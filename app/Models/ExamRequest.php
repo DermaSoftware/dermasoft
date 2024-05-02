@@ -31,6 +31,14 @@ class ExamRequest extends Model
     {
         return $this->belongsTo(Appointments::class);
     }
+    public function hcdermdiagnostics()
+    {
+        return $this->belongsTo(Hcdermdiagnostics::class);
+    }
+    public function dermatology()
+    {
+        return $this->belongsTo(Dermatology::class);
+    }
 
     public function doctor_class()
     {
