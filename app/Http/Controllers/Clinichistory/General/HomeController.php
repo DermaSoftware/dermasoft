@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\Clinichistory\General;
 
+use App\Http\Controllers\Clinichistory\AestheticController;
+use App\Http\Controllers\Clinichistory\BiopsiesController;
+use App\Http\Controllers\Clinichistory\SurgicalController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Medical\ExamordersController;
 use App\Http\Controllers\Medical\MedicalpController;
@@ -306,11 +309,11 @@ class HomeController extends Controller
                             ->orderBy('id', 'DESC')->first();
 
             if(!empty($o_vitalsigns)){
-                if($o_vitalsigns->hc_type !== $o_vitalsigns->appointment->hc_type){
+                if($o_vitalsigns->hc_type !== $o_vitalsigns->appointment_class->hc_type){
                     $request->session()->flash('msj_error', 'El usuario no tiene signos vitales definido para este  tipo de consulta');
 		            return redirect($this->r_name.'/dermatology');
                 }
-                $appintment = $o_vitalsigns->appointment->id;
+                $appintment = $o_vitalsigns->appointment_class->id;
                 return redirect($this->r_name.'/dermatology/'.$o->uuid.'/'.$appintment);
             }
             else{
@@ -323,7 +326,28 @@ class HomeController extends Controller
 		return redirect($this->r_name.'/dermatology');
     }
 
+    public function gethcpdf(Request $request,$appointment_id){
 
+        $appointment = Appointments::where('uuid',$appointment_id)->first();
+        $hc_type = $appointment->hc_type;
+
+        if($hc_type == 'Dermatología general'){
+            return $this->hcdermpdf($appointment_id);
+        }
+        if($hc_type == 'Biopsías y/o procedimientos'){
+            $biopsiescontroller = new BiopsiesController();
+            return $biopsiescontroller->hcpdf($appointment_id);
+        }
+        if($hc_type == 'Procedimientos Estéticos'){
+            $aestheticscontroller = new AestheticController();
+            return $aestheticscontroller->hcpdf($appointment_id);
+        }
+        if($hc_type == 'Descripción Quirúrgica'){
+            $surgicalcontroller = new SurgicalController();
+            return $surgicalcontroller->hcpdf($appointment_id);
+        }
+
+    }
 	//PDF
 	public function hcdermpdf($id)
     {
@@ -373,7 +397,8 @@ class HomeController extends Controller
             },
             'campus_class' => function ($query) {
                 $query->select('id','name'); # Uno a muchos
-            }
+            },
+            'latestVitalsign'
             ])
             ->where('uuid',$id)
             ->orderBy('created_at','DESC')
@@ -390,18 +415,80 @@ class HomeController extends Controller
 		$photo = !empty($o->photo_pp)?$o->photo_pp:public_path('assets/images/user.png');
 		$signature = !empty($o_doctor->signature_pp)?$o_doctor->signature_pp:public_path('assets/images/firma.png');
 
-		$data['o_vitalsigns'] = Vitalsigns::where(['user' => $o_derm->user])
-                                ->where('appointment_id',$appointment->id)
-                                ->where('hc_type',$appointment->hc_type)
-                                ->orderBy('id', 'DESC')->first();
-		$all_dgs = Hcdermdiagnostics::where(['hc' => $o_derm->id])->orderBy('id', 'asc')->get();//diagnosticos
-		$all_ind = Hcdermindications::where(['hc' => $o_derm->id])->orderBy('id', 'asc')->get();//indicaciones
-		$all_pre = Prescriptions::where(['hc' => $o_derm->id])->orderBy('id', 'asc')->get();//prescripción médica
-		$all_sex = Hcdermsolexams::where(['hc' => $o_derm->id])->orderBy('id', 'asc')->get();//Solicitudes de examenes
-		$all_spr = Hcdermsolproc::where(['hc' => $o_derm->id])->orderBy('id', 'asc')->get();//Solicitudes de procedimientos
-		$all_spa = Hcdermsolpath::where(['hc' => $o_derm->id])->orderBy('id', 'asc')->get();//Solicitudes de patalogías
+		$data['o_vitalsigns'] = $appointment->latestVitalsign;
+
+
+        $all_ana = $o_derm->anamnesis;
+        $all_back = $o_derm->antecedentes;
+
+		$all_dgs= Hcdermdiagnostics::where('appointments_id',$id)
+        ->orderBy('created_at','DESC')
+        ->orderBy('updated_at','DESC')
+        ->get(['id','uuid','code','diagnostic','type_diagnostic' ,'created_at','updated_at']);
+
+		$all_ind = Hcdermindications::with([
+            'appointments' => function ($query) {
+                $query->select('id','uuid','date_quote','time_quote','created_at'); # Uno a muchos
+            },
+        ])
+           ->where('appointments_id',$id)
+        ->orderBy('created_at','DESC')
+        ->orderBy('updated_at','DESC')
+        ->get(['id','uuid','indication','created_at','updated_at','appointments_id','hc_type']);
+
+        $all_pre = Prescription::with([
+            'doctor_class' => function ($query) {
+                $query->select('id','uuid','name','lastname','scd_name','scd_lastname','signature_pp'); # Uno a muchos
+            },
+            'medicines']
+            )
+            ->where('appointments_id',$id)
+            ->orderBy('id','ASC')
+            ->get(['doctor','id','uuid','validity','created_at']);
+
+        $all_sex = ExamRequest::with([
+            'doctor_class' => function ($query) {
+                $query->select('id','uuid','name','lastname','scd_name','scd_lastname','signature_pp'); # Uno a muchos
+            },
+            'hcdermdiagnostics' => function ($query) {
+                $query->select('id','uuid','code','diagnostic'); # Uno a muchos
+            },
+            'laboratoryexams'
+            ]
+            )
+            ->where('appointments_id',$id)
+            ->orderBy('id','ASC')
+            ->get(['doctor','id','uuid','hcdermdiagnostics_id','total','created_at']);
+
+		$all_spr = ProcedureRequest::with([
+            'doctor_class' => function ($query) {
+                $query->select('id','uuid','name','lastname','scd_name','scd_lastname','signature_pp'); # Uno a muchos
+            },
+            'procedures']
+            )
+            ->where('appointments_id',$id)
+            ->orderBy('id','ASC')
+            ->get(['doctor','id','uuid','created_at']);
+
+        // $all_spr = Hcdermsolproc::where(['hc' => $o_derm->id])->orderBy('id', 'asc')->get();//Solicitudes de procedimientos
+        $all_spa = PathologyRequest::with([
+            'doctor_class' => function ($query) {
+                $query->select('id','uuid','name','lastname','scd_name','scd_lastname','signature_pp'); # Uno a muchos
+            },
+            'hcdermdiagnostics' => function ($query) {
+                $query->select('id','uuid','code','diagnostic'); # Uno a muchos
+            },
+            'pathologies'
+            ]
+            )
+            ->where('appointments_id',$id)
+            ->orderBy('id','ASC')
+            ->get(['doctor','id','uuid','hcdermdiagnostics_id','annexes','created_at']);
+		// $all_spa = Hcdermsolpath::where(['hc' => $o_derm->id])->orderBy('id', 'asc')->get();//Solicitudes de patalogías
 		//echo 'ok pdf';exit();
 
+		$data['all_ann'] = $all_ana;
+		$data['all_back'] = $all_back;
 		$data['all_dgs'] = $all_dgs;
 		$data['all_ind'] = $all_ind;
 		$data['all_pre'] = $all_pre;
@@ -522,7 +609,6 @@ class HomeController extends Controller
 		}
 		$pdfFilePath = $this->allpdfhcderm($id);
     }
-
 	private function allpdfhcderm($id)
     {
 		if(empty($id)){
@@ -560,17 +646,57 @@ class HomeController extends Controller
 		return $pdf->stream('document.pdf');
 		exit();
     }
+	// private function allpdfhcderm($id)
+    // {
+	// 	if(empty($id)){
+	// 		return null;
+	// 	}
+	// 	$o = $this->o_model::where(['uuid' => $id])->first();
+	// 	$full_name = $o->name.' '.$o->scd_name.' '.$o->lastname.' '.$o->scd_lastname;
+	// 	$o_company = Companies::where(['id' => $o->company])->first();
+	// 	$logo = !empty($o_company->logo_pp)?public_path($o_company->logo_pp):public_path('assets/images/favicon.png');
+	// 	$photo = !empty($o->photo_pp)?$o->photo_pp:public_path('assets/images/user.png');
+	// 	$data['o'] = $o;
+	// 	$data['logo'] = $logo;
+	// 	$data['photo'] = $photo;
+	// 	$data['company_name'] = $o_company->name;
+	// 	$data['full_name'] = $full_name;
+	// 	$data['o_vitalsigns'] = Vitalsigns::where(['user' => $o->id])->orderBy('id', 'DESC')->first();
+
+	// 	$arr = [];
+	// 	$derm_all = Dermatology::where(['user' => $o->id,'hc_type' => $this->hc_type])->orderBy('id', 'asc')->get();
+	// 	foreach($derm_all as $key => $o_derm){
+	// 		$o_doctor = $this->o_model::where(['id' => $o_derm->doctor])->first();
+	// 		$dfull_name = $o_doctor->name.' '.$o_doctor->scd_name.' '.$o_doctor->lastname.' '.$o_doctor->scd_lastname;
+	// 		$signature = !empty($o_doctor->signature_pp)?$o_doctor->signature_pp:public_path('assets/images/firma.png');
+	// 		$all_dgs = Hcdermdiagnostics::where(['hc' => $o_derm->id])->orderBy('id', 'asc')->get();//diagnosticos
+	// 		$all_ind = Hcdermindications::where(['hc' => $o_derm->id])->orderBy('id', 'asc')->get();//indicaciones
+	// 		$all_pre = Prescriptions::where(['hc' => $o_derm->id])->orderBy('id', 'asc')->get();//prescripción médica
+	// 		$all_sex = Hcdermsolexams::where(['hc' => $o_derm->id])->orderBy('id', 'asc')->get();//Solicitudes de examenes
+	// 		$all_spr = Hcdermsolproc::where(['hc' => $o_derm->id])->orderBy('id', 'asc')->get();//Solicitudes de procedimientos
+	// 		$all_spa = Hcdermsolpath::where(['hc' => $o_derm->id])->orderBy('id', 'asc')->get();//Solicitudes de patalogías
+	// 		array_push($arr, ['o_derm' => $o_derm,'o_doctor' => $o_doctor,'dfull_name' => $dfull_name,'signature' => $signature,'all_dgs' => $all_dgs,'all_ind' => $all_ind,'all_pre' => $all_pre,'all_sex' => $all_sex,'all_spr' => $all_spr,'all_spa' => $all_spa]);
+	// 	}
+	// 	$data['arr'] = $arr;
+
+	// 	$pdf = PDF::loadView('pdf.dermall', $data);
+	// 	return $pdf->stream('document.pdf');
+	// 	exit();
+    // }
 
     public function backgrounds(Request $request,$hc,$appointment = null){
 
         $backgrounds= Antecedente::with([
             'type_class' => function ($query) {
                 $query->select('id','name'); # Uno a muchos
-            }
+            },
+            'appointments' => function ($query) {
+                $query->select('id','uuid','date_quote','time_quote','created_at'); # Uno a muchos
+            },
         ])->where('hc',$hc)
         ->orderBy('created_at','DESC')
         ->orderBy('updated_at','DESC')
-        ->get(['id','uuid','resumen','type_id' ,'created_at','updated_at']);
+        ->get(['id','uuid','resumen','type_id' ,'created_at','updated_at','appointments_id']);
 
          return DataTables::of($backgrounds)->make(true);
     }
@@ -587,6 +713,7 @@ class HomeController extends Controller
         else{
             $data = request()->except(['_token', '_method']);
             $data['hc'] = $hc;
+            $data['appoinments_id'] = $appointment;
             $background = Antecedente::create($data);
 
             return [
@@ -624,10 +751,15 @@ class HomeController extends Controller
     /////////////// DIAGNOSTICOS /////////////////////////
     public function diagnostics(Request $request,$hc,$appointment = null){
 
-        $diagnostics= Hcdermdiagnostics::where('hc',$hc)
+        $diagnostics= Hcdermdiagnostics::with([
+            'appointments' => function ($query) {
+                $query->select('id','uuid','date_quote','time_quote','created_at'); # Uno a muchos
+            },
+        ])->
+        where('hc',$hc)
         ->orderBy('created_at','DESC')
         ->orderBy('updated_at','DESC')
-        ->get(['id','uuid','code','diagnostic','type_diagnostic' ,'created_at','updated_at']);
+        ->get(['id','uuid','code','diagnostic','type_diagnostic' ,'created_at','updated_at','appointments_id']);
 
          return DataTables::of($diagnostics)->make(true);
     }
@@ -806,7 +938,10 @@ class HomeController extends Controller
             },
             'prequest_nprocedure' => function ($query) {
                 $query->select('id','procedures_id'); # Uno a muchos
-            }
+            },
+            'appointments' => function ($query) {
+                $query->select('id','uuid','date_quote','time_quote','created_at'); # Uno a muchos
+            },
             ])
             // ->whereHas('diagnostic',function($q) use ($appoint){
             //     $q->where('hc_type',$appoint->hc_type);
@@ -814,7 +949,7 @@ class HomeController extends Controller
             ->where('hc',$hc)
             ->orderBy('created_at', 'desc')
             ->orderBy('updated_at', 'desc')
-            ->get(['id','uuid','prequest_nprocedure_id','type_procedure','created_at','updated_at']);
+            ->get(['id','uuid','prequest_nprocedure_id','type_procedure','appointments_id','created_at','updated_at','appointments_id']);
 
          return DataTables::of($biopsies)->make(true);
     }
@@ -839,7 +974,7 @@ class HomeController extends Controller
             $data['o_paths'] = Pathologies::where(['status' => 'active'])->orderBy('id', 'asc')->get(['name','id','description']);
             $data['o_hcp'] = null;
             $data['is_other'] = false;
-            $data['diagnoses'] = $diagnoses;
+            $data['procedures_requests'] = $procedures_requests;
             return view($this->v_name . '.form.modals.modal_biopsie', $data);
         }
         else{
@@ -850,7 +985,7 @@ class HomeController extends Controller
             foreach($all_params as $key => $row){
                 $aux_params[$row] = !empty($data[$row])?$data[$row]:'';
             }
-            $aux_params['diagnostic_id'] = $data['diagnostic_id'];
+            $aux_params['prequest_nprocedure_id'] = $data['prequest_nprocedure_id'];
             $aux_params['doctor'] = Auth::user()->id;
             $aux_params['appointments_id'] = $appointment;
             $o_hcpro = Hprocedure::create($aux_params);
@@ -923,12 +1058,15 @@ class HomeController extends Controller
             },
             'prequest_nprocedure' => function ($query) {
                 $query->select('id','procedures_id'); # Uno a muchos
-            }
+            },
+            'appointments' => function ($query) {
+                $query->select('id','uuid','date_quote','time_quote','created_at'); # Uno a muchos
+            },
             ])
         ->where('hc',$hc)
         ->orderBy('created_at','DESC')
         ->orderBy('updated_at','DESC')
-        ->get(['id','uuid','type_procedure','prequest_nprocedure_id','created_at','updated_at']);
+        ->get(['id','uuid','type_procedure','prequest_nprocedure_id','created_at','updated_at','appointments_id']);
 
          return DataTables::of($biopsies)->make(true);
     }
@@ -937,14 +1075,18 @@ class HomeController extends Controller
         if($request->method() === 'GET'){
 
             $data = [];
-            $diagnoses = Hcdermdiagnostics::where("hc",$hc)
-                        ->whereNotNull("skin_phototype")
-                        ->get();
+            $procedures_requests= ProcedureRequest::with([
+                'procedures'
+                ])
+            ->where('dermatology_id',$hc)
+            ->orderBy('created_at','DESC')
+            ->orderBy('updated_at','DESC')
+            ->get(['id','uuid','created_at']);
             $data['post_url'] = $this->r_name . '/cryotherapies/' . $hc .'/' .$appointment. '/add';
             $data['obj'] = null;
             $data['is_records'] = false;
             $data['is_other'] = false;
-            $data['diagnoses'] = $diagnoses;
+            $data['procedures_requests'] = $procedures_requests;
             return view($this->v_name . '.form.modals.modal_crypy', $data);
         }
         else{
@@ -955,7 +1097,7 @@ class HomeController extends Controller
             foreach($all_params as $key => $row){
                 $aux_params[$row] = !empty($data[$row])?$data[$row]:'';
             }
-            $aux_params['diagnostic_id'] = $data['diagnostic_id'];
+            $aux_params['prequest_nprocedure_id'] = $data['prequest_nprocedure_id'];
             $aux_params['doctor'] = Auth::user()->id;
             $aux_params['appointments_id'] = $appointment;
             $o_hcpro = Hprocedure::create($aux_params);
@@ -979,12 +1121,15 @@ class HomeController extends Controller
             },
             'htreatment' => function ($query) {
                 $query->select('id','muscle','units','product_dates','product_name','lot','dilution','injectable','hprocedure_id'); # Uno a muchos
-            }
+            },
+            'appointments' => function ($query) {
+                $query->select('id','uuid','date_quote','time_quote','created_at'); # Uno a muchos
+            },
             ])
         ->where('hc',$hc)
         ->orderBy('created_at','DESC')
         ->orderBy('updated_at','DESC')
-        ->get(['id','uuid','type_procedure','prequest_nprocedure_id','created_at']);
+        ->get(['id','uuid','type_procedure','prequest_nprocedure_id','created_at','appointments_id']);
 
          return DataTables::of($biopsies)->make(true);
     }
@@ -993,14 +1138,18 @@ class HomeController extends Controller
         if($request->method() === 'GET'){
 
             $data = [];
-            $diagnoses = Hcdermdiagnostics::where("hc",$hc)
-                        ->whereNotNull("skin_phototype")
-                        ->get();
+            $procedures_requests= ProcedureRequest::with([
+                'procedures'
+                ])
+            ->where('dermatology_id',$hc)
+            ->orderBy('created_at','DESC')
+            ->orderBy('updated_at','DESC')
+            ->get(['id','uuid','created_at']);
             $data['post_url'] = $this->r_name . '/aesthetics/' . $hc .'/' .$appointment. '/add';
             $data['obj'] = null;
             $data['is_records'] = false;
             $data['is_other'] = false;
-            $data['diagnoses'] = $diagnoses;
+            $data['procedures_requests'] = $procedures_requests;
             return view($this->v_name . '.form.modals.modal_aesthetic', $data);
         }
         else{
@@ -1012,7 +1161,7 @@ class HomeController extends Controller
             foreach($all_params as $key => $row){
                 $aux_params[$row] = !empty($data[$row])?$data[$row]:'';
             }
-            $aux_params['diagnostic_id'] = $data['diagnostic_id'];
+            $aux_params['prequest_nprocedure_id'] = $data['prequest_nprocedure_id'];
             $aux_params['doctor'] = Auth::user()->id;
             $aux_params['appointments_id'] = $appointment;
             $o_hcpro = Hprocedure::create($aux_params);
@@ -1056,7 +1205,10 @@ class HomeController extends Controller
             },
             'hctumors' => function ($query) {
                 $query->select('id','tumors','size','margin','pathology','observations','hprocedure_id'); # Uno a muchos
-            }
+            },
+            'appointments' => function ($query) {
+                $query->select('id','uuid','date_quote','time_quote','created_at'); # Uno a muchos
+            },
             ])
             ->whereHas('diagnostic',function($q) use ($appoint){
                 $q->where('hc_type',$appoint->hc_type);
@@ -1064,7 +1216,7 @@ class HomeController extends Controller
             ->where('hc',$hc)
             ->orderBy('created_at', 'desc')
             ->orderBy('upadted_at', 'desc')
-            ->get(['id','uuid','type_procedure','prequest_nprocedure_id','created_at']);
+            ->get(['id','uuid','type_procedure','prequest_nprocedure_id','created_at','appointments_id']);
 
          return DataTables::of($biopsies)->make(true);
     }
@@ -1074,11 +1226,13 @@ class HomeController extends Controller
 
             $data = [];
             $appoint = Appointments::find($appointment);
-            $diagnoses = Hcdermdiagnostics::where("hc",$hc)
-                        ->where('hc_type',$appoint->hc_type)
-                        ->where('hc',$hc)
-                        ->where('appointments_id',$appointment)
-                        ->get();
+            $procedures_requests= ProcedureRequest::with([
+                'procedures'
+                ])
+            ->where('dermatology_id',$hc)
+            ->orderBy('created_at','DESC')
+            ->orderBy('updated_at','DESC')
+            ->get(['id','uuid','created_at']);
             $data['post_url'] = $this->r_name . '/surgicals/' . $hc .'/' .$appointment. '/add';
             $data['o_medicines'] = Medicines::where(['status' => 'active'])->orderBy('id', 'asc')->get(['name','id','description']);
             $data['o_labexams'] = Laboratoryexams::where(['status' => 'active'])->orderBy('id', 'asc')->get(['name','id','description']);
@@ -1087,7 +1241,7 @@ class HomeController extends Controller
             $data['obj'] = null;
             $data['is_records'] = false;
             $data['is_other'] = false;
-            $data['diagnoses'] = $diagnoses;
+            $data['procedures_requests'] = $procedures_requests;
             return view($this->v_name . '.form.modals.modal_surgical', $data);
         }
         else{
@@ -1104,7 +1258,7 @@ class HomeController extends Controller
                 $aux_params[$row] = !empty($data[$row])?$data[$row]:'';
             }
 
-            $aux_params['diagnostic_id'] = $data['diagnostic_id'];
+            $aux_params['prequest_nprocedure_id'] = $data['prequest_nprocedure_id'];
             $aux_params['doctor'] = Auth::user()->id;
             $aux_params['appointments_id'] = $appointment;
             $o_hcpro = Hprocedure::create($aux_params);

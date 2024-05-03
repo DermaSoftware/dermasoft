@@ -278,7 +278,8 @@ Route::middleware(['auth'])->group(function () {
 		Route::get('/listrecords/{id}', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'listrecords'])->name('listrecords');
 		Route::get('/dermrecords/{id}', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'dermrecords'])->name('dermrecords');
 		Route::post('/search_dermatology', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'shvs_dermatology'])->name('shvs_dermatology');
-		Route::get('/hcdermpdf/{id}', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'hcdermpdf'])->name('hcdermpdf');
+		Route::get('/hcdermpdf/{id}', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'gethcpdf'])->name('gethcpdf');
+		// Route::get('/hcdermpdf/{id}', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'hcdermpdf'])->name('hcdermpdf');
 
         Route::get('/backgrounds/{hc}/{appointment}', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'backgrounds'])->name('backgrounds');
         Route::match(['get', 'post'],'/backgrounds/{hc}/{appointment}/add', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'add_backgrounds'])->name('add_backgrounds');

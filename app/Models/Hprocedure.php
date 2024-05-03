@@ -25,6 +25,9 @@ class Hprocedure extends Model
     public function prequest_nprocedure(){
         return $this->belongsTo(PRequest_NProcedure::class);
     }
+    public function appointments(){
+        return $this->belongsTo(Appointments::class);
+    }
 
     public function hcsuture(){
         return $this->hasMany(Hcsuture::class);

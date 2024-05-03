@@ -17,4 +17,11 @@ class Antecedente extends Model
     {
         return $this->belongsTo(TipoAntecedente::class, 'type_id');
     }
+    public function hc_class()
+    {
+        return $this->belongsTo(Dermatology::class, 'hc');
+    }
+    public function appointments(){
+        return $this->belongsTo(Appointments::class);
+    }
 }

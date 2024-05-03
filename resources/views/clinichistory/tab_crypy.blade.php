@@ -17,7 +17,7 @@
                             <tr>
                                 <th>#</th>
                                 <th>UUID</th>
-                                <th>Diagnóstico</th>
+                                <th>Consulta</th>
                                 <th>Tipo procedimeinto</th>
                                 {{-- <th>Suturas</th> --}}
                                 <th>Creado</th>

@@ -14,15 +14,19 @@
                         <div class="column is-12">
                             <div class="field">
                                 <div class="control">
-                                    <?php $t_att = 'diagnostic_id'; ?>
-                                    <?php $n_att = 'Diagnostico'; ?>
+                                    <?php $t_att = 'prequest_nprocedure_id'; ?>
+                                    <?php $n_att = 'Solicitud de procedimiento'; ?>
                                     <label><?= $n_att ?></label>
-                                    <select name="<?= $t_att ?>" class="input select2_fsc">
+                                    <select name="prequest_nprocedure_id" class="input select2_fsc">
                                         <option value="" selected disabled>Diagnostico</option>
-                                        <?php foreach($diagnoses as $key => $row){ ?>
-                                        <option value="<?= $row->id ?>">
-                                            <?= empty($row->skin_phototype) ? $row->diagnostic  : $row->diagnostic . ' - ' . $row->skin_phototype ?></option>
-                                        <?php } ?>
+                                        @foreach ($procedures_requests as $item)
+                                            @foreach ($item->procedures as $procedure)
+                                            <option value="<?= $procedure->pivot->id ?>">
+                                                {{$procedure->name}} - {{$procedure->description}}
+                                            </option>
+                                            @endforeach
+                                        @endforeach
+
                                     </select>
                                 </div>
                             </div>

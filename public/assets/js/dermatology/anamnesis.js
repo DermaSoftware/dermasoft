@@ -109,7 +109,7 @@ $(function () {
                             <div style="display: flex;
                                 flex-direction: column;
                                 padding: 8px;">
-                                <h6>Motivo de la consult</h6>
+                                <h6>Motivo de la consulta</h6>
                                 <p>${row.reason}</p>
                             </div>
                             <div style="display: flex;

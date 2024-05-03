@@ -40,7 +40,7 @@ $(function () {
             "serverSide": true,
             columnDefs: [{
                 "visible": false,
-                "targets": [0, 1]
+                "targets": [0, 1,2]
             },
             // {
             //     searchable: false,
@@ -60,6 +60,22 @@ $(function () {
                 //{responsivePriority: 1, targets: [0,15]},
                 //{responsivePriority: 2, targets: [0,1,2, 4,7,8,10,15]},
             ],
+            "drawCallback": function (settings) {
+                var api = this.api();
+                var rows = api.rows({page: 'current'}).nodes();
+                var last = null;
+
+                api.column(2, {page: 'current'}).data().each(function (group, i) {
+                    if (last !== `${group.date_quote} ${group.time_quote}`) {
+                        console.log(group)
+                        $(rows).eq(i).before(
+                            '<tr class="group" style="background:grey"><td style="color:white !important;" colspan="6">' + `${group.date_quote} ${group.time_quote}` + '</td></tr>'
+                        );
+
+                        last = `${group.date_quote} ${group.time_quote}`;
+                    }
+                });
+            },
             "ajax": {
                 "url": `/clinichistory/backgrounds/${derma_id}/${appointment}`,
                 "type": 'GET',
@@ -69,6 +85,12 @@ $(function () {
             },
             {
                 "data": "uuid",
+            },
+            {
+                "data": "appointments",
+                render: function (data, type, row) {
+                    return data ? `${data.date_quote} ${data.time_quote}` : '';
+                }
             },
             {
                 "data": "resumen",

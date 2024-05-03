@@ -17,6 +17,7 @@
                             <tr>
                                 <th>#</th>
                                 <th>UUID</th>
+                                <th>Consulta</th>
                                 <th>Código</th>
                                 <th>Nombre</th>
                                 <th>Tipo</th>

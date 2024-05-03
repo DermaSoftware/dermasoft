@@ -43,6 +43,6 @@ class ProcedureRequest extends Model
 
     public function procedures(){
         return $this->belongsToMany(Procedures::class,'prequest_nprocedure','procedure_request_id','procedures_id')
-            ->withPivot('note');
+            ->withPivot('id','note');
     }
 }

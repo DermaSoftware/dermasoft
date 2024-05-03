@@ -32,4 +32,13 @@ class Appointments extends Model
     {
         return $this->belongsTo(User::class, 'doctor');
     }
+    public function latestVitalsign()
+    {
+        return $this->hasOne(Vitalsigns::class,'appointment_id')->latestOfMany();
+    }
+
+    public function vitalsigns()
+    {
+        return $this->hasMany(Vitalsigns::class);
+    }
 }

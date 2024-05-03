@@ -5,6 +5,7 @@ $(function () {
         if ($('#biopsie_table').length > 0) {
             $('#biopsie_table').DataTable().destroy();
         }
+        var groupColumn = 2;
         var table = $('#biopsie_table').DataTable({
             ordering: true,
             paging: true,
@@ -65,6 +66,22 @@ $(function () {
                 "url": `/clinichistory/biops/${derma_id}/${appointment}`,
                 "type": 'GET',
             },
+            "drawCallback": function (settings) {
+                var api = this.api();
+                var rows = api.rows({page: 'current'}).nodes();
+                var last = null;
+
+                api.column(groupColumn, {page: 'current'}).data().each(function (group, i) {
+                    if (last !== `${group.date_quote} ${group.time_quote}`) {
+                        console.log(group)
+                        $(rows).eq(i).before(
+                            '<tr class="group" style="background:grey"><td style="color:white !important;" colspan="6">' + `${group.date_quote} ${group.time_quote}` + '</td></tr>'
+                        );
+
+                        last = `${group.date_quote} ${group.time_quote}`;
+                    }
+                });
+            },
             "columns": [{
                 "data": "id"
             },
@@ -72,9 +89,9 @@ $(function () {
                 "data": "uuid",
             },
             {
-                "data": "type_procedure_class",
+                "data": "appointments",
                 render: function (data, type, row) {
-                    return data ? data.description : '';
+                    return data ? `${data.date_quote} ${data.time_quote}` : '';
                 }
             },
             {
