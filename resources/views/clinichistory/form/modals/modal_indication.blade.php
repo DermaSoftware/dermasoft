@@ -32,6 +32,9 @@
                             </div>
                         </div>
                         <div class="column is-12">
+                            <hr>
+                        </div>
+                        <!-- <div class="column is-12">
                             <div class="field">
                                 <div class="control">
                                     <label>Otra indicación</label>
@@ -39,11 +42,18 @@
                                         id="is_other"></input>
                                 </div>
                             </div>
-                        </div>
-                        <div class="column is-12" id="other-box">
+                        </div> -->
+                        <div class="column is-6" id="other-box">
                             <div class="field">
                                 <div class="control">
                                     <textarea class="textarea" name="other_indication" id="other_indication" rows="2"><?= ($is_other == true and isset($obj)) ? $obj->indication : '' ?></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column is-6">
+                            <div class="field">
+                                <div class="control">
+                                    <a href="javascript:void(0)" class="button h-button is-primary is-dark-outlined other-add">Agregar</a>
                                 </div>
                             </div>
                         </div>
@@ -80,25 +90,27 @@
                 });
             });
         }
-        const toggleButton = document.getElementById('is_other');
-        const elementoToggle = document.getElementById('other-box');
-        const indicationToggle = document.getElementById('indication-box');
-        elementoToggle.style.display = 'none';
+        var add_btn = document.querySelector('.other-add');
+        var indications = document.querySelector('select[name="indication[]"]');
+        var other = document.querySelector('textarea[name="other_indication"]');
+        console.log(add_btn)
+        // elementoToggle.style.display = 'none';
 
-        if (toggleButton.checked) {
-            elementoToggle.style.display = 'block';
-            indicationToggle.style.display = 'none';
-        }
-        toggleButton.addEventListener('change', function() {
-            if (this.checked) {
-                // Si el checkbox está marcado, mostrar el elemento.
-                elementoToggle.style.display = 'block';
-                indicationToggle.style.display = 'none';
-            } else {
-                // Si el checkbox no está marcado, ocultar el elemento.
-                elementoToggle.style.display = 'none';
-                indicationToggle.style.display = 'block';
+        add_btn.addEventListener('click', function() {
+            if(other.value !== ''){
+                var nuevaOpcion = document.createElement("option");
+                nuevaOpcion.value = `${other.value}`;
+                nuevaOpcion.textContent = `${other.value}`;
+                nuevaOpcion.setAttribute('selected','selected');
+                indications.append(
+                    nuevaOpcion
+                )
+            other.value = '';
             }
+
+        else{
+            alert('Agregue una nueva indicación.')
+        }
         });
     })
 </script>

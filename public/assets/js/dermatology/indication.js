@@ -157,8 +157,6 @@ $(function () {
                 })
                 $('#indication_form').on('submit', function (e) {
                     e.preventDefault();
-
-                    debugger
                     url2 = $(this).attr('action')
                     var formData = new FormData(document.getElementById(
                         'indication_form'));
