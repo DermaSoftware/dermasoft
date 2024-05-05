@@ -322,7 +322,7 @@ class BiopsiesController extends Controller
             ->where('uuid',$id)
             ->orderBy('created_at','DESC')
             ->first(['id','uuid','date_quote','user','time_quote','doctor','campus','hc_type']);
-		$o_derm = Dermatology::where(['user' => $appointment->user])->orderBy('created_at','DESC')->first();
+        $o_derm = Dermatology::with(['latestAppointmentReason'])->where(['user' => $appointment->user])->orderBy('created_at', 'DESC')->first();
 		if(empty($o_derm->id)){
 			return null;
 		}
@@ -334,7 +334,19 @@ class BiopsiesController extends Controller
 		$signature = !empty($o_doctor->signature_pp)?$o_doctor->signature_pp:public_path('assets/images/firma.png');
 
 		$data['o_vitalsigns'] = $appointment->latestVitalsign;
-
+        $all_back = $o_derm->antecedentes;
+        $backgounds = [
+            "Antecedente medico"=>[],
+            "Antecedentes médicos"=>[],
+            "Antecedentes quirúrgicos"=>[],
+            "Antecedentes alérgicos"=>[],
+            "Antecedentes farmacológicos"=>[],
+            "Antecedentes familiares"=>[],
+            "Otros antecedentes"=>[],
+        ];
+        foreach ($all_back as $key => $value) {
+            array_push($backgounds[$value->type_class->name],$value);
+        }
 		$all_dgs= Hcdermdiagnostics::where('appointments_id',$id)
         ->orderBy('created_at','DESC')
         ->orderBy('updated_at','DESC')
@@ -345,7 +357,7 @@ class BiopsiesController extends Controller
                 $query->select('id','uuid','date_quote','time_quote','created_at'); # Uno a muchos
             },
         ])
-        ->where('appointments_id',$id)
+        ->where('appointments_id',$appointment->id)
         ->orderBy('created_at','DESC')
         ->orderBy('updated_at','DESC')
         ->get(['id','uuid','indication','created_at','updated_at','appointments_id','hc_type']);
@@ -356,7 +368,7 @@ class BiopsiesController extends Controller
             },
             'medicines']
             )
-            ->where('appointments_id',$id)
+            ->where('appointments_id',$appointment->id)
             ->orderBy('id','ASC')
             ->get(['doctor','id','uuid','validity','created_at']);
 
@@ -370,7 +382,7 @@ class BiopsiesController extends Controller
             'laboratoryexams'
             ]
             )
-            ->where('appointments_id',$id)
+            ->where('appointments_id',$appointment->id)
             ->orderBy('id','ASC')
             ->get(['doctor','id','uuid','hcdermdiagnostics_id','total','created_at']);
 
@@ -380,7 +392,7 @@ class BiopsiesController extends Controller
             },
             'procedures']
             )
-            ->where('appointments_id',$id)
+            ->where('appointments_id',$appointment->id)
             ->orderBy('id','ASC')
             ->get(['doctor','id','uuid','created_at']);
 
@@ -395,7 +407,7 @@ class BiopsiesController extends Controller
             'pathologies'
             ]
             )
-            ->where('appointments_id',$id)
+            ->where('appointments_id',$appointment->id)
             ->orderBy('id','ASC')
             ->get(['doctor','id','uuid','hcdermdiagnostics_id','annexes','created_at']);
 
@@ -405,18 +417,15 @@ class BiopsiesController extends Controller
             },
             'hcsuture' => function ($query) {
                 $query->select('id','suture_type','caliber','hprocedure_id'); # Uno a muchos
-            },
-            'prequest_nprocedure' => function ($query) {
-                $query->select('id','procedures_id'); # Uno a muchos
             }
             ])
             // ->whereHas('diagnostic',function($q) use ($appoint){
             //     $q->where('hc_type',$appoint->hc_type);
             // })
-            ->where('appointments_id',$id)
+            ->where('appointments_id',$appointment->id)
             ->orderBy('created_at', 'desc')
             ->orderBy('updated_at', 'desc')
-            ->get(['id','uuid','prequest_nprocedure_id','type_procedure','created_at','updated_at']);
+            ->get();
 		// $all_sut = Hcsuture::where(['hc' => $o_derm->id])->orderBy('id', 'asc')->get();//Suture
 		// $all_dgs = Hcdermdiagnostics::where(['hc' => $o_derm->id])->orderBy('id', 'asc')->get();//diagnosticos
 		// $all_ind = Hcdermindications::where(['hc' => $o_derm->id])->orderBy('id', 'asc')->get();//indicaciones
@@ -426,6 +435,7 @@ class BiopsiesController extends Controller
 		// $all_spa = Hcdermsolpath::where(['hc' => $o_derm->id])->orderBy('id', 'asc')->get();//Solicitudes de patalogías
 
 		// $data['all_sut'] = $all_sut;
+        $data['all_back'] = $backgounds;
 		$data['all_dgs'] = $all_dgs;
 		$data['all_ind'] = $all_ind;
 		$data['all_pre'] = $all_pre;

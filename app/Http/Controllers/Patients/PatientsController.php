@@ -45,7 +45,7 @@ class PatientsController extends Controller
         'email' => 'Correo', 'phone' => 'Telefono'
     ];
     private $o_model = User::class;
-    private $hctype = ['Dermatología general','Dermatología general Control', 'Biopsías y/o procedimientos', 'Procedimientos Estéticos', 'Descripción Quirúrgica'];
+    private $hctype = ['Dermatología general','Dermatología general Control', 'Biopsías y/o procedimientos', 'Procedimientos Estéticos', 'Descripción Quirúrgica','Crioterapia'];
 
     private function gdata($t = 'Historial de', $tfinal = true)
     {

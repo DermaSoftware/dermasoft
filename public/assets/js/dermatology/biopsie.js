@@ -7,7 +7,8 @@ $(function () {
         }
         var groupColumn = 2;
         var table = $('#biopsie_table').DataTable({
-            ordering: true,
+            ordering: false,
+            "order": [[2, 'desc']],
             paging: true,
             scrollCollapse: true,
             scrollY: '200px',
@@ -95,9 +96,9 @@ $(function () {
                 }
             },
             {
-                "data": "prequest_nprocedure",
+                "data": "type_procedure_class",
                 render: function (data, type, row) {
-                    return data ? data : '';
+                    return data ? `${data.name}-${data.descrition}` : '';
                 }
             },
             {

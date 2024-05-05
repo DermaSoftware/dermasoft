@@ -14,7 +14,7 @@
                                 <div class="right">
                                     <div class="buttons">
                                         <?php if($is_records){ ?>
-                                        <a href="<?= url($menu . '/listrecords/' . $o->uuid) ?>"
+                                        <a href="<?= url($menu . '/hcdermpdf/' . $appoint->uuid) ?>"
                                             class="button h-button is-primary is-dark-outlined">
                                             Resumen de consulta
                                         </a>

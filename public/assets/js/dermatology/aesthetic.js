@@ -6,7 +6,8 @@ $(function () {
             $('#aesthetics_table').DataTable().destroy();
         }
         var table = $('#aesthetics_table').DataTable({
-            ordering: true,
+            ordering: false,
+            "order": [[2, 'desc']],
             paging: true,
             oLanguage: {
                 oAria: {

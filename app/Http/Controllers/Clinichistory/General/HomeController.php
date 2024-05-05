@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Clinichistory\General;
 
 use App\Http\Controllers\Clinichistory\AestheticController;
 use App\Http\Controllers\Clinichistory\BiopsiesController;
+use App\Http\Controllers\Clinichistory\CrypyController;
 use App\Http\Controllers\Clinichistory\SurgicalController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Medical\ExamordersController;
@@ -71,7 +72,7 @@ class HomeController extends Controller
 	private $list_tbl_fsc = ['name' => 'Nombre'];
 	private $o_model = User::class;
 	private $hc_type = 'Dermatología general';
-    private $o_hctype = ['Dermatología general','Dermatología general Control', 'Biopsías y/o procedimientos', 'Procedimientos Estéticos', 'Descripción Quirúrgica'];
+    private $o_hctype = ['Dermatología general','Dermatología general Control', 'Biopsías y/o procedimientos', 'Procedimientos Estéticos', 'Descripción Quirúrgica','Crioterapia'];
 	private function gdata($t = '')
     {
         $data['menu'] = $this->r_name;
@@ -115,6 +116,7 @@ class HomeController extends Controller
 		$data = $this->gdata('HC - Dermatología general', false);
         $data['o'] = $o;
         $data['appointment'] = $appointment;
+        $data['appoint'] = $appoint;
 		$data['o_vitalsigns'] = $o_vitalsigns;
 		$data['o_diagnoses'] = Diagnoses::where(['status' => 'active'])->orderBy('id', 'asc')->get(['name','id','code']);
 		$data['o_diagnosesty'] = Diagnosestype::where(['status' => 'active'])->orderBy('id', 'asc')->get(['name','id']);
@@ -346,6 +348,10 @@ class HomeController extends Controller
             $surgicalcontroller = new SurgicalController();
             return $surgicalcontroller->hcpdf($appointment_id);
         }
+        if($hc_type == 'Crioterapia'){
+            $crypyController = new CrypyController();
+            return $crypyController->hcpdf($appointment_id);
+        }
 
     }
 	//PDF
@@ -403,7 +409,7 @@ class HomeController extends Controller
             ->where('uuid',$id)
             ->orderBy('created_at','DESC')
             ->first(['id','uuid','date_quote','user','time_quote','doctor','campus','hc_type']);
-		$o_derm = Dermatology::where(['user' => $appointment->user])->orderBy('created_at','DESC')->first();
+            $o_derm = Dermatology::with(['latestAppointmentReason'])->where(['user' => $appointment->user])->orderBy('created_at', 'DESC')->first();
 		if(empty($o_derm->id)){
 			return null;
 		}
@@ -420,8 +426,19 @@ class HomeController extends Controller
 
         $all_ana = $o_derm->anamnesis;
         $all_back = $o_derm->antecedentes;
-
-		$all_dgs= Hcdermdiagnostics::where('appointments_id',$id)
+        $backgounds = [
+            "Antecedente medico"=>[],
+            "Antecedentes médicos"=>[],
+            "Antecedentes quirúrgicos"=>[],
+            "Antecedentes alérgicos"=>[],
+            "Antecedentes farmacológicos"=>[],
+            "Antecedentes familiares"=>[],
+            "Otros antecedentes"=>[],
+        ];
+        foreach ($all_back as $key => $value) {
+            array_push($backgounds[$value->type_class->name],$value);
+        }
+		$all_dgs= Hcdermdiagnostics::where('appointments_id',$appointment->id)
         ->orderBy('created_at','DESC')
         ->orderBy('updated_at','DESC')
         ->get(['id','uuid','code','diagnostic','type_diagnostic' ,'created_at','updated_at']);
@@ -431,7 +448,7 @@ class HomeController extends Controller
                 $query->select('id','uuid','date_quote','time_quote','created_at'); # Uno a muchos
             },
         ])
-           ->where('appointments_id',$id)
+           ->where('appointments_id',$appointment->id)
         ->orderBy('created_at','DESC')
         ->orderBy('updated_at','DESC')
         ->get(['id','uuid','indication','created_at','updated_at','appointments_id','hc_type']);
@@ -442,7 +459,7 @@ class HomeController extends Controller
             },
             'medicines']
             )
-            ->where('appointments_id',$id)
+            ->where('appointments_id',$appointment->id)
             ->orderBy('id','ASC')
             ->get(['doctor','id','uuid','validity','created_at']);
 
@@ -456,7 +473,7 @@ class HomeController extends Controller
             'laboratoryexams'
             ]
             )
-            ->where('appointments_id',$id)
+            ->where('appointments_id',$appointment->id)
             ->orderBy('id','ASC')
             ->get(['doctor','id','uuid','hcdermdiagnostics_id','total','created_at']);
 
@@ -466,7 +483,7 @@ class HomeController extends Controller
             },
             'procedures']
             )
-            ->where('appointments_id',$id)
+            ->where('appointments_id',$appointment->id)
             ->orderBy('id','ASC')
             ->get(['doctor','id','uuid','created_at']);
 
@@ -481,14 +498,14 @@ class HomeController extends Controller
             'pathologies'
             ]
             )
-            ->where('appointments_id',$id)
+            ->where('appointments_id',$appointment->id)
             ->orderBy('id','ASC')
             ->get(['doctor','id','uuid','hcdermdiagnostics_id','annexes','created_at']);
 		// $all_spa = Hcdermsolpath::where(['hc' => $o_derm->id])->orderBy('id', 'asc')->get();//Solicitudes de patalogías
 		//echo 'ok pdf';exit();
 
 		$data['all_ann'] = $all_ana;
-		$data['all_back'] = $all_back;
+		$data['all_back'] = $backgounds;
 		$data['all_dgs'] = $all_dgs;
 		$data['all_ind'] = $all_ind;
 		$data['all_pre'] = $all_pre;
@@ -593,7 +610,10 @@ class HomeController extends Controller
                 $query->select('id','name'); # Uno a muchos
             }
             ])
-        ->where('user',$o->id)->get(['id','uuid','date_quote','time_quote','doctor','campus','hc_type']);
+        ->where('user',$o->id)
+        ->orderBy('date_quote','desc')
+        ->orderBy('time_quote','desc')
+        ->get(['id','uuid','date_quote','time_quote','doctor','campus','hc_type']);
         $data['o_appoinments'] = $appointments;
         return view($this->v_name.'.records',$data);
     }
@@ -954,10 +974,8 @@ class HomeController extends Controller
          return DataTables::of($biopsies)->make(true);
     }
     public function add_biopsie(Request $request,$hc,$appointment = null){
-
+        $appoint = Appointments::find($appointment);
         if($request->method() === 'GET'){
-
-            $appoint = Appointments::find($appointment);
             $procedures_requests= ProcedureRequest::with([
                 'procedures'
                 ])
@@ -988,6 +1006,7 @@ class HomeController extends Controller
             $aux_params['prequest_nprocedure_id'] = $data['prequest_nprocedure_id'];
             $aux_params['doctor'] = Auth::user()->id;
             $aux_params['appointments_id'] = $appointment;
+            $aux_params['hc_type'] = $appoint->hc_type;
             $o_hcpro = Hprocedure::create($aux_params);
             //HCSUTURE
             if(!empty($data['suture_type'])){
@@ -1071,7 +1090,7 @@ class HomeController extends Controller
          return DataTables::of($biopsies)->make(true);
     }
     public function add_cryotherapy(Request $request,$hc,$appointment = null){
-
+        $appoint = Appointments::find($appointment);
         if($request->method() === 'GET'){
 
             $data = [];
@@ -1100,6 +1119,7 @@ class HomeController extends Controller
             $aux_params['prequest_nprocedure_id'] = $data['prequest_nprocedure_id'];
             $aux_params['doctor'] = Auth::user()->id;
             $aux_params['appointments_id'] = $appointment;
+            $aux_params['hc_type'] = $appoint->hc_type;
             $o_hcpro = Hprocedure::create($aux_params);
 
             return [
@@ -1134,7 +1154,7 @@ class HomeController extends Controller
          return DataTables::of($biopsies)->make(true);
     }
     public function add_aesthetic(Request $request,$hc,$appointment = null){
-
+        $appoint = Appointments::find($appointment);
         if($request->method() === 'GET'){
 
             $data = [];
@@ -1164,6 +1184,7 @@ class HomeController extends Controller
             $aux_params['prequest_nprocedure_id'] = $data['prequest_nprocedure_id'];
             $aux_params['doctor'] = Auth::user()->id;
             $aux_params['appointments_id'] = $appointment;
+            $aux_params['hc_type'] = $appoint->hc_type;
             $o_hcpro = Hprocedure::create($aux_params);
 
             if (!empty($data['muscle'])) {
@@ -1194,7 +1215,7 @@ class HomeController extends Controller
 
     /////////////// SURGICALS /////////////////////////
     public function surgicals(Request $request,$hc,$appointment = null){
-
+        $appoint = Appointments::find($appointment);
         $appoint = Appointments::find($appointment);
         $biopsies= Hprocedure::with([
             'type_procedure_class' => function ($query) {
@@ -1210,18 +1231,15 @@ class HomeController extends Controller
                 $query->select('id','uuid','date_quote','time_quote','created_at'); # Uno a muchos
             },
             ])
-            ->whereHas('diagnostic',function($q) use ($appoint){
-                $q->where('hc_type',$appoint->hc_type);
-            })
             ->where('hc',$hc)
             ->orderBy('created_at', 'desc')
-            ->orderBy('upadted_at', 'desc')
             ->get(['id','uuid','type_procedure','prequest_nprocedure_id','created_at','appointments_id']);
+
 
          return DataTables::of($biopsies)->make(true);
     }
     public function add_surgical(Request $request,$hc,$appointment = null){
-
+        $appoint = Appointments::find($appointment);
         if($request->method() === 'GET'){
 
             $data = [];
@@ -1261,6 +1279,7 @@ class HomeController extends Controller
             $aux_params['prequest_nprocedure_id'] = $data['prequest_nprocedure_id'];
             $aux_params['doctor'] = Auth::user()->id;
             $aux_params['appointments_id'] = $appointment;
+            $aux_params['hc_type'] = $appoint->hc_type;
             $o_hcpro = Hprocedure::create($aux_params);
             if(!empty($data['tumors'])){
                 foreach($data['tumors'] as $key => $row){
