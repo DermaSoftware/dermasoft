@@ -31,11 +31,6 @@ class UpdateColumnsAppointmentsTable extends Migration
 			$table->foreign('appointments_id')->references('id')->on('appointments');
 
         });
-        Schema::table('antecedentes', function (Blueprint $table) {
-            $table->unsignedBigInteger('appointments_id')->default(0);//Procedimiento
-			$table->foreign('appointments_id')->references('id')->on('appointments');
-
-        });
     }
 
     /**
