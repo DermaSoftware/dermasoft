@@ -409,7 +409,7 @@ class HomeController extends Controller
             ->where('uuid',$id)
             ->orderBy('created_at','DESC')
             ->first(['id','uuid','date_quote','user','time_quote','doctor','campus','hc_type']);
-            $o_derm = Dermatology::with(['latestAppointmentReason'])->where(['user' => $appointment->user])->orderBy('created_at', 'DESC')->first();
+        $o_derm = Dermatology::with(['latestAppointmentReason'])->where(['user' => $appointment->user])->orderBy('created_at', 'DESC')->first();
 		if(empty($o_derm->id)){
 			return null;
 		}
