@@ -616,7 +616,7 @@ class PatientsController extends Controller
                     $o_user = User::where(['id' => $o->user])->first();
                     Mail::to($o_user->email)->send(new Ntfs('Cita agendada', 'Hola ' . $o_user->name . ', su cita de ' . $o->query_type . ' ha sido agendada correctamente para el día ' . $o->date_quote . ' a la hora ' . $o->time_quote . ' en la modalidad ' . $o->modality . ', recuerde estar puntual y realizar el pago de forma precencial en el lugar de la cita.', $o_user->name, $o_user->email));
                 }
-                return redirect($this->r_name . '/appointments/' . $o->user); //finalized
+                return redirect($this->r_name . '/appointments/' . $o->uuid); //finalized
             }
             return redirect('/');
         }

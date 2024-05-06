@@ -98,7 +98,7 @@ $(function () {
             {
                 "data": "type_class",
                 render: function (data, type, row) {
-                    return data.name;
+                    return data ? data.name : '';
                 }
             },
             {

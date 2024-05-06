@@ -42,12 +42,12 @@
                         <ul>
                             <li id="prescriptions_btn" data-tab="prescriptions_tab">
                                 <a>Prescripciones</a></li>
-                            <li id="examns_request_btn" data-tab="examns_request_tab"><a>Solisitud de
+                            <li id="examns_request_btn" data-tab="examns_request_tab"><a>Solicitud de
                                     exámenes</a></li>
                             <li id="procedure_request_btn" data-tab="procedure_request_tab">
-                                <a>Solisitud de procedimientos</a></li>
+                                <a>Solicitud de procedimientos</a></li>
                             <li id="pathologies_request_btn" data-tab="pathologies_request_tab">
-                                <a>Solisitud de patoloías</a></li>
+                                <a>Solicitud de patologías</a></li>
 
                         </ul>
                     </div>
