@@ -21,7 +21,7 @@
                                             <?php $n_att = 'Solicitud de procedimiento'; ?>
                                             <label><?= $n_att ?></label>
                                             <select name="prequest_nprocedure_id" class="input select2_fsc">
-                                                <option value="" selected disabled>Diagnostico</option>
+                                                {{-- <option value="" selected disabled>Diagnostico</option> --}}
                                                 @foreach ($procedures_requests as $item)
                                                     @foreach ($item->procedures as $procedure)
                                                     <option value="<?= $procedure->pivot->id ?>">

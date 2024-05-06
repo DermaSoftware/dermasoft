@@ -69,16 +69,35 @@
 							</div>
                             <div class="column is-6">
 								<div class="field">
-									<div class="control">
+									<div class="control" style="display: flex;flex-direction: column">
 										<?php $t_att = 'hc_type'; ?>
 										<?php $n_att = 'Tipo de Historia Clinica'; ?>
 										<label><?= $n_att ?></label>
-										<select name="<?= $t_att ?>" class="input">
-											<option value="0" selected disabled >--Seleccione--</option>
+										{{-- <select name="<?= $t_att ?>" class="input"> --}}
+											{{-- <option value="0" selected disabled >--Seleccione--</option> --}}
 											<?php foreach($o_hctype as $key => $row){ ?>
-											<option value="<?= $row ?>"><?= $row ?></option>
+                                                <label class="radio" style="display: flex;flex-direction: row;align-items: center">
+                                                    <input style="position: inherit;opacity: inherit;" value="{{$row}}" type="radio" name="{{$t_att}}" />
+                                                    @if ($row == 'Dermatología general')
+                                                    <img src="<?= asset('assets/img/landing/h/dermatology.jpg') ?>" alt="" width="50" height="50">
+                                                    @endif
+                                                    @if ($row == 'Biopsías y/o procedimientos')
+                                                        <img src="<?= asset('assets/img/landing/h/biopsies.jpg') ?>" alt="" width="50" height="50">
+                                                    @endif
+                                                    @if ($row == 'Procedimientos Estéticos')
+                                                    <img src="<?= asset('assets/img/landing/h/aesthetic.jpg') ?>" alt="" width="50" height="50">
+                                                    @endif
+                                                    @if ($row == 'Descripción Quirúrgica')
+                                                    <img src="<?= asset('assets/img/landing/h/surgical.jpg') ?>" alt="" width="50" height="50">
+                                                    @endif
+                                                    @if ($row == 'Crioterapia')
+                                                        <img src="<?= asset('assets/img/landing/h/crypy.jpg') ?>" alt="" width="50" height="50">
+                                                    @endif
+                                                    {{$row}}
+                                                </label>
+											{{-- <option value="<?= $row ?>"><?= $row ?></option> --}}
 											<?php } ?>
-										</select>
+										{{-- </select> --}}
 									</div>
 								</div>
 							</div>
