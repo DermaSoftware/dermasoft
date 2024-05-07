@@ -98,7 +98,7 @@ $(function () {
             {
                 "data": "type_procedure_class",
                 render: function (data, type, row) {
-                    return data ? `${data.name}-${data.descrition}` : '';
+                    return data ? `${data.name}-${data.description}` : '';
                 }
             },
             {

@@ -5,7 +5,8 @@ $(function () {
             $('#backgrouns').DataTable().destroy();
         }
         var table = $('#backgrouns').DataTable({
-            ordering: true,
+            ordering: false,
+            "order": [[2, 'desc']],
             paging: true,
             scrollCollapse: true,
             scrollY: '200px',

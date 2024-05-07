@@ -250,7 +250,7 @@ class LogmailsController extends Controller
                 $this->sendMail($email, $subject, $data['msj'], $emails, $attachments);
             }
             $request->session()->flash('msj_success', $this->tag_the . ' ' . $this->c_name . ' ' . $request->subject . ' ha sido registrad' . $this->tag_o . ' correctamente.');
-            redirect($this->r_name);
+           return redirect($this->r_name);
         }
     }
 

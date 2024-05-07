@@ -325,6 +325,7 @@ class PatientsController extends Controller
             $path = 'storage/' . $path;
             $data['signature_pp'] = $path;
             $data['signature'] = asset($path);
+            $data['habeas'] = 'si';
         }
         $o->update($data);
         $request->session()->flash('msj_success', $this->tag_the . ' ' . $this->c_name . ' ' . $o->name . ' ha sido actualizad' . $this->tag_o . ' correctamente.');
@@ -616,7 +617,7 @@ class PatientsController extends Controller
                     $o_user = User::where(['id' => $o->user])->first();
                     Mail::to($o_user->email)->send(new Ntfs('Cita agendada', 'Hola ' . $o_user->name . ', su cita de ' . $o->query_type . ' ha sido agendada correctamente para el día ' . $o->date_quote . ' a la hora ' . $o->time_quote . ' en la modalidad ' . $o->modality . ', recuerde estar puntual y realizar el pago de forma precencial en el lugar de la cita.', $o_user->name, $o_user->email));
                 }
-                return redirect($this->r_name . '/appointments/' . $o->uuid); //finalized
+                return redirect($this->r_name . '/appointments/' . $o->user_class->uuid); //finalized
             }
             return redirect('/');
         }
@@ -815,7 +816,7 @@ class PatientsController extends Controller
         return $data;
     }
 
-    public function appointments_calendar(Request $request)
+    public function appointments_calendar(Request $request,$modalidad = null)
     {
         $doctor = Auth::user();
         $doctors = DB::table('users')
@@ -828,12 +829,13 @@ class PatientsController extends Controller
         $campus = Headquarters::where('company',$doctor->company_class->id)->get(['id','name']);
 
         $data = $this->gdata('Agenda de citas');
+        $data['modalidad'] = $modalidad;
         $data['doctors'] = $doctors;
         $data['campus'] = $campus;
         return view($this->v_name . '.appointments_calendar', $data);
     }
 
-    public function appointments_calendar_events(Request $request)
+    public function appointments_calendar_events(Request $request,$modalidad = null)
     {
         if ($request->method() === 'POST') {
             $data = request()->except(['_token', '_method']);
@@ -850,6 +852,9 @@ class PatientsController extends Controller
             }
             if(!empty($data['sede']) && $data['sede'] !== '0') {
                 $pts_all = $pts_all->where(['campus' => $data['sede']]);
+            }
+            if(!empty($modalidad)){
+                $pts_all = $pts_all->where(['modality' => $modalidad]);
             }
             $pts_all = $pts_all->get(['uuid','date_quote','time_quote','doctor','campus','query_type']);
             if (count($pts_all) > 0) {
@@ -884,6 +889,7 @@ class PatientsController extends Controller
 		if($o->modality == 'Teleconsulta'){
 			$url = '<a href="https://meet.jit.si/'.$o->uuid.'" target="_blank" class="button is-primary is-raised">Iniciar</a>';
 		}
+        $hc_type = !empty($o->hc_type) ? '<span class="tag is-rounded is-solid">'. $o->hc_type . '</span>' : '';
 		$resend = '<a href="'.url('dcitas/resend/'.$o->uuid).'" class="button is-info is-raised">Re-enviar</a>';
 		$vsigns = '<a href="'.url('patients/vitalsigns/' . $o_user->uuid. '/' .$o->uuid).'" class="button is-warning is-raised ml-2">Registrar signos vitales</a>';
 		$pfull_name = $o_user->name.' '.$o_user->scd_name.' '.$o_user->lastname.' '.$o_user->scd_lastname;
@@ -891,7 +897,7 @@ class PatientsController extends Controller
 		$photo = !empty($o->photo)?$o->photo:asset('assets/images/user.png');
 		$img = '<img class="avatar" src="'.$photo.'" data-demo-src="'.$photo.'" alt="" data-user-popover="17">';
 		$out = '<div class="card-head">';
-		$out .= '<div class="left"><div class="tags"><span class="tag is-rounded is-solid">'.$o->query_type.'</span><span class="tag is-rounded is-success">'.$o->modality.'</span><span class="tag is-rounded is-solid">Costo: '.$o->amount.'</span></div></div>';
+		$out .= '<div class="left"><div class="tags"><span class="tag is-rounded is-solid">'.$o->query_type .'</span>'. $hc_type. '<span class="tag is-rounded is-success">'.$o->modality.'</span><span class="tag is-rounded is-solid">Costo: '.$o->amount.'</span></div></div>';
 		$out .= '<div class="right">'.$url.'</div>';
 		$out .= '</div>';
 		$out .= '<div class="card-body"><p>Cita del paciente <b>'.$pfull_name.'</b> para el día <b>'.$o->date_quote.'</b> a la hora <b>'.$o->time_quote.'</b></p></div>';

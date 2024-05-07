@@ -82,6 +82,7 @@
 @section('js')
     @parent
     <script>
+        var modadity = <?php echo json_encode($modalidad); ?>;
         $(document).ready(function() {
 
                     const filtro = document.querySelector('button[id="filtro"]');
@@ -162,8 +163,8 @@
                     });
 
                     async function get_days(data) {
-
-                        var response = await fetch('/patients/appointments_calendar/events', {
+                        var uri = modadity == null ? '/patients/appointments_calendar/events' : `/patients/appointments_calendar/events/${modadity}`;
+                        var response = await fetch(uri, {
                             method: "POST", // *GET, POST, PUT, DELETE, etc.
                             mode: "cors", // no-cors, *cors, same-origin
                             cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached

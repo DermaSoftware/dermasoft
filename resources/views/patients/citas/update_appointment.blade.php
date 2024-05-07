@@ -55,6 +55,29 @@
             </div>
         </div>
     </div>
+    <div>
+        <a class="button h-button is-rounded h-modal-trigger is-hidden btn_cita_show" data-modal="cita_modal">Right Actions</a>
+    </div>
+    <div id="cita_modal" class="modal h-modal">
+        <div class="modal-background  h-modal-close"></div>
+        <div class="modal-content">
+            <div class="modal-card">
+                <header class="modal-card-head">
+                    <h3>Detalles de cita</h3>
+                    <button type="button" class="h-modal-close ml-auto" aria-label="close"><i data-feather="x"></i></button>
+                </header>
+                <div class="modal-card-body">
+                    <div class="inner-content">
+                        <div class="r-card-advanced box_info">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-card-foot is-end">
+                    <a class="button h-button is-rounded h-modal-close">Cerrar</a>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection('content')
 @section('js')
     @parent
@@ -87,8 +110,57 @@
                     initialView: 'timeGridWeek',
                     locale: 'es',
                     selectable: true,
+                    validRange: {
+                            start: new Date()
+                        },
                     // resources: JSON.parse(resp.doctors),
-                    events: JSON.parse(resp.locks_days)
+                    events: JSON.parse(resp.locks_days),
+                    dateClick: function(info) {
+                            debugger
+                            console.log(info.date.getTime())
+                            var fecha = info.date;
+                            var hour = fecha.getHours() >= 10 ? fecha.getHours() :
+                                `0${fecha.getHours()}`;
+                            var minutes = fecha.getMinutes() >= 10 ? fecha
+                            .getMinutes() : `0${fecha.getMinutes()}`;
+                            var time = `${hour}:${minutes}`;
+
+                            var month = fecha.getMonth() + 1 >= 10 ? fecha.getMonth() +
+                                1 : `0${fecha.getMonth() + 1}`;
+                            var day = fecha.getDate() >= 10 ? fecha.getDate() :
+                                `0${fecha.getDate()}`;
+                            var year = fecha.getFullYear();
+                            var fecha = `${year}-${month}-${day}`;
+
+                            $('.date-view-fsc').html(info.dateStr);
+                            $('.info-calendar').html(
+                                `<h2 style="
+                                    text-align: center;
+                                    margin-bottom: 10px;
+                                    color: green;
+                                ">${fecha} ${time}</h2>`
+                            );
+                            $('#date_quote').val(fecha);
+                            $('#time_quote').val(time);
+                            if ($('#date_quote').val() != '') {
+                                $(".btn_send_calendar").prop('disabled', false);
+                            }
+
+                        },
+                    eventClick: function(info) {
+                            var eventObj = info.event;
+                            if (eventObj.url) {
+                                var resp = get_detail(eventObj.url).then(resp => {
+                                        debugger
+                                        $('.btn_cita_show').trigger('click');
+                                        $('.box_info').html(resp);
+
+                                    });
+                                    //window.open(eventObj.url);
+                                    info.jsEvent
+                                .preventDefault();; // prevents browser from following link in current tab.
+                            }
+                        },
                 });
                 calendar.render();
                 });
@@ -156,6 +228,13 @@
                             var fecha = `${year}-${month}-${day}`;
 
                             $('.date-view-fsc').html(info.dateStr);
+                            $('.info-calendar').html(
+                                `<h2 style="
+                                    text-align: center;
+                                    margin-bottom: 10px;
+                                    color: green;
+                                ">${fecha} ${time}</h2>`
+                            );
                             $('#date_quote').val(fecha);
                             $('#time_quote').val(time);
                             if ($('#date_quote').val() != '') {
@@ -166,17 +245,15 @@
                         eventClick: function(info) {
                             var eventObj = info.event;
                             if (eventObj.url) {
-                                console.log(eventObj.url)
-                                $.post(eventObj.url, {
-                                    _token: $("meta[name='csrf-token']").attr(
-                                        "content")
-                                }, function(data) {
-                                    $('.box_info_cite').html(data);
-                                    $('.btn_cita_show').trigger('click');
-                                }, "html");
-                                //window.open(eventObj.url);
-                                info.jsEvent
-                                    .preventDefault(); // prevents browser from following link in current tab.
+                                var resp = get_detail(eventObj.url).then(resp => {
+                                        debugger
+                                        $('.btn_cita_show').trigger('click');
+                                        $('.box_info').html(resp);
+
+                                    });
+                                    //window.open(eventObj.url);
+                                    info.jsEvent
+                                .preventDefault();; // prevents browser from following link in current tab.
                             }
                         },
                     });
@@ -224,6 +301,25 @@
                 }
             });
 
+            async function get_detail(url) {
+
+                var response = await fetch(url, {
+                    method: "GET", // *GET, POST, PUT, DELETE, etc.
+                    mode: "cors", // no-cors, *cors, same-origin
+                    cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+                    credentials: "same-origin", // include, *same-origin, omit
+                    headers: {
+                        "Content-Type": "application/json",
+                        // 'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    redirect: "follow", // manual, *follow, error
+                    referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+                    // body: JSON.stringify(data)
+                    })
+                console.log(response);
+                return response.text();
+
+            }
             async function get_days(data) {
 
             var response = await fetch('/patients/get_habailable_days', {

@@ -60,7 +60,7 @@
         </div>
     </div>
     <!--Field-->
-    <div class="column is-6 {{ isset($o->date_quote) ? '' : 'is-hidden' }}">
+    <div class="column is-6 is-hidden">
         <div class="field">
             <div class="control">
                 <?php $t_att = 'action_value'; ?>
@@ -72,7 +72,7 @@
         </div>
     </div>
     <!--Field-->
-    <div class="column is-6 {{ isset($o->time_quote) ? '' : 'is-hidden' }} ">
+    <div class="column is-6 is-hidden">
         <div class="field">
             <div class="control">
                 <?php $t_att = 'time_quote'; ?>
@@ -108,6 +108,18 @@
                 <label><?= $n_att ?></label>
                 <input name="<?= $t_att ?>" type="text" class="input" placeholder="<?= $n_att ?>"
                     value="{{ isset($o->$t_att) ? $o->$t_att : old('note') }}" />
+            </div>
+        </div>
+    </div>
+    <!--Field-->
+    <div class="column is-6">
+        <div class="field">
+            <div class="control" style="display: flex;flex-direction: row">
+                <?php $n_att = 'Fecha seleccionada:'; ?>
+                <label><?= $n_att ?></label>
+                <div class="info-calendar" style="margin-left: 5px">
+
+                </div>
             </div>
         </div>
     </div>

@@ -24,7 +24,7 @@ class MiagendaController extends Controller
     private $c_names = 'Agendas';
 	private $list_tbl_fsc = ['name' => 'Nombre','lastname' => 'Apellidos','email' => 'Correo','phone' => 'Telefono'];
 	private $o_model = Diary::class;
-	
+
 	private function gdata($t = 'Lista de')
     {
         $data['menu'] = $this->r_name;
@@ -42,7 +42,7 @@ class MiagendaController extends Controller
         $this->middleware('checkRole:3');
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $id = Auth::user()->uuid;
 		$o_us = User::where(['uuid' => $id])->first();

@@ -261,8 +261,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('get_doctors/{qt}', [App\Http\Controllers\Patients\PatientsController::class, 'get_doctors']);
         Route::get('/appointments/{id}', [App\Http\Controllers\Patients\PatientsController::class, 'appointments']);
         Route::match(["POST","GET"],'/appointments/{id}/edit', [App\Http\Controllers\Patients\PatientsController::class, 'update_appointment']);
-        Route::get('/appointments_calendar', [App\Http\Controllers\Patients\PatientsController::class, 'appointments_calendar']);
-        Route::post('/appointments_calendar/events', [App\Http\Controllers\Patients\PatientsController::class, 'appointments_calendar_events']);
+        Route::get('/appointments_calendar/{modalidad?}', [App\Http\Controllers\Patients\PatientsController::class, 'appointments_calendar']);
+        Route::post('/appointments_calendar/events/{modalidad?}', [App\Http\Controllers\Patients\PatientsController::class, 'appointments_calendar_events']);
         Route::get('/appointment_detail/{id}', [App\Http\Controllers\Patients\PatientsController::class, 'appointment_detail']);
 
 	});

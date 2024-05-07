@@ -7,10 +7,10 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class Msjlogmails extends Mailable
+class Msjlogmails extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
-	
+
 	public $subject_fsc;
 	public $msj_fsc;
 

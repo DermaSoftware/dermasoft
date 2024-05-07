@@ -90,6 +90,7 @@
                                     <div class="column is-12">
                                         <div class="field">
                                             <div class="control">
+                                                <label for="name">Nombre</label>
                                                 <input name="name" type="text" class="input" placeholder="Su nombre"
                                                     value="{{ isset($o->name) ? $o->name : old('name') }}" required>
                                             </div>
@@ -99,6 +100,37 @@
                                     <div class="column is-12">
                                         <div class="field">
                                             <div class="control">
+                                                <label for="scd_name">Segundo Nombre</label>
+                                                <input name="scd_name" type="text" class="input" placeholder="Su nombre"
+                                                    value="{{ isset($o->scd_name) ? $o->scd_name : old('scd_name') }}" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--Field-->
+                                    <div class="column is-12">
+                                        <div class="field">
+                                            <div class="control">
+                                                <label for="lastname">Primer Apellido</label>
+                                                <input name="lastname" type="text" class="input" placeholder="Su nombre"
+                                                    value="{{ isset($o->lastname) ? $o->lastname : old('lastname') }}" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--Field-->
+                                    <div class="column is-12">
+                                        <div class="field">
+                                            <div class="control">
+                                                <label for="scd_lastname">Segundo Apellido</label>
+                                                <input name="scd_lastname" type="text" class="input" placeholder="Su nombre"
+                                                    value="{{ isset($o->scd_lastname) ? $o->scd_lastname : old('scd_lastname') }}" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--Field-->
+                                    <div class="column is-12">
+                                        <div class="field">
+                                            <div class="control">
+                                                <label for="Correo"></label>
                                                 <input name="email" type="email" class="input" placeholder="Su correo"
                                                     value="{{ isset($o->email) ? $o->email : old('email') }}" required>
                                             </div>
@@ -108,6 +140,7 @@
                                     <div class="column is-12">
                                         <div class="field">
                                             <div class="control">
+                                                <label for="Teléfono"></label>
                                                 <input name="phone" type="text" class="input"
                                                     placeholder="Su teléfono"
                                                     value="{{ isset($o->phone) ? $o->phone : old('phone') }}" required>
@@ -117,7 +150,7 @@
                                     <div class="column is-12">
                                         <div class="field">
                                             <div class="control">
-
+                                                <label for="Cargo"></label>
                                                 <select class="input" name="charge" id="charge">
                                                     @foreach ($charges as $item)
                                                         @if ($item->id == $o->charge)
@@ -135,6 +168,7 @@
                                     <div class="column is-12">
                                         <div class="field">
                                             <div class="control">
+                                                <label for="Tipo de documento"></label>
                                                 <select class="input" name="charge" id="charge">
                                                     @foreach ($documents_type as $item)
                                                         @if ($item == $o->document_type)
@@ -151,6 +185,7 @@
                                         <div class="column is-12">
                                             <div class="field">
                                                 <div class="control">
+                                                    <label for="Nímero de documento"></label>
                                                     <input name="document_number" type="text" class="input"
                                                         placeholder="Número de documento"
                                                         value="{{ isset($o->document_number) ? $o->document_number : old('document_number') }}"

@@ -56,7 +56,7 @@
 									<div class="control">
 										<?php $t_att = 'time_init'; ?>
 										<?php $n_att = 'Hora de inicio'; ?>
-										<input name="<?= $t_att ?>" id="bulma-datepicker-time-fsc1" type="time" class="input" placeholder="<?= $n_att ?>" value="{{ isset($o->$t_att)?$o->$t_att:old($t_att) }}" required />
+										<input name="<?= $t_att ?>" id="time-fsc1" type="time" class="input" placeholder="<?= $n_att ?>" value="{{ isset($o->{$t_att})? $o->{$t_att} : old($t_att) }}" required />
 									</div>
 								</div>
 							</div>
@@ -77,7 +77,7 @@
 									<div class="control">
 										<?php $t_att = 'time_end'; ?>
 										<?php $n_att = 'Hora de fin'; ?>
-										<input name="<?= $t_att ?>" id="bulma-datepicker-time-fsc2" type="time" class="input" placeholder="<?= $n_att ?>" value="{{ isset($o->$t_att)?$o->$t_att:old($t_att) }}" required />
+										<input name="<?= $t_att ?>" id="time-fsc2" type="time" class="input" placeholder="<?= $n_att ?>" value="{{ isset($o->$t_att)?$o->$t_att:old($t_att) }}" required />
 									</div>
 								</div>
 							</div>
@@ -112,4 +112,22 @@
         </div>
     </div>
 </div>
+@endsection
+@section('js')
+    @parent
+    <script>
+        $(document).ready(function(){
+            if ($("#time-fsc1").length) {
+                bulmaCalendar.attach('#time-fsc1', {
+                    lang: 'es'
+                });
+            }
+            if ($("#time-fsc2").length) {
+                bulmaCalendar.attach('#time-fsc2', {
+                    lang: 'es',
+                });
+            }
+
+        })
+    </script>
 @endsection

@@ -6,7 +6,8 @@ $(function () {
             $('#exams_request_table').DataTable().destroy();
         }
         var table = $('#exams_request_table').DataTable({
-            ordering: true,
+            ordering: false,
+            "order": [[2, 'desc']],
             paging: true,
             scrollCollapse: true,
             scrollY: '200px',
