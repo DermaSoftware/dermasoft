@@ -281,6 +281,8 @@ Route::middleware(['auth'])->group(function () {
 		Route::get('/hcdermpdf/{id}', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'gethcpdf'])->name('gethcpdf');
 		// Route::get('/hcdermpdf/{id}', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'hcdermpdf'])->name('hcdermpdf');
 
+        Route::match(['post'],'/user_appointments', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'user_appointments'])->name('user_appointments');
+
         Route::get('/backgrounds/{hc}/{appointment}', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'backgrounds'])->name('backgrounds');
         Route::match(['get', 'post'],'/backgrounds/{hc}/{appointment}/add', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'add_backgrounds'])->name('add_backgrounds');
         Route::match(['get', 'post'],'/backgrounds/{hc}/{id}/{appointment}/edit', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'edit_backgrounds'])->name('edit_backgrounds');

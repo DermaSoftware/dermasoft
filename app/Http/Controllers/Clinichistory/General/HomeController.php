@@ -60,6 +60,7 @@ use App\Http\Controllers\Medical\PthsController;
 use App\Mail\ExamordersMail;
 use App\Mail\ProdsMail;
 use App\Mail\PthsMail;
+use App\Models\Roles;
 use Yajra\DataTables\DataTables;
 class HomeController extends Controller
 {
@@ -281,8 +282,55 @@ class HomeController extends Controller
 	public function shdermatology()
     {
 		$data = $this->gdata('Buscar paciente', false);
+
+        $user_authenticated = Auth::user();
+        $company = $user_authenticated->company_class;
+        $role = Roles::where('name','Paciente')->first();
+        $company_patients = User::with([
+            'role_class',
+            'company_class'
+        ])
+        ->whereBelongsTo($company,'company_class')
+        ->whereBelongsTo($role,'role_class')
+        ->get(['id','uuid','name','role','company','lastname','document_number']);
         $data['o_hctype'] = $this->o_hctype;
+        $data['company_patients'] = $company_patients;
 		return view($this->v_name.'.shdermatology',$data);
+    }
+
+    public function user_appointments(Request $request){
+
+        $data = request()->except(['_token','_method']);
+
+        if(isset($data['patient'])){
+            $user = User::where('id', $data['patient'])->first();
+
+            $appointments = Appointments::with([
+                'company_class' => function ($query) {
+                    $query->select('id', 'name');
+                },
+                'doctor_class' => function ($query) {
+                    $query->select('id', 'name');
+                },
+                'campus_class' => function ($query) {
+                    $query->select('id', 'name');
+                },
+                'user_class' => function ($query) {
+                    $query->select('id', 'name');
+                }
+            ])->where('user', $user->id)
+                ->where('company', Auth::user()->company)
+            ->orderBy('created_at','DESC')
+            ->orderBy('updated_at','DESC');
+
+            // if (Auth::user()->role_class->name == 'Doctor') {
+            //     $appointments = $appointments->where('doctor', Auth::user()->id);
+            // }
+            $appointments = $appointments->get();
+            return ["data" => $appointments];
+        }
+        return [];
+
     }
 
 	public function shvs_dermatology(Request $request)
@@ -290,33 +338,29 @@ class HomeController extends Controller
 		$data = request()->except(['_token','_method']);
         $user_loged = Auth::user();
 		$validatedData = $request->validate([
-			'document_type' => 'required',
-			'document_number' => 'required',
-			'hc_type' => 'required',
+			'appointment' => 'required',
+			'patient' => 'required',
 		],[
-			'document_type.required' => 'El tipo de documento es requerido',
-			'document_number.required' => 'El Número de documento es requerido',
-			'hc_type.required' => 'El tipo de consulta es requerido',
+			'appointment.required' => 'La consulta es requerido',
+			'patient.required' => 'El Número de documento es requerido'
 		]);
+        $appointment = $data['appointment'];
+        $appointment_obj = Appointments::find($appointment);
 		$data['company'] = Auth::user()->company;
         # El usuario debe de pertenecer a la misma compañia qie el doctor
-		$o = $this->o_model::where('document_type',$data['document_type'])
-                    ->where('document_number',$data['document_number'])
-                    ->where('company',$data['company'])
-                    ->first();
-        $appintment = null;
+		$o = $appointment_obj->user_class;
 		if(!empty($o->id)){
             $o_vitalsigns = Vitalsigns::where(['user' => $o->id])
-                            ->where(['hc_type' => $data['hc_type']])
+                            ->where(['appointment_id' => $data['appointment']])
                             ->orderBy('id', 'DESC')->first();
 
             if(!empty($o_vitalsigns)){
-                if($o_vitalsigns->hc_type !== $o_vitalsigns->appointment_class->hc_type){
-                    $request->session()->flash('msj_error', 'El usuario no tiene signos vitales definido para este  tipo de consulta');
-		            return redirect($this->r_name.'/dermatology');
-                }
-                $appintment = $o_vitalsigns->appointment_class->id;
-                return redirect($this->r_name.'/dermatology/'.$o->uuid.'/'.$appintment);
+                // if($o_vitalsigns->hc_type !== $o_vitalsigns->appointment_class->hc_type){
+                //     $request->session()->flash('msj_error', 'El usuario no tiene signos vitales definido para este  tipo de consulta');
+		        //     return redirect($this->r_name.'/dermatology');
+                // }
+                // $appintment = $o_vitalsigns->appointment_class->id;
+                return redirect($this->r_name.'/dermatology/'.$o->uuid.'/'.$appointment);
             }
             else{
                 $request->session()->flash('msj_error', 'El usuario no tiene signos vitales definido para este  tipo de consulta');
