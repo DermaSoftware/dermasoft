@@ -1691,7 +1691,7 @@ class HomeController extends Controller
             }
             return [
                     "Success" => true,
-                "Message" => "Adición exitosa"
+                    "Message" => "Adición exitosa"
             ];
         }
     }

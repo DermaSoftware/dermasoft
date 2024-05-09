@@ -70,8 +70,8 @@
                                         <tr>
                                             <th>#</th>
                                             <th>UUID</th>
-                                            <th>Doctor</th>
                                             <th>Consulta</th>
+                                            <th>Doctor</th>
                                             <th>Medicinas</th>
                                             <th>Tiempo de Validez</th>
                                             <th>Creado</th>
@@ -105,6 +105,7 @@
                                         <tr>
                                             <th>#</th>
                                             <th>UUID</th>
+                                            <th>Consulta</th>
                                             <th>Doctor</th>
                                             <th>Exámen</th>
                                             <th>Total</th>
@@ -140,8 +141,8 @@
                                         <tr>
                                             <th>#</th>
                                             <th>UUID</th>
-                                            <th>Doctor</th>
                                             <th>Consulta</th>
+                                            <th>Doctor</th>
                                             <th>Procedimientos</th>
                                             <th>Creado</th>
                                             {{-- <th>Actualizado</th> --}}
@@ -174,6 +175,7 @@
                                         <tr>
                                             <th>#</th>
                                             <th>UUID</th>
+                                            <th>Consulta</th>
                                             <th>Doctor</th>
                                             <th>Patholgies</th>
                                             <th>Observaciones</th>

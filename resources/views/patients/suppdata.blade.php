@@ -303,7 +303,7 @@
 									</div>
 								</div>
 							</div> --}}
-							{{-- <!--Field-->
+							<!--Field-->
 							<div class="column is-4">
 								<div class="field">
 									<div class="control">
@@ -313,7 +313,7 @@
 										<input <?= $company->name_attendant_active =='no' ? 'disabled' : ''?> <?= $company->name_attendant_required =='si' ? 'required' : ''?> name="{{$t_att}}" type="text" class="input" placeholder="<?= $n_att ?>" value="{{ isset($o->$t_att)?$o->$t_att:old($t_att) }}" />
 									</div>
 								</div>
-							</div> --}}
+							</div>
 							<!--Field-->
 							<div class="column is-4">
 								<div class="field">

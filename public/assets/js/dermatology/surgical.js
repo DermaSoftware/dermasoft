@@ -68,13 +68,15 @@ $(function () {
                 var last = null;
 
                 api.column(2, {page: 'current'}).data().each(function (group, i) {
-                    if (last !== `${group.date_quote} ${group.time_quote}`) {
-                        console.log(group)
-                        $(rows).eq(i).before(
-                            '<tr class="group" style="background:grey"><td style="color:white !important;" colspan="6">' + `${group.date_quote} ${group.time_quote}` + '</td></tr>'
-                        );
+                    if (group !==null) {
+                        if (last !== `${group.date_quote} ${group.time_quote}`) {
+                            console.log(group)
+                            $(rows).eq(i).before(
+                                '<tr class="group" style="background:grey"><td style="color:white !important;" colspan="6">' + `${group.date_quote} ${group.time_quote}` + '</td></tr>'
+                            );
 
-                        last = `${group.date_quote} ${group.time_quote}`;
+                            last = `${group.date_quote} ${group.time_quote}`;
+                        }
                     }
                 });
             },

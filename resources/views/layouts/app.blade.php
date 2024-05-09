@@ -2231,9 +2231,17 @@ if (Auth::user()->company != 0 && Auth::user()->company_class->plan && Auth::use
         //
         if ($('#roles_uss_fsc').length) {
             $('#roles_uss_fsc').on('change', function () {
-                $.post($('#roles_uss_fsc').data('url') + "/uss/" + $('#roles_uss_fsc').val(), {
-                    _token: $("meta[name='csrf-token']").attr("content")
-                }, function (data) {
+                var diagnostic = $('#sel_diagnostic').val();
+                var is_diagnostic = $('#sel_is_diagnostic').val();
+                var uri =  diagnostic != '0' || diagnostic != undefined ?
+                    $('#roles_uss_fsc').data('url') + "/uss/" + $('#roles_uss_fsc').val() :
+                    $('#roles_uss_fsc').data('url') + "/uss/" + $('#roles_uss_fsc').val() + '?diag=' + diagnostic;
+                var data = {
+                    _token: $("meta[name='csrf-token']").attr("content"),
+                    diagnost: diagnostic,
+                    is_diagnostic: is_diagnostic
+                }
+                $.post($('#roles_uss_fsc').data('url') + "/uss/" + $('#roles_uss_fsc').val(), data, function (data) {
                     $('#sel_list_users_fsc').html(data);
                 }, "html");
             });

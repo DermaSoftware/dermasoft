@@ -17,6 +17,7 @@ use App\Mail\MsjlogmailsWithAttachments;
 use App\Mail\Msjlogmails;
 use App\Models\Companies;
 use App\Models\Roles;
+use Illuminate\Database\Eloquent\Builder;
 
 class LogmailsController extends Controller
 {
@@ -312,6 +313,7 @@ class LogmailsController extends Controller
 
     public function uss(Request $request, $id)
     {
+        $data = request()->except(['_token', '_method']);
         $w = ['company' => Auth::user()->company];
         if ($id > 0) {
             $w['role'] = $id;
@@ -323,7 +325,15 @@ class LogmailsController extends Controller
                             ->orderBy('id', 'asc')
                             ->whereHas('role_class',function($q) use ($id) {
                                 $q->where('name',$id);
-                            })->get(['id','uuid','name','lastname','scd_lastname','scd_name','email']);
+                            });
+        if(isset($data['diagnost']) && $data['diagnost'] != "0" && $id == 'Paciente' && $data['is_diagnostic'] == 'si' ){
+            $diag = Diagnoses::find($data['diagnost']);
+            $users_filtererd = $users_filtererd->whereHas('diagnotics',function($q) use ($diag) {
+                $q->where('code',$diag->code);
+            });
+        }
+
+        $users_filtererd = $users_filtererd->get(['id','uuid','name','lastname','scd_lastname','scd_name','email']);
         // $o_all = User::where($w)->whereNotIn('status', ['deleted'])->orderBy('id', 'asc')->get();
         $out = '<option value="0" selected >--Todos--</option>';
         foreach ($users_filtererd as $key => $row) {

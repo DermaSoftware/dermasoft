@@ -692,8 +692,33 @@ class PatientsController extends Controller
                 return redirect('clndrsh/' . $o->id);
             } else if ($data['action_type'] == 'date_quote') {
                 if ($data['modality'] == 'Teleconsulta') {
-                    $o->update(['status' => 'pending']);
-                    return redirect('paymentsh/' . $o->id); //modality
+                    // $o->update(['status' => 'pending']);
+                    // return redirect('paymentsh/' . $o->id); //modality
+                    $o_qt = Querytypes::where(['id' => $o->qt_id])->first();
+                    $o->update(['status' => 'finalized']);
+                    //creamos la cita
+                    $data_apt = [
+                        'modality' => $o->modality,
+                        'user' => $o->user,
+                        'company' => $o->company,
+                        'campus' => $o->campus,
+                        'qt_id' => $o->qt_id,
+                        'query_type' => $o->query_type,
+                        'doctor' => $o->doctor,
+                        'date_quote' => $o->date_quote,
+                        'time_quote' => $o->time_quote,
+                        'note' => $o->note,
+                        'invoice' => uniqid(),
+                        'amount' => $o_qt->price,
+                        'currency' => 'COP',
+                        'response' => 'Pendiente',
+                        'franchise' => 'Efectivo',
+                        'date_init' => date('Y-m-d'),
+                    ];
+                    $o_apt = Appointments::create($data_apt);
+                    //notificamos
+                    $o_user = User::where(['id' => $o->user])->first();
+                    Mail::to($o_user->email)->send(new Ntfs('Cita agendada', 'Hola ' . $o_user->name . ', su cita de ' . $o->query_type . ' ha sido agendada correctamente para el día ' . $o->date_quote . ' a la hora ' . $o->time_quote . ' en la modalidad ' . $o->modality . ', recuerde estar puntual y realizar el pago de forma precencial en el lugar de la cita.', $o_user->name, $o_user->email));
                 } else {
                     //crear cita en estado pendiente de pago
                     //cambiamos estado de solicitud

@@ -130,7 +130,7 @@
                                     <div class="column is-12">
                                         <div class="field">
                                             <div class="control">
-                                                <label for="Correo"></label>
+                                                <label for="email">Correo</label>
                                                 <input name="email" type="email" class="input" placeholder="Su correo"
                                                     value="{{ isset($o->email) ? $o->email : old('email') }}" required>
                                             </div>
@@ -140,7 +140,7 @@
                                     <div class="column is-12">
                                         <div class="field">
                                             <div class="control">
-                                                <label for="Teléfono"></label>
+                                                <label for="phone">Teléfono</label>
                                                 <input name="phone" type="text" class="input"
                                                     placeholder="Su teléfono"
                                                     value="{{ isset($o->phone) ? $o->phone : old('phone') }}" required>
@@ -150,7 +150,7 @@
                                     <div class="column is-12">
                                         <div class="field">
                                             <div class="control">
-                                                <label for="Cargo"></label>
+                                                <label for="charge">Cargo</label>
                                                 <select class="input" name="charge" id="charge">
                                                     @foreach ($charges as $item)
                                                         @if ($item->id == $o->charge)
@@ -168,8 +168,8 @@
                                     <div class="column is-12">
                                         <div class="field">
                                             <div class="control">
-                                                <label for="Tipo de documento"></label>
-                                                <select class="input" name="charge" id="charge">
+                                                <label for="document_type">Tipo de documento</label>
+                                                <select class="input" name="document_type" id="document_type">
                                                     @foreach ($documents_type as $item)
                                                         @if ($item == $o->document_type)
                                                             <option value="{{ $item }}" selected>
@@ -185,7 +185,7 @@
                                         <div class="column is-12">
                                             <div class="field">
                                                 <div class="control">
-                                                    <label for="Nímero de documento"></label>
+                                                    <label for="document_number">Nímero de documento</label>
                                                     <input name="document_number" type="text" class="input"
                                                         placeholder="Número de documento"
                                                         value="{{ isset($o->document_number) ? $o->document_number : old('document_number') }}"
