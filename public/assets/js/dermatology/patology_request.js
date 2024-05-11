@@ -44,31 +44,14 @@ $(function () {
                 "visible": false,
                 "targets": [0, 1]
             },
-                // {
-                //     searchable: false,
-                //     "targets": [0, 2, 3, 4, 5]
-                // },
-                // {
-                //     orderable: false,
-                //     targets: [5]
-                // }
-                // {
-                //     className: 'is-end',
-                //     targets: 3
-                // },
-                //{className: 'text-center', targets: [3, 4, 8, 10, 11, 19]},
-                //{searchable: false, targets: [0,4]},
-                //{orderable: false, targets: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]}
-                //{responsivePriority: 1, targets: [0,15]},
-                //{responsivePriority: 2, targets: [0,1,2, 4,7,8,10,15]},
             ],
             "drawCallback": function (settings) {
                 var api = this.api();
-                var rows = api.rows({page: 'current'}).nodes();
+                var rows = api.rows({ page: 'current' }).nodes();
                 var last = null;
 
-                api.column(2, {page: 'current'}).data().each(function (group, i) {
-                    if (group !==null) {
+                api.column(2, { page: 'current' }).data().each(function (group, i) {
+                    if (group !== null) {
                         if (last !== `${group.date_quote} ${group.time_quote}`) {
                             console.log(group)
                             $(rows).eq(i).before(
@@ -84,33 +67,34 @@ $(function () {
                 "url": `/clinichistory/patology_request/${derma_id}/${appointment}`,
                 "type": 'GET',
             },
-            "columns": [{
-                "data": "id"
-            },
-            {
-                "data": "uuid",
-            },
-            {
-                "data": "appointments",
-                render: function (data, type, row) {
+            "columns": [
+                {
+                    "data": "id"
+                },
+                {
+                    "data": "uuid",
+                },
+                {
+                    "data": "appointments",
+                    render: function (data, type, row) {
 
-                    return data ? `${data.date_quote} ${data.time_quote}` : '';
-                }
-            },
-            {
-                "data": "doctor_class",
-                render: function (data, type, row) {
-                    return data ? data.name : '';
-                }
-            },
-            {
-                "data": "pathologies",
-                render: function (data, type, row) {
-                    if (data) {
-                        console.log(data)
-                        var html = '<ul>';
-                        data.forEach(element => {
-                            html += `<li>
+                        return data ? `${data.date_quote} ${data.time_quote}` : '';
+                    }
+                },
+                {
+                    "data": "doctor_class",
+                    render: function (data, type, row) {
+                        return data ? data.name : '';
+                    }
+                },
+                {
+                    "data": "pathologies",
+                    render: function (data, type, row) {
+                        if (data) {
+                            console.log(data)
+                            var html = '<ul>';
+                            data.forEach(element => {
+                                html += `<li>
                                     <div style="display: flex;flex-direction: column;box-shadow: 0px 25px 20px -20px rgba(0, 0, 0, 0.45);
                                     padding: 5px;
                                     font-size: 10px;">
@@ -123,47 +107,35 @@ $(function () {
                                     </div>
                                 </li>
                         `
-                        });
-                        html += '</ul>';
-                        return html;
+                            });
+                            html += '</ul>';
+                            return html;
+                        }
+                        return data;
+
                     }
-                    return data;
-
-                }
-            },
-            {
-                "data": "annexes",
-                render: function (data, type, row) {
-                    return data ? data : '';
-                }
-            },
-            {
-                "data": "created_at",
-                render: function (data, type, row) {
-                    let fechaActual = new Date(data);
-                    let fechaFormateada = fechaActual.toLocaleDateString()
-                    return fechaFormateada;
-                }
-            },
-
-            // {
-            //     "data": "updated_at",
-            //     render: function (data, type, row) {
-            //         let fechaActual = new Date(data);
-            //         let fechaFormateada = fechaActual.toLocaleDateString()
-            //         return fechaFormateada;
-            //     }
-            // },
-            {
-                "data": "buttons",
-                render: function (data, type, row) {
-                    let derm = derma_id;
-                    let url_update =
-                        `/clinichistory/patology_request/${derm}/${row.id}/${appointment}/edit`;
-                    // let url_delete = `{% url 'nomenclador:delete_anexo' 0 %}`;
-                    // url_update = url_update.replace(0, row.id);
-                    // url_delete = url_delete.replace(0, row.id);
-                    let html = `
+                },
+                {
+                    "data": "annexes",
+                    render: function (data, type, row) {
+                        return data ? data : '';
+                    }
+                },
+                {
+                    "data": "created_at",
+                    render: function (data, type, row) {
+                        let fechaActual = new Date(data);
+                        let fechaFormateada = fechaActual.toLocaleDateString()
+                        return fechaFormateada;
+                    }
+                },
+                {
+                    "data": "buttons",
+                    render: function (data, type, row) {
+                        let derm = derma_id;
+                        let url_update =
+                            `/clinichistory/patology_request/${derm}/${row.id}/${appointment}/edit`;
+                        let html = `
                     <div>
                         <a href="${url_update}" data-toggle="modal" data-modal="derma_modal"
                             class="h-modal-trigger btn btn-primary">
@@ -174,11 +146,9 @@ $(function () {
                     </div>
                 `
 
-                    return html;
-                    ////}
-                    //return data;
+                        return html;
+                    }
                 }
-            }
             ]
         })
         $('#add_patology_request').on('click', function (e) {
@@ -188,9 +158,9 @@ $(function () {
                 $('#derma_modal #salvar').on('click', function () {
                     $('#salvar').hide();
                     $('button.is-loading').removeClass('is-hidden');
-                    setTimeout(function(){
+                    setTimeout(function () {
                         $('#pathology_request_form').submit();
-                    },10)
+                    }, 10)
 
                 })
                 $('#pathology_request_form').on('submit', function (e) {
@@ -260,9 +230,9 @@ $(function () {
                 $('#derma_modal #salvar').on('click', function () {
                     $('#salvar').hide();
                     $('button.is-loading').removeClass('is-hidden');
-                    setTimeout(function(){
+                    setTimeout(function () {
                         $('#pathology_request_form').submit();
-                    },10)
+                    }, 10)
                 })
                 $('#pathology_request_form').on('submit', function (event) {
                     event.preventDefault();

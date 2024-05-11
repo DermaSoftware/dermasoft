@@ -43,23 +43,6 @@ $(function () {
                 "visible": false,
                 "targets": [0, 1]
             },
-            // {
-            //     searchable: false,
-            //     "targets": [0, 2, 3, 4, 5]
-            // },
-            // {
-            //     orderable: false,
-            //     targets: [5]
-            // }
-            // {
-            //     className: 'is-end',
-            //     targets: 3
-            // },
-                //{className: 'text-center', targets: [3, 4, 8, 10, 11, 19]},
-                //{searchable: false, targets: [0,4]},
-                //{orderable: false, targets: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]}
-                //{responsivePriority: 1, targets: [0,15]},
-                //{responsivePriority: 2, targets: [0,1,2, 4,7,8,10,15]},
             ],
             "drawCallback": function (settings) {
                 var api = this.api();

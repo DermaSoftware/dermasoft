@@ -4,7 +4,8 @@ $(function () {
             $('#anamnesis_table').DataTable().destroy();
         }
         var table = $('#anamnesis_table').DataTable({
-            ordering: true,
+            ordering: false,
+            "order": [[0, 'desc']],
             paging: true,
             scrollCollapse: true,
             scrollY: '200px',
@@ -38,63 +39,40 @@ $(function () {
             "processing": true,
             "serverSide": true,
             columnDefs: [{
-                "visible": true,
+                "visible": false,
                 "targets": [0]
             },
-                // {
-                //     searchable: false,
-                //     "targets": [0, 2, 3, 4, 5]
-                // },
-                // {
-                //     orderable: false,
-                //     targets: [5]
-                // }
-                // {
-                //     className: 'is-end',
-                //     targets: 3
-                // },
-                //{className: 'text-center', targets: [3, 4, 8, 10, 11, 19]},
-                //{searchable: false, targets: [0,4]},
-                //{orderable: false, targets: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]}
-                //{responsivePriority: 1, targets: [0,15]},
-                //{responsivePriority: 2, targets: [0,1,2, 4,7,8,10,15]},
             ],
             responsive: true,
+            "drawCallback": function (settings) {
+                var api = this.api();
+                var rows = api.rows({page: 'current'}).nodes();
+                var last = null;
+
+                api.column(0, {page: 'current'}).data().each(function (group, i) {
+                    if (group !==null) {
+                        if (last !== `${group.date_quote} ${group.time_quote}`) {
+                            console.log(group)
+                            $(rows).eq(i).before(
+                                '<tr class="group" style="background:grey"><td style="color:white !important;" colspan="6">' + `${group.date_quote} ${group.time_quote}` + '</td></tr>'
+                            );
+
+                            last = `${group.date_quote} ${group.time_quote}`;
+                        }
+                    }
+                });
+            },
             "ajax": {
                 "url": `/clinichistory/anamnesis/${derma_id}/${appointment}`,
                 "type": 'GET',
             },
             "columns": [
-                //     {
-                //     "data": "id"
-                // },
-                // {
-                //     "data": "reason",
-                // },
-                // {
-                //     "data": "current_illness",
-                // },
-                // {
-                //     "data": "physical_exam",
-                // },
-                // {
-                //     "data": "analysis",
-                // },
-                // {
-                //     "data": "medical_history",
-                // },
-                // {
-                //     "data": "surgical_history",
-                // },
-                // {
-                //     "data": "allergic_history",
-                // },
-                // {
-                //     "data": "drug_history",
-                // },
-                // {
-                //     "data": "system_revition",
-                // },
+                {
+                    "data": "appointments",
+                    render: function (data, type, row) {
+                        return data ? `${data.date_quote} ${data.time_quote}` : '';
+                    }
+                },
                 {
                     "data": "evoluction",
                     render: function (data, type, row) {

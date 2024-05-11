@@ -21,7 +21,7 @@ class PcitasController extends Controller
 	private $list_tbl_fsc = ['name' => 'Nombre'];
 	private $o_model = User::class;
 	private $hc_view = 'citas';
-	
+
 	private function gdata($t = '')
     {
         $data['menu'] = $this->r_name;
@@ -39,7 +39,7 @@ class PcitasController extends Controller
 	public function __construct(){
         $this->middleware('checkRole:5');
     }
-	
+
 	public function index()
     {
 		$data = $this->gdata();
@@ -47,7 +47,9 @@ class PcitasController extends Controller
 		$str_days = '';//
 		$locks_days = '';//
 		//Agendas programadas
-		$pts_all = Appointments::where(['user' => Auth::user()->id,'company' => Auth::user()->company])->whereDate('date_quote', '>=', date('Y-m-d'))->whereNotIn('status',['deleted'])->orderBy('id', 'asc')->get();
+		$pts_all = Appointments::where(['user' => Auth::user()->id,'company' => Auth::user()->company])
+            ->whereDate('date_quote', '>=', date('Y-m-d'))
+            ->whereNotIn('status',['deleted'])->orderBy('id', 'asc')->get();
 		if(count($pts_all) > 0){
 			foreach($pts_all as $key => $row){
 				$url = ", url: '".url('citas/'.$row->uuid)."'";
@@ -63,7 +65,7 @@ class PcitasController extends Controller
 		$data['locks_days'] = $locks_days;
 		return view($this->v_name.'.'.$this->hc_view.'.index',$data);
     }
-	
+
 	public function show(Request $request, $id)
     {
 		$o = Appointments::where(['uuid' => $id])->first();

@@ -160,7 +160,7 @@
         </div>
 
 		<div style="width: 100%;text-align: right;">
-		<a target="_blank" href="<?= url('patients/suppdata/'.$o->uuid) ?>" class="button h-button is-primary is-dark-outlined"><span class="icon"><i class="fas fa-edit"></i></span><span>Actualizar datos secundarios</span></a>
+		<a href="<?= url('patients/suppdata/'.$o->uuid) ?>" class="button h-button is-primary is-dark-outlined"><span class="icon"><i class="fas fa-edit"></i></span><span>Actualizar datos secundarios</span></a>
 		</div>
 	</div>
 
@@ -258,6 +258,7 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
+                                    <th>Consulta</th>
                                     <th>Causa Externa</th>
                                     <th>Motivo de la consulta</th>
                                     <th>Doctor</th>
@@ -276,7 +277,7 @@
     </div>
     </div>
 	<div style="width: 100%;text-align: right;padding: 20px;">
-		<a href="javascript:void(0)" class="button h-button is-success is-dark-outlined btn_next_tab_fsc" data-idtab="anamnesis_tab"><span class="icon"><i class="lnir lnir-arrow-right rem-100"></i></span> <span>Siguiente</span></a>
+		<a href="javascript:void(0)" class="button h-button is-success is-dark-outlined btn_next_tab_fsc" data-idtab="<?= $hc_type == 'Dermatología general Control' || $hc_type == 'Dermatología general' ? 'anamnesis_tab' : 'history_tab' ?>"><span class="icon"><i class="lnir lnir-arrow-right rem-100"></i></span> <span>Siguiente</span></a>
 	</div>
 </div>
 

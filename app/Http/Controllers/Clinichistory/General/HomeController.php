@@ -776,9 +776,15 @@ class HomeController extends Controller
         }
         else{
             $data = request()->except(['_token', '_method']);
-            $data['hc'] = $hc;
-            $data['appoinments_id'] = $appointment;
-            $background = Antecedente::create($data);
+            if(!empty($data['type'])){
+                foreach($data['type'] as $key => $row){
+                    $aux_params['hc'] = $hc;
+                    $aux_params['appointments_id'] = $appointment;//
+                    $aux_params['type_id'] = !empty($data['type_id'][$key])?$data['type_id'][$key]:'';//
+                    $aux_params['resumen'] = !empty($data['resumen'][$key])?$data['resumen'][$key]:'';//
+                    $background = Antecedente::create($aux_params);
+                }
+            }
 
             return [
                 "Success" => true,
@@ -1347,12 +1353,15 @@ class HomeController extends Controller
         $appointment_reason= AppointmentReason::with([
             'doctor_class' => function ($query) {
                 $query->select('id','name','lastname'); # Uno a muchos
-            }
+            },
+            'appointments' => function ($query) {
+                $query->select('id','uuid','date_quote','time_quote'); # Uno a muchos
+            },
             ])
         ->where('dermatology_id',$hc)
         ->orderBy('created_at','DESC')
         ->orderBy('updated_at','DESC')
-        ->get(['id','doctor','consultation_purpose','external_cause','created_at']);
+        ->get(['id','doctor','consultation_purpose','appointments_id','external_cause','created_at']);
 
          return DataTables::of($appointment_reason)->make(true);
     }
@@ -1391,12 +1400,15 @@ class HomeController extends Controller
         $anamnesis= Anamnesis::with([
             'doctor_class' => function ($query) {
                 $query->select('id','name','lastname'); # Uno a muchos
+            },
+            'appointments' => function ($query) {
+                $query->select('id','uuid','date_quote','time_quote'); # Uno a muchos
             }
             ])
         ->where('dermatology_id',$hc)
         ->orderBy('created_at','DESC')
         ->orderBy('updated_at','DESC')
-        ->get(['id','doctor','reason','current_illness','physical_exam',
+        ->get(['id','doctor','appointments_id','reason','current_illness','physical_exam',
                 'analysis','medical_history','surgical_history','allergic_history','drug_history','family_history',
                     'other_history','evoluction','system_revition','is_control','created_at']);
 

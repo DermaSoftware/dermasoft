@@ -543,7 +543,8 @@ Route::middleware(['auth'])->group(function () {
 		Route::get('/', [App\Http\Controllers\Patients\BiopsiasController::class, 'index']);
 		Route::get('/records', [App\Http\Controllers\Patients\BiopsiasController::class, 'records']);
 		Route::get('/hcpdf/{id}', [App\Http\Controllers\Patients\BiopsiasController::class, 'hcpdf']);
-	});
+        Route::post('/biopsies', [App\Http\Controllers\ServicesController::class, 'biopsies']);
+    });
 
 	//Crioterapia
 	Route::group([
@@ -578,6 +579,9 @@ Route::middleware(['auth'])->group(function () {
 		Route::get('/', [App\Http\Controllers\Patients\PrescripcionesController::class, 'index']);
 		Route::get('/records', [App\Http\Controllers\Patients\PrescripcionesController::class, 'records']);
 		Route::get('/hcpdf/{id}', [App\Http\Controllers\Patients\PrescripcionesController::class, 'hcpdf']);
+		Route::post('/get_preciptions', [App\Http\Controllers\ServicesController::class, 'medical_prescription']);
+
+
 	});
 
 	//Examenes
@@ -587,7 +591,8 @@ Route::middleware(['auth'])->group(function () {
 		Route::get('/', [App\Http\Controllers\Patients\ExamenesController::class, 'index']);
 		Route::get('/records', [App\Http\Controllers\Patients\ExamenesController::class, 'records']);
 		Route::get('/hcpdf/{id}', [App\Http\Controllers\Patients\ExamenesController::class, 'hcpdf']);
-	});
+        Route::post('/get_exams', [App\Http\Controllers\ServicesController::class, 'exam_request']);
+    });
 
 	//Procedimientos
 	Route::group([
@@ -596,7 +601,8 @@ Route::middleware(['auth'])->group(function () {
 		Route::get('/', [App\Http\Controllers\Patients\ProcedimientosController::class, 'index']);
 		Route::get('/records', [App\Http\Controllers\Patients\ProcedimientosController::class, 'records']);
 		Route::get('/hcpdf/{id}', [App\Http\Controllers\Patients\ProcedimientosController::class, 'hcpdf']);
-	});
+        Route::post('/procedure_request', [App\Http\Controllers\ServicesController::class, 'procedure_request']);
+    });
 
 	//Patalogias
 	Route::group([
@@ -605,7 +611,8 @@ Route::middleware(['auth'])->group(function () {
 		Route::get('/', [App\Http\Controllers\Patients\PatalogiasController::class, 'index']);
 		Route::get('/records', [App\Http\Controllers\Patients\PatalogiasController::class, 'records']);
 		Route::get('/hcpdf/{id}', [App\Http\Controllers\Patients\PatalogiasController::class, 'hcpdf']);
-	});
+        Route::post('/patology_request', [App\Http\Controllers\ServicesController::class, 'patology_request']);
+    });
 
 
 	//MEDICO

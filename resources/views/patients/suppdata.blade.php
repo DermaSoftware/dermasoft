@@ -239,10 +239,21 @@
 							<div class="column is-4">
 								<div class="field">
 									<div class="control">
+										<?php $t_att = 'main_address'; ?>
+										<?php $n_att = 'Dirección principal'; ?>
+										<label><?= $n_att ?></label>
+										<input <?= $company->main_address_active =='no' ? 'disabled' : ''?> <?= $company->main_address_required =='si' ? 'required' : ''?> name="{{$t_att}}" type="text" class="input" placeholder="<?= $n_att ?>" value="{{ isset($o->$t_att)?$o->$t_att:old($t_att) }}" />
+									</div>
+								</div>
+							</div>
+							<!--Field-->
+							<div class="column is-4">
+								<div class="field">
+									<div class="control">
 										<?php $t_att = 'regime'; ?>
 										<?php $n_att = 'Régimen'; ?>
 										<label><?= $n_att ?></label>
-										<select name="<?= $t_att ?>" class="input">
+										<select <?= $company->regime_active =='no' ? 'disabled' : ''?> <?= $company->regime_required =='si' ? 'required' : ''?> name="<?= $t_att ?>" class="input">
 											<option value="" selected disabled >--Seleccione--</option>
 											<?php $options = ['contributivo','subsidiado','vinculado','particular','otro','desplazado']; ?>
 											<?php foreach($options as $key => $row){ ?>
@@ -288,7 +299,8 @@
 										<?php $t_att = 'stratum'; ?>
 										<?php $n_att = 'Estrato'; ?>
 										<label><?= $n_att ?></label>
-										<input name="{{$t_att}}" type="text" class="input" placeholder="<?= $n_att ?>" value="{{ isset($o->$t_att)?$o->$t_att:old($t_att) }}" required />
+										<input <?= $company->stratum_active =='no' ? 'disabled' : ''?> <?= $company->stratum_required =='si' ? 'required' : ''?>
+                                             name="{{$t_att}}" type="text" class="input" placeholder="<?= $n_att ?>" value="{{ isset($o->$t_att)?$o->$t_att:old($t_att) }}" required />
 									</div>
 								</div>
 							</div>
@@ -354,7 +366,7 @@
 										<?php $t_att = 'signature'; ?>
 										<?php $n_att = 'Firma'; ?>
 										<label><?= $n_att ?></label>
-										<input name="{{$t_att}}" type="file" class="input" />
+										<input <?= $company->signature_active =='no' ? 'disabled' : ''?> <?= $company->signature_required =='si' ? 'required' : ''?> name="{{$t_att}}" type="file" class="input" />
 									</div>
 								</div>
 							</div>

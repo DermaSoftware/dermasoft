@@ -4,7 +4,8 @@ $(function () {
         $('#appointments_reason_table').DataTable().destroy();
     }
     var table = $('#appointments_reason_table').DataTable({
-        ordering: true,
+        ordering: false,
+        "order": [[1, 'desc']],
         paging: true,
         scrollCollapse: true,
         scrollY: '200px',
@@ -40,31 +41,38 @@ $(function () {
         columnDefs: [{
             "visible": false,
             "targets": [0]
-        },
-        // {
-        //     searchable: false,
-        //     "targets": [0, 2, 3, 4, 5]
-        // },
-        // {
-        //     orderable: false,
-        //     targets: [5]
-        // }
-        // {
-        //     className: 'is-end',
-        //     targets: 3
-        // },
-            //{className: 'text-center', targets: [3, 4, 8, 10, 11, 19]},
-            //{searchable: false, targets: [0,4]},
-            //{orderable: false, targets: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]}
-            //{responsivePriority: 1, targets: [0,15]},
-            //{responsivePriority: 2, targets: [0,1,2, 4,7,8,10,15]},
+        }
         ],
+        "drawCallback": function (settings) {
+            var api = this.api();
+            var rows = api.rows({page: 'current'}).nodes();
+            var last = null;
+
+            api.column(1, {page: 'current'}).data().each(function (group, i) {
+                if (group !==null) {
+                    if (last !== `${group.date_quote} ${group.time_quote}`) {
+                        console.log(group)
+                        $(rows).eq(i).before(
+                            '<tr class="group" style="background:grey"><td style="color:white !important;" colspan="6">' + `${group.date_quote} ${group.time_quote}` + '</td></tr>'
+                        );
+
+                        last = `${group.date_quote} ${group.time_quote}`;
+                    }
+                }
+            });
+        },
         "ajax": {
             "url": `/clinichistory/appointments_reason/${derma_id}/${appointment}`,
             "type": 'GET',
         },
         "columns": [{
             "data": "id"
+        },
+        {
+            "data": "appointments",
+            render: function (data, type, row) {
+                return data ? `${data.date_quote} ${data.time_quote}` : '';
+            }
         },
         {
             "data": "external_cause",

@@ -193,11 +193,11 @@
                 </div>
             </div>
         </div>
-        <div style="width: 100%;text-align: right;padding: 10px;">
+        {{-- <div style="width: 100%;text-align: right;padding: 10px;">
             <a href="javascript:void(0)" class="button h-button is-success is-dark-outlined btn_next_tab_fsc"
                 data-idtab="diagnostics_tab"><span class="icon"><i
                         class="lnir lnir-arrow-right rem-100"></i></span>
                 <span>Siguiente</span></a>
-        </div>
+        </div> --}}
     </div>
 </div>

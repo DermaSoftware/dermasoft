@@ -25,6 +25,7 @@
                                 <th>Antecedentes alérgicos</th>
                                 <th>Antecedentes farmacológicos</th>
                                 <th>Revisión sistema</th> --}}
+                                <th>Consulta</th>
                                 <th>Histórico</th>
                                 {{-- <th>Creado</th> --}}
                                 {{-- <th>Actualizado</th> --}}
