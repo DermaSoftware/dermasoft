@@ -539,7 +539,8 @@ class PatientsController extends Controller
             },
             'user_class' => function ($query) {
                 $query->select('id', 'name');
-            }
+            },
+            'latestVitalsign'
         ])->where('user', $user->id)
             ->where('company', Auth::user()->company)
         ->orderBy('created_at','DESC')
@@ -778,7 +779,9 @@ class PatientsController extends Controller
             $time_init = 'time_init' . $i;
             $time_end = 'time_end' . $i;
             $tag_campus = 'campus' . $i;
-            if ($o_diary->$tag == 'not' || $o_diary->$tag_campus != intval($data['campus'])) {
+            $tag_modality = 'modality' . $i;
+            if ($o_diary->$tag == 'not' || $o_diary->$tag_campus != intval($data['campus'])
+                || $o_diary->$tag_modality != $data['modality']) {
                 $str_days .= !empty($str_days) ? ', ' . $i : $i;
             } else {
                 // array_push(

@@ -318,7 +318,9 @@ class HomeController extends Controller
                 'user_class' => function ($query) {
                     $query->select('id', 'name');
                 }
-            ])->where('user', $user->id)
+            ])
+            ->has('vitalsigns')
+            ->where('user', $user->id)
                 ->where('company', Auth::user()->company)
             ->orderBy('created_at','DESC')
             ->orderBy('updated_at','DESC');
@@ -578,61 +580,6 @@ class HomeController extends Controller
 		exit();
     }
 
-	// private function getpdfhcderm($id, $save = false)
-    // {
-	// 	if(empty($id)){
-	// 		return null;
-	// 	}
-	// 	$o_derm = Dermatology::where(['uuid' => $id])->first();
-	// 	if(empty($o_derm->id)){
-	// 		return null;
-	// 	}
-
-	// 	$o = $this->o_model::where(['id' => $o_derm->user])->first();
-	// 	$o_doctor = $this->o_model::where(['id' => $o_derm->doctor])->first();
-	// 	$o_company = Companies::where(['id' => $o_derm->company])->first();
-	// 	$logo = !empty($o_company->logo_pp)?public_path($o_company->logo_pp):public_path('assets/images/favicon.png');
-	// 	$photo = !empty($o->photo_pp)?$o->photo_pp:public_path('assets/images/user.png');
-	// 	$signature = !empty($o_doctor->signature_pp)?$o_doctor->signature_pp:public_path('assets/images/firma.png');
-
-	// 	$data['o_vitalsigns'] = Vitalsigns::where(['user' => $o_derm->user])->orderBy('id', 'DESC')->first();
-	// 	$all_dgs = Hcdermdiagnostics::where(['hc' => $o_derm->id])->orderBy('id', 'asc')->get();//diagnosticos
-	// 	$all_ind = Hcdermindications::where(['hc' => $o_derm->id])->orderBy('id', 'asc')->get();//indicaciones
-	// 	$all_pre = Prescriptions::where(['hc' => $o_derm->id])->orderBy('id', 'asc')->get();//prescripción médica
-	// 	$all_sex = Hcdermsolexams::where(['hc' => $o_derm->id])->orderBy('id', 'asc')->get();//Solicitudes de examenes
-	// 	$all_spr = Hcdermsolproc::where(['hc' => $o_derm->id])->orderBy('id', 'asc')->get();//Solicitudes de procedimientos
-	// 	$all_spa = Hcdermsolpath::where(['hc' => $o_derm->id])->orderBy('id', 'asc')->get();//Solicitudes de patalogías
-	// 	//echo 'ok pdf';exit();
-
-	// 	$data['all_dgs'] = $all_dgs;
-	// 	$data['all_ind'] = $all_ind;
-	// 	$data['all_pre'] = $all_pre;
-	// 	$data['all_sex'] = $all_sex;
-	// 	$data['all_spr'] = $all_spr;
-	// 	$data['all_spa'] = $all_spa;
-	// 	$data['o'] = $o;
-	// 	$data['o_derm'] = $o_derm;
-	// 	$data['o_doctor'] = $o_doctor;
-	// 	$data['logo'] = $logo;
-	// 	$data['photo'] = $photo;
-	// 	$data['signature'] = $signature;
-	// 	$data['company_name'] = $o_company->name;
-	// 	$full_name = $o->name.' '.$o->scd_name.' '.$o->lastname.' '.$o->scd_lastname;
-	// 	$data['full_name'] = $full_name;
-	// 	$dfull_name = $o_doctor->name.' '.$o_doctor->scd_name.' '.$o_doctor->lastname.' '.$o_doctor->scd_lastname;
-	// 	$data['dfull_name'] = $dfull_name;
-	// 	$pdf = PDF::loadView('pdf.derm', $data);
-	// 	//retornamos el pdf
-	// 	/*if($save){
-	// 		$pdfFilePath = 'app/public/uploads/hc_derm_'.$id.'.pdf';
-	// 		$pdf->save(storage_path($pdfFilePath));
-	// 		return $pdfFilePath;
-	// 	}*/
-	// 	return $pdf->stream('document.pdf');
-	// 	exit();
-    // }
-
-
 	//PDF Historial de todos las consultas
 	public function listrecords($id)
     {
@@ -710,43 +657,6 @@ class HomeController extends Controller
 		return $pdf->stream('document.pdf');
 		exit();
     }
-	// private function allpdfhcderm($id)
-    // {
-	// 	if(empty($id)){
-	// 		return null;
-	// 	}
-	// 	$o = $this->o_model::where(['uuid' => $id])->first();
-	// 	$full_name = $o->name.' '.$o->scd_name.' '.$o->lastname.' '.$o->scd_lastname;
-	// 	$o_company = Companies::where(['id' => $o->company])->first();
-	// 	$logo = !empty($o_company->logo_pp)?public_path($o_company->logo_pp):public_path('assets/images/favicon.png');
-	// 	$photo = !empty($o->photo_pp)?$o->photo_pp:public_path('assets/images/user.png');
-	// 	$data['o'] = $o;
-	// 	$data['logo'] = $logo;
-	// 	$data['photo'] = $photo;
-	// 	$data['company_name'] = $o_company->name;
-	// 	$data['full_name'] = $full_name;
-	// 	$data['o_vitalsigns'] = Vitalsigns::where(['user' => $o->id])->orderBy('id', 'DESC')->first();
-
-	// 	$arr = [];
-	// 	$derm_all = Dermatology::where(['user' => $o->id,'hc_type' => $this->hc_type])->orderBy('id', 'asc')->get();
-	// 	foreach($derm_all as $key => $o_derm){
-	// 		$o_doctor = $this->o_model::where(['id' => $o_derm->doctor])->first();
-	// 		$dfull_name = $o_doctor->name.' '.$o_doctor->scd_name.' '.$o_doctor->lastname.' '.$o_doctor->scd_lastname;
-	// 		$signature = !empty($o_doctor->signature_pp)?$o_doctor->signature_pp:public_path('assets/images/firma.png');
-	// 		$all_dgs = Hcdermdiagnostics::where(['hc' => $o_derm->id])->orderBy('id', 'asc')->get();//diagnosticos
-	// 		$all_ind = Hcdermindications::where(['hc' => $o_derm->id])->orderBy('id', 'asc')->get();//indicaciones
-	// 		$all_pre = Prescriptions::where(['hc' => $o_derm->id])->orderBy('id', 'asc')->get();//prescripción médica
-	// 		$all_sex = Hcdermsolexams::where(['hc' => $o_derm->id])->orderBy('id', 'asc')->get();//Solicitudes de examenes
-	// 		$all_spr = Hcdermsolproc::where(['hc' => $o_derm->id])->orderBy('id', 'asc')->get();//Solicitudes de procedimientos
-	// 		$all_spa = Hcdermsolpath::where(['hc' => $o_derm->id])->orderBy('id', 'asc')->get();//Solicitudes de patalogías
-	// 		array_push($arr, ['o_derm' => $o_derm,'o_doctor' => $o_doctor,'dfull_name' => $dfull_name,'signature' => $signature,'all_dgs' => $all_dgs,'all_ind' => $all_ind,'all_pre' => $all_pre,'all_sex' => $all_sex,'all_spr' => $all_spr,'all_spa' => $all_spa]);
-	// 	}
-	// 	$data['arr'] = $arr;
-
-	// 	$pdf = PDF::loadView('pdf.dermall', $data);
-	// 	return $pdf->stream('document.pdf');
-	// 	exit();
-    // }
 
     public function backgrounds(Request $request,$hc,$appointment = null){
 

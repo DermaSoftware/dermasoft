@@ -39,6 +39,6 @@ class Appointments extends Model
 
     public function vitalsigns()
     {
-        return $this->hasMany(Vitalsigns::class);
+        return $this->hasMany(Vitalsigns::class,'appointment_id');
     }
 }

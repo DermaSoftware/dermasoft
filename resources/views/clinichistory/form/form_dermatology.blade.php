@@ -214,7 +214,7 @@
         </div>
 	</div>
 
-	<div class="accordion-header is-active">Signos vitales</div>
+	<div class="accordion-header is-active">Signos vitales ({{$o_vitalsigns->created_at}})</div>
 	<div class="accordion-content" style="display: block;">
 		<?php if(!empty($o_vitalsigns->id)){ ?>
 		<div class="columns is-multiline">

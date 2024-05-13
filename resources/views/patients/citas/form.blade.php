@@ -79,6 +79,7 @@
                 <label><?= $n_att ?></label>
                 <select name="modality" class="input" required>
                     <?php $options = ['Presencial', 'Teleconsulta']; ?>
+                    <option value="0">---Seleccione---</option>
                     <?php foreach($options as $key => $row){ ?>
                     <option value="<?= $row ?>"><?= $row ?></option>
                     <?php } ?>

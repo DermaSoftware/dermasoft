@@ -90,7 +90,7 @@
                 <?php $n_att = 'Modalidad'; ?>
                 <label><?= $n_att ?></label>
                 <select name="modality" class="input" required>
-                    <?php $options = ['Presencial', 'Teleconsulta', 'Domiciliaria']; ?>
+                    <?php $options = ['Presencial', 'Teleconsulta']; ?>
                     <?php foreach($options as $key => $row){ ?>
                     <option value="<?= $row ?>"><?= $row ?></option>
                     <?php } ?>

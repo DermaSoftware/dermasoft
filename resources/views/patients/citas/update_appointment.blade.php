@@ -85,17 +85,22 @@
         $(document).ready(function() {
 
             const doctor = document.querySelector('select[name="doctor"]');
+            const modality = document.querySelector('select[name="modality"]');
             doctor.removeAttribute('disabled');
             op = doctor.options[doctor.selectedIndex];
             var value = op.value;
             const campus = document.querySelector('select[name="campus"]');
             var campus_value = campus.options[campus.selectedIndex].value;
+
+            modality_op = modality.options[modality.selectedIndex];
+            var modality_value = modality_op.value;
             // var calendarEl = document.getElementById('calendar');
-            if (value !== '0') {
+            if (modality_value !== '0') {
                 var data = {
                     _token: $("meta[name='csrf-token']").attr("content"),
                     "doctor": value,
                     "campus": campus_value,
+                    "modality": modality_value,
                     "patient": <?= $patient ?>
                 }
                 const resp = get_days(data).then(resp => {
@@ -166,17 +171,23 @@
                 });
             }
 
-            doctor.addEventListener('change', async function() {
+            modality.addEventListener('change', async function() {
                 op = doctor.options[doctor.selectedIndex];
                 var value = op.value;
+
+                modality_op = modality.options[modality.selectedIndex];
+                var modality_value = modality_op.value;
+
                 const campus = document.querySelector('select[name="campus"]');
                 var campus_value = campus.options[campus.selectedIndex].value;
+
                 var calendarEl = document.getElementById('calendar');
-                if (value !== '0') {
+                if (modality_value !== '0') {
                     var data = {
                         _token: $("meta[name='csrf-token']").attr("content"),
                         "doctor": value,
                         "campus": campus_value,
+                        "modality": modality_value,
                         "patient": <?= $patient ?>
                     }
                     const response = await fetch('/patients/get_habailable_days', {
