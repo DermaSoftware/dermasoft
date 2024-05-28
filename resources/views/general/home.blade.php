@@ -144,7 +144,7 @@
                 <span>Pacientes</span>
                 <h3>Gestión de pacientes</h3>
             </a>
-            <a href="<?= url('admon/diary') ?>" class="settings-box">
+            <a href="<?= url('patients/appointments_calendar/Teleconsulta') ?>" class="settings-box">
                 <div class="edit-icon">
                     <i class="lnil lnil-pencil"></i>
                 </div>

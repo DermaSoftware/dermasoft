@@ -32,4 +32,22 @@ class PathologyRequest extends Model
     {
         return $this->belongsTo(User::class, 'doctor');
     }
+    public function appointments()
+    {
+        return $this->belongsTo(Appointments::class);
+    }
+    public function dermatology()
+    {
+        return $this->belongsTo(Dermatology::class);
+    }
+    public function hcdermdiagnostics()
+    {
+        return $this->belongsTo(Hcdermdiagnostics::class);
+    }
+
+    public function pathologies()
+    {
+        return $this->belongsToMany(Pathologies::class, 'patology_request_pathologies','patology_request_id','pathologies_id')
+                ->withPivot('note','pathologie','code');
+    }
 }

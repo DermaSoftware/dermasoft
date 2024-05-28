@@ -15,7 +15,9 @@ use Illuminate\Http\File;
 use Illuminate\Support\Facades\Storage;
 use App\Mail\MsjlogmailsWithAttachments;
 use App\Mail\Msjlogmails;
+use App\Models\Companies;
 use App\Models\Roles;
+use Illuminate\Database\Eloquent\Builder;
 
 class LogmailsController extends Controller
 {
@@ -249,7 +251,7 @@ class LogmailsController extends Controller
                 $this->sendMail($email, $subject, $data['msj'], $emails, $attachments);
             }
             $request->session()->flash('msj_success', $this->tag_the . ' ' . $this->c_name . ' ' . $request->subject . ' ha sido registrad' . $this->tag_o . ' correctamente.');
-            redirect($this->r_name);
+           return redirect($this->r_name);
         }
     }
 
@@ -311,13 +313,30 @@ class LogmailsController extends Controller
 
     public function uss(Request $request, $id)
     {
+        $data = request()->except(['_token', '_method']);
         $w = ['company' => Auth::user()->company];
         if ($id > 0) {
             $w['role'] = $id;
         }
-        $o_all = User::where($w)->whereNotIn('status', ['deleted'])->orderBy('id', 'asc')->get();
+        $user_authenticated = Auth::user();
+        $company = Companies::where('id',$user_authenticated->company)->first();
+        $users_filtererd = User::where('company',$company->id)
+                            ->whereNotIn('status', ['deleted'])
+                            ->orderBy('id', 'asc')
+                            ->whereHas('role_class',function($q) use ($id) {
+                                $q->where('name',$id);
+                            });
+        if(isset($data['diagnost']) && $data['diagnost'] != "0" && $id == 'Paciente' && $data['is_diagnostic'] == 'si' ){
+            $diag = Diagnoses::find($data['diagnost']);
+            $users_filtererd = $users_filtererd->whereHas('diagnotics',function($q) use ($diag) {
+                $q->where('code',$diag->code);
+            });
+        }
+
+        $users_filtererd = $users_filtererd->get(['id','uuid','name','lastname','scd_lastname','scd_name','email']);
+        // $o_all = User::where($w)->whereNotIn('status', ['deleted'])->orderBy('id', 'asc')->get();
         $out = '<option value="0" selected >--Todos--</option>';
-        foreach ($o_all as $key => $row) {
+        foreach ($users_filtererd as $key => $row) {
             $full_name = $row->name . ' ' . $row->scd_name . ' ' . $row->lastname . ' ' . $row->scd_lastname;
             $out .= '<option value="' . $row->id . '">' . $full_name . ' (' . $row->email . ')</option>';
         }
@@ -340,4 +359,16 @@ class LogmailsController extends Controller
             }
         }
     }
+
+    // public function get_users(Request $request)
+    // {
+    //     $data = request()->except(['_token', '_method']);
+    //     $user_authenticated = Auth::user();
+    //     $company = Companies::where('id',$user_authenticated->company)->first();
+    //     $users_filtererd = User::where('company',$company->id)
+    //                         ->whereHas('role_class',function($q) use ($data) {
+    //                             $q->where('name',$data['rol']);
+    //                         })->get(['id','uuid','name']);
+    //     return empty($users_filtererd ? [] : $users_filtererd);
+    // }
 }

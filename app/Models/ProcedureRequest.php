@@ -36,8 +36,13 @@ class ProcedureRequest extends Model
     {
         return $this->belongsTo(Appointments::class);
     }
+    public function dermatology()
+    {
+        return $this->belongsTo(Dermatology::class);
+    }
 
-    public function prequest_nprocedure(){
-        return $this->belongsToMany(Procedures::class,'prequest_nprocedure','procedure_request_id','procedures_id');
+    public function procedures(){
+        return $this->belongsToMany(Procedures::class,'prequest_nprocedure','procedure_request_id','procedures_id')
+            ->withPivot('id','note');
     }
 }

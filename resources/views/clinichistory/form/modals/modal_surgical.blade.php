@@ -14,15 +14,19 @@
                         <div class="column is-12">
                             <div class="field">
                                 <div class="control">
-                                    <?php $t_att = 'diagnostic_id'; ?>
-                                    <?php $n_att = 'Diagnostico'; ?>
+                                    <?php $t_att = 'prequest_nprocedure_id'; ?>
+                                    <?php $n_att = 'Solicitud de procedimiento'; ?>
                                     <label><?= $n_att ?></label>
-                                    <select name="<?= $t_att ?>" class="input select2_fsc">
-                                        <option value="" selected disabled>Diagnostico</option>
-                                        <?php foreach($diagnoses as $key => $row){ ?>
-                                        <option value="<?= $row->id ?>">
-                                            <?= empty($row->skin_phototype) ? $row->diagnostic  : $row->diagnostic . ' - ' . $row->skin_phototype ?></option>
-                                        <?php } ?>
+                                    <select name="prequest_nprocedure_id" class="input select2_fsc">
+                                        {{-- <option value="" selected disabled>Diagnostico</option> --}}
+                                        @foreach ($procedures_requests as $item)
+                                            @foreach ($item->procedures as $procedure)
+                                            <option value="<?= $procedure->pivot->id ?>">
+                                                {{$procedure->name}} - {{$procedure->description}}
+                                            </option>
+                                            @endforeach
+                                        @endforeach
+
                                     </select>
                                 </div>
                             </div>
@@ -303,7 +307,15 @@
                                     <?php $t_att = 'pathology'; ?>
                                     <?php $n_att = 'Patología'; ?>
                                     <label><?= $n_att ?></label>
-                                    <input name="<?= $t_att ?>[]" type="text" class="input fl_sel_parent_disb" data-xparent=".sel_tumors" data-option="Si" placeholder="<?= $n_att ?>" value="{{ old($t_att) }}" />
+                                    {{-- <input name="<?= $t_att ?>[]" type="text" class="input fl_sel_parent_disb" data-xparent=".sel_tumors" data-option="Si" placeholder="<?= $n_att ?>" value="{{ old($t_att) }}" /> --}}
+                                    <select name="<?= $t_att ?>[]" class="input patol fl_sel_parent_disb" data-xparent=".sel_tumors" data-option="Si">
+                                        <option value="" selected disabled >--Seleccione--</option>
+                                        <?php $options = ['Si','No']; ?>
+                                        <?php $select_old = $is_records?$o_hcp->$t_att:''; ?>
+                                        <?php foreach($options as $key => $row){ ?>
+                                        <option value="<?= $row ?>" <?= $select_old==$row?'selected':'' ?> ><?= $row ?></option>
+                                        <?php } ?>
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -314,7 +326,7 @@
                                     <?php $t_att = 'observations'; ?>
                                     <?php $n_att = 'Observaciones'; ?>
                                     <label><?= $n_att ?></label>
-                                    <input name="<?= $t_att ?>[]" type="text" class="input fl_sel_parent_disb" data-xparent=".sel_tumors" data-option="Si" placeholder="<?= $n_att ?>" value="{{ old($t_att) }}" required />
+                                    <input name="<?= $t_att ?>[]" type="text" class="input fl_sel_parent_disb" data-xparent=".patol" data-option="Si" placeholder="<?= $n_att ?>" value="{{ old($t_att) }}" required />
                                 </div>
 
                             </div>
@@ -368,7 +380,7 @@
                             <div class="field">
                                 <div class="control">
                                     <?php $t_att = 'comments'; ?>
-                                    <?php $n_att = 'Comentarios adicionales'; ?>
+                                    <?php $n_att = 'Análisis y/o observaciones'; ?>
                                     <label><?= $n_att ?></label>
                                     <textarea name="<?= $t_att ?>" class="textarea" rows="2" placeholder="<?= $n_att ?>"><?= old($t_att) ?><?= $is_records?$o_hcp->$t_att:'' ?></textarea>
                                 </div>
@@ -379,7 +391,7 @@
                         </div>
                         <!--Field-->
                         <div class="column is-12"><h3 class="subtitle">Datos de quienes participaron en el procedimiento</h3></div>
-                        <div class="column is-3">
+                        <div class="column is-6">
                             <div class="field">
                                 <div class="control">
                                     <?php $t_att = 'surgeon'; ?>
@@ -389,7 +401,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="column is-3">
+                        <div class="column is-6">
                             <div class="field">
                                 <div class="control">
                                     <?php $t_att = 'assistant'; ?>
@@ -399,7 +411,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="column is-3">
+                        <div class="column is-6">
                             <div class="field">
                                 <div class="control">
                                     <?php $t_att = 'instrumentalist'; ?>
@@ -409,7 +421,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="column is-3">
+                        <div class="column is-6">
                             <div class="field">
                                 <div class="control">
                                     <?php $t_att = 'anesthesiologist'; ?>
@@ -427,8 +439,9 @@
     </form>
 </div>
 <div class="modal-card-foot is-end">
-    <div id="salvar" class="buttons">
-        <button type="submit" class="button is-success">Salvar</button>
+    <div  class="buttons">
+        <button id="salvar" type="submit" class="button is-success">Salvar</button>
+        <button class="button is-success is-loading is-hidden">Loading</button>
     </div>
 </div>
 

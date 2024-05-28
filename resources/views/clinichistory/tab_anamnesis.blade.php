@@ -25,6 +25,7 @@
                                 <th>Antecedentes alérgicos</th>
                                 <th>Antecedentes farmacológicos</th>
                                 <th>Revisión sistema</th> --}}
+                                <th>Consulta</th>
                                 <th>Histórico</th>
                                 {{-- <th>Creado</th> --}}
                                 {{-- <th>Actualizado</th> --}}
@@ -39,7 +40,7 @@
         </div>
         <div style="width: 100%;text-align: right;padding: 10px;">
             <a href="javascript:void(0)" class="button h-button is-success is-dark-outlined btn_next_tab_fsc"
-                data-idtab="diagnostics_tab"><span class="icon"><i class="lnir lnir-arrow-right rem-100"></i></span>
+                data-idtab="history_tab"><span class="icon"><i class="lnir lnir-arrow-right rem-100"></i></span>
                 <span>Siguiente</span></a>
         </div>
     </div>

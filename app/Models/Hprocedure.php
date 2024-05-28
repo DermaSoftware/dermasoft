@@ -22,8 +22,17 @@ class Hprocedure extends Model
     public function type_procedure_class(){
         return $this->belongsTo(Procedures::class,'type_procedure');
     }
+    public function user_class(){
+        return $this->belongsTo(User::class,'user');
+    }
+    public function doctor_class(){
+        return $this->belongsTo(User::class,'doctor');
+    }
     public function prequest_nprocedure(){
         return $this->belongsTo(PRequest_NProcedure::class);
+    }
+    public function appointments(){
+        return $this->belongsTo(Appointments::class);
     }
 
     public function hcsuture(){

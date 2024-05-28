@@ -17,15 +17,19 @@
                                 <div class="column is-12">
                                     <div class="field">
                                         <div class="control">
-                                            <?php $t_att = 'diagnostic_id'; ?>
-                                            <?php $n_att = 'Diagnostico'; ?>
+                                            <?php $t_att = 'prequest_nprocedure_id'; ?>
+                                            <?php $n_att = 'Solicitud de procedimiento'; ?>
                                             <label><?= $n_att ?></label>
-                                            <select name="<?= $t_att ?>" class="input select2_fsc">
-                                                <option value="" selected disabled>Diagnostico</option>
-                                                <?php foreach($diagnoses as $key => $row){ ?>
-                                                <option value="<?= $row->id ?>">
-                                                    <?= empty($row->skin_phototype) ? $row->diagnostic  : $row->diagnostic . ' - ' . $row->skin_phototype ?></option>
-                                                <?php } ?>
+                                            <select name="prequest_nprocedure_id" class="input select2_fsc">
+                                                {{-- <option value="" selected disabled>Diagnostico</option> --}}
+                                                @foreach ($procedures_requests as $item)
+                                                    @foreach ($item->procedures as $procedure)
+                                                    <option value="<?= $procedure->pivot->id ?>">
+                                                        {{$procedure->name}} - {{$procedure->description}}
+                                                    </option>
+                                                    @endforeach
+                                                @endforeach
+
                                             </select>
                                         </div>
                                     </div>
@@ -322,8 +326,9 @@
     </form>
 </div>
 <div class="modal-card-foot is-end">
-    <div id="salvar" class="buttons">
-        <button type="submit" class="button is-success">Salvar</button>
+    <div  class="buttons">
+        <button id="salvar" type="submit" class="button is-success">Salvar</button>
+        <button class="button is-success is-loading is-hidden">Loading</button>
     </div>
 </div>
 

@@ -36,9 +36,18 @@ class Prescription extends Model
     {
         return $this->belongsTo(Appointments::class);
     }
+    public function dermatology()
+    {
+        return $this->belongsTo(Dermatology::class);
+    }
 
     public function prescriptionmedicines()
     {
         return $this->hasMany(PrescriptionMedicine::class);
+    }
+    public function medicines()
+    {
+        return $this->belongsToMany(Medicines::class,'prescription_medicine','prescription_id','medicines_id')
+            ->withPivot('medicine_name','dose','frequency','route_administration','duration','indications');
     }
 }

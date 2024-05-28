@@ -21,7 +21,7 @@ class PcitasController extends Controller
 	private $list_tbl_fsc = ['name' => 'Nombre'];
 	private $o_model = User::class;
 	private $hc_view = 'citas';
-	
+
 	private function gdata($t = '')
     {
         $data['menu'] = $this->r_name;
@@ -39,7 +39,7 @@ class PcitasController extends Controller
 	public function __construct(){
         $this->middleware('checkRole:5');
     }
-	
+
 	public function index()
     {
 		$data = $this->gdata();
@@ -47,7 +47,9 @@ class PcitasController extends Controller
 		$str_days = '';//
 		$locks_days = '';//
 		//Agendas programadas
-		$pts_all = Appointments::where(['user' => Auth::user()->id,'company' => Auth::user()->company])->whereDate('date_quote', '>=', date('Y-m-d'))->whereNotIn('status',['deleted'])->orderBy('id', 'asc')->get();
+		$pts_all = Appointments::where(['user' => Auth::user()->id,'company' => Auth::user()->company])
+            ->whereDate('date_quote', '>=', date('Y-m-d'))
+            ->whereNotIn('status',['deleted'])->orderBy('id', 'asc')->get();
 		if(count($pts_all) > 0){
 			foreach($pts_all as $key => $row){
 				$url = ", url: '".url('citas/'.$row->uuid)."'";
@@ -61,9 +63,9 @@ class PcitasController extends Controller
 		$data['o'] = $o;
 		$data['str_days'] = $str_days;
 		$data['locks_days'] = $locks_days;
-		return view($this->v_name.'.'.$this->hc_view.'.index',$data);
+		return view($this->v_name . '.' . $this->hc_view . '.index',$data);
     }
-	
+
 	public function show(Request $request, $id)
     {
 		$o = Appointments::where(['uuid' => $id])->first();
@@ -72,21 +74,21 @@ class PcitasController extends Controller
 		$url = '';
 		$today = date('Y-m-d');
 		if($o->modality == 'Teleconsulta' AND $o->date_quote == $today){
-			$url = '<a href="https://meet.jit.si/'.$o->uuid.'" target="_blank" class="button is-primary is-raised">Iniciar</a>';
+			$url = '<a href="https://meet.jit.si/' . $o->uuid . '" target="_blank" class="button is-primary is-raised">Iniciar</a>';
 		}
-		$pfull_name = $o_user->name.' '.$o_user->scd_name.' '.$o_user->lastname.' '.$o_user->scd_lastname;
-		$dfull_name = $o_doctor->name.' '.$o_doctor->scd_name.' '.$o_doctor->lastname.' '.$o_doctor->scd_lastname;
+		$pfull_name = $o_user->name . ' ' . $o_user->scd_name.' ' . $o_user->lastname . ' ' . $o_user->scd_lastname;
+		$dfull_name = $o_doctor->name . ' ' . $o_doctor->scd_name . ' ' . $o_doctor->lastname . ' ' . $o_doctor->scd_lastname;
 		$photo = !empty($o->photo)?$o->photo:asset('assets/images/user.png');
-		$img = '<img class="avatar" src="'.$photo.'" data-demo-src="'.$photo.'" alt="" data-user-popover="17">';
+		$img = '<img class="avatar" src="' . $photo . '" data-demo-src="' . $photo . '" alt="" data-user-popover="17">';
 		$out = '<div class="card-head">';
 		$out .= '<div class="left"><div class="tags"><span class="tag is-rounded is-solid">'.$o->query_type.'</span><span class="tag is-rounded is-success">'.$o->modality.'</span><span class="tag is-rounded is-solid">Costo: '.$o->amount.'</span></div></div>';
 		$out .= '<div class="right">'.$url.'</div>';
 		$out .= '</div>';
-		$out .= '<div class="card-body"><p>Cita del paciente <b>'.$pfull_name.'</b> para el día <b>'.$o->date_quote.'</b> a la hora <b>'.$o->time_quote.'</b></p></div>';
+		$out .= '<div class="card-body"><p>Cita del paciente <b>' . $pfull_name . '</b> para el día <b>' . $o->date_quote . '</b> a la hora <b>'.$o->time_quote.'</b></p></div>';
 		$out .= '<div class="card-foot"><div class="left">';
 		$out .= '<div class="media-flex-center no-margin">';
-		$out .= '<div class="h-avatar">'.$img.'</div>';
-		$out .= '<div class="flex-meta"><span>'.$dfull_name.'</span><span>Doctor(a)</span></div></div></div><div class="right"></div></div>';
+		$out .= '<div class="h-avatar">' . $img . '</div>';
+		$out .= '<div class="flex-meta"><span>' . $dfull_name . '</span><span>Doctor(a)</span></div></div></div><div class="right"></div></div>';
 		echo $out;
     }
 }

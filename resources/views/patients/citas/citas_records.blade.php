@@ -17,6 +17,9 @@
                                         <span class="icon"><i
                                                 class="lnir lnir-arrow-left rem-100"></i></span><span>Regresar</span>
                                     </a>
+                                    <a href="{{ url($menu.'/make_cita'.'/'.$user->uuid)}}" class="button h-button is-success is-raised btn_save_not_sign">
+                                        <span class="icon"></span><span>Agendar nueva cita</span>
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -26,6 +29,7 @@
             <div class="flex-table">
                 <!--Table header-->
                 <div class="flex-table-header">
+                    <span>Tipo de consulta</span>
                     <span>Médico</span>
                     <span>Modalidad</span>
                     <span>Sede</span>
@@ -35,6 +39,9 @@
                 </div>
                 @foreach ($appointments as $item)
                     <div class="flex-table-item">
+                        <div class="flex-table-cell" data-th="hc_type">
+                            <span class="light-text">{{ $item->hc_type }}</span>
+                        </div>
                         <div class="flex-table-cell" data-th="hc_type">
                             <span class="light-text">{{ $item->doctor_class->name }}</span>
                         </div>
@@ -88,6 +95,18 @@
                                                 <span>Signos vitales</span>
                                             </div>
                                         </a>
+                                        @isset ($item->latestVitalsign)
+                                        <a href="<?= url('clinichistory/dermatology/' . $user->uuid . '/' . $item->id) ?>"
+                                            class="dropdown-item is-media">
+                                            <div class="icon">
+                                                <i class="lnil lnil-hospital-sign"></i>
+                                            </div>
+                                            <div class="meta">
+                                                <span>Historia clínica</span>
+                                                <span>Visitar Historia clínica</span>
+                                            </div>
+                                        </a>
+                                        @endisset
                                     </div>
                                 </div>
                             </div>

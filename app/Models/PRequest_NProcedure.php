@@ -33,7 +33,4 @@ class PRequest_NProcedure extends Pivot
     {
         return $this->belongsTo(User::class, 'doctor');
     }
-    public function prequest_nprocedure(){
-        return $this->hasMany(Hprocedure::class);
-    }
 }

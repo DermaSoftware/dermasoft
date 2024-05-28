@@ -13,9 +13,9 @@
                     <img src="<?= asset('assets/img/landing/h/dermatology.jpg') ?>" alt="">
                 </div>
                 <span>Dermatología</span>
-                <h3>General</h3>
+                <h3>História clínica</h3>
             </a>
-            <a href="<?= url($menu.'/biopsies') ?>" class="settings-box">
+            {{-- <a href="<?= url($menu.'/biopsies') ?>" class="settings-box">
                 <div class="edit-icon">
                     <i class="lnil lnil-pencil"></i>
                 </div>
@@ -54,7 +54,7 @@
                 </div>
                 <span>Descripción</span>
                 <h3>Quirúrgica</h3>
-            </a>
+            </a> --}}
             <a href="<?= url($menu.'/checklist') ?>" class="settings-box">
                 <div class="edit-icon">
                     <i class="lnil lnil-pencil"></i>

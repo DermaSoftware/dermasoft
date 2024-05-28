@@ -1,13 +1,16 @@
 $(function () {
 
-    $('#indic_tab').on('click', function () {
+    $('#procedure_request_btn').on('click', function () {
 
         if ($('#procedures_request_table').length > 0) {
             $('#procedures_request_table').DataTable().destroy();
         }
         var table = $('#procedures_request_table').DataTable({
-            ordering: true,
+            ordering: false,
+            "order": [[2, 'desc']],
             paging: true,
+            scrollCollapse: true,
+            scrollY: '200px',
             oLanguage: {
                 oAria: {
                     sSortAscending: ": activate to sort column ascending",
@@ -41,24 +44,42 @@ $(function () {
                 "visible": false,
                 "targets": [0, 1]
             },
-            // {
-            //     searchable: false,
-            //     "targets": [0, 2, 3, 4, 5]
-            // },
-            // {
-            //     orderable: false,
-            //     targets: [5]
-            // }
-            // {
-            //     className: 'is-end',
-            //     targets: 3
-            // },
+                // {
+                //     searchable: false,
+                //     "targets": [0, 2, 3, 4, 5]
+                // },
+                // {
+                //     orderable: false,
+                //     targets: [5]
+                // }
+                // {
+                //     className: 'is-end',
+                //     targets: 3
+                // },
                 //{className: 'text-center', targets: [3, 4, 8, 10, 11, 19]},
                 //{searchable: false, targets: [0,4]},
                 //{orderable: false, targets: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]}
                 //{responsivePriority: 1, targets: [0,15]},
                 //{responsivePriority: 2, targets: [0,1,2, 4,7,8,10,15]},
             ],
+            "drawCallback": function (settings) {
+                var api = this.api();
+                var rows = api.rows({page: 'current'}).nodes();
+                var last = null;
+
+                api.column(2, {page: 'current'}).data().each(function (group, i) {
+                    if (group !==null) {
+                        if (last !== `${group.date_quote} ${group.time_quote}`) {
+                            console.log(group)
+                            $(rows).eq(i).before(
+                                '<tr class="group" style="background:grey"><td style="color:white !important;" colspan="6">' + `${group.date_quote} ${group.time_quote}` + '</td></tr>'
+                            );
+
+                            last = `${group.date_quote} ${group.time_quote}`;
+                        }
+                    }
+                });
+            },
             "ajax": {
                 "url": `/clinichistory/procedure_request/${derma_id}/${appointment}`,
                 "type": 'GET',
@@ -70,19 +91,20 @@ $(function () {
                 "data": "uuid",
             },
             {
+                "data": "appointments",
+                render: function (data, type, row) {
+
+                    return data ? `${data.date_quote} ${data.time_quote}` : '';
+                }
+            },
+            {
                 "data": "doctor_class",
                 render: function (data, type, row) {
                     return data ? data.name : '';
                 }
             },
             {
-                "data": "appointments",
-                render: function (data, type, row) {
-                    return data ? `${data.date_quote} ${data.time_quote}` : '';
-                }
-            },
-            {
-                "data": "prequest_nprocedure",
+                "data": "procedures",
                 render: function (data, type, row) {
                     console.log(row)
                     var html = '<ul>';
@@ -92,16 +114,16 @@ $(function () {
                                     padding: 5px;
                                     font-size: 10px;">
                                         <span>
-                                            Observaciones: ${element.note}
+                                            Observaciones: ${element.pivot.note}
                                         </span>
                                         <span>
-                                            Procedimiento: ${element.procedures.name} - ${element.procedures.description}
+                                            Procedimiento: ${element.name} - ${element.description}
                                         </span>
                                     </div>
                                 </li>
                         `
                     });
-                    html+= '</ul>';
+                    html += '</ul>';
                     return html;
                 }
             },
@@ -153,12 +175,17 @@ $(function () {
             e.preventDefault();
             var url = $(this).attr('href');
             $('#derma_modal div[class="modal-card"]').load(url, function () {
-                $('#derma_modal #salvar').on('click',function(){
-                    $('#procedure_request_form').submit();
+                $('#derma_modal #salvar').on('click', function () {
+                    $('#salvar').hide();
+                    $('button.is-loading').removeClass('is-hidden');
+                    setTimeout(function(){
+                        $('#procedure_request_form').submit();
+                    },10)
                 })
                 $('#procedure_request_form').on('submit', function (e) {
                     e.preventDefault();
-                    url2 = $(this).attr('action')
+                    url2 = $(this).attr('action');
+
                     var formData = new FormData(document.getElementById(
                         'procedure_request_form'));
                     $.ajax({
@@ -168,6 +195,8 @@ $(function () {
                             .serializeArray(),
                         type: "post",
                         success: function (data) {
+                            $('button.is-loading').addClass('is-hidden');
+                            $('#salvar').show();
                             if (data.Success == true) {
                                 var table = $('#medical_prescriptions_table')
                                     .DataTable();
@@ -181,6 +210,8 @@ $(function () {
                             return;
                         }
                     }).fail(function (request, status, aa, a) {
+                        $('button.is-loading').addClass('is-hidden');
+                        $('#salvar').show();
                         try {
                             let keys = Object.keys(request
                                 .responseJSON)
@@ -194,6 +225,8 @@ $(function () {
                                 }
                             }
                         } catch {
+                            $('button.is-loading').addClass('is-hidden');
+                            $('#salvar').show();
                             console.log(aa);
                         }
                     });
@@ -213,13 +246,18 @@ $(function () {
             // let operation = $(this).data('operation');
             $('#derma_modal').addClass('is-active')
             $('#derma_modal div[class="modal-card"]').load(url, function () {
-                $('#derma_modal #salvar').on('click',function(){
-                    $('#procedure_request_form').submit();
+                $('#derma_modal #salvar').on('click', function () {
+                    $('#salvar').hide();
+                    $('button.is-loading').removeClass('is-hidden');
+                    setTimeout(function(){
+                        $('#procedure_request_form').submit();
+                    },10)
+
                 })
                 $('#procedure_request_form').on('submit', function (event) {
                     event.preventDefault();
                     var $form = $(this);
-                    url2 = $(this).attr('action')
+                    url2 = $(this).attr('action');
                     var formData = new FormData(document.getElementById('procedure_request_form'))
                     $.ajax({
                         url: url2,
@@ -227,6 +265,8 @@ $(function () {
                         data: $('#procedure_request_form').serializeArray(),
                         type: "post",
                         success: function (data) {
+                            $('button.is-loading').addClass('is-hidden');
+                            $('#salvar').show();
                             var table = $('#procedures_request_table').DataTable();
                             $('#delete-modal').trigger('click');
                             table.ajax.reload();
@@ -236,7 +276,8 @@ $(function () {
                             return;
                         }
                     }).fail(function (request, status, aa, a) {
-
+                        $('button.is-loading').addClass('is-hidden');
+                        $('#salvar').show();
                     });
                     return false;
                 });

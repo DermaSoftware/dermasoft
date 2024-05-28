@@ -4,9 +4,13 @@ $(function () {
         if ($('#indications_table').length > 0) {
             $('#indications_table').DataTable().destroy();
         }
+        var groupColumn = 3;
         var table = $('#indications_table').DataTable({
-            ordering: true,
+            ordering: false,
+            "order": [[groupColumn, 'desc']],
             paging: true,
+            scrollCollapse: true,
+            scrollY: '200px',
             oLanguage: {
                 oAria: {
                     sSortAscending: ": activate to sort column ascending",
@@ -38,16 +42,16 @@ $(function () {
             "serverSide": true,
             columnDefs: [{
                 "visible": false,
-                "targets": [0, 1]
+                "targets": [0, 1,3]
             },
             // {
             //     searchable: false,
             //     "targets": [0, 2, 3, 4, 5]
             // },
-            // {
-            //     orderable: false,
-            //     targets: [5]
-            // }
+            {
+                orderable: false,
+                targets: [0,1,2,4,5]
+            }
             // {
             //     className: 'is-end',
             //     targets: 3
@@ -58,6 +62,24 @@ $(function () {
                 //{responsivePriority: 1, targets: [0,15]},
                 //{responsivePriority: 2, targets: [0,1,2, 4,7,8,10,15]},
             ],
+            "drawCallback": function (settings) {
+                var api = this.api();
+                var rows = api.rows({page: 'current'}).nodes();
+                var last = null;
+
+                api.column(groupColumn, {page: 'current'}).data().each(function (group, i) {
+                    if (group !==null) {
+                        if (last !== `${group.date_quote} ${group.time_quote}`) {
+                            console.log(group)
+                            $(rows).eq(i).before(
+                                '<tr class="group" style="background:grey"><td style="color:white !important;" colspan="6">' + `${group.date_quote} ${group.time_quote}` + '</td></tr>'
+                            );
+
+                            last = `${group.date_quote} ${group.time_quote}`;
+                        }
+                    }
+                });
+            },
             "ajax": {
                 "url": `/clinichistory/indications/${derma_id}/${appointment}`,
                 "type": 'GET',
@@ -70,6 +92,16 @@ $(function () {
             },
             {
                 "data": "indication",
+            },
+            {
+                "data": "appointments",
+                render: function (data, type, row) {
+
+                    return data ? `${data.date_quote} ${data.time_quote}` : '';
+                }
+            },
+            {
+                "data": "hc_type",
             },
             {
                 "data": "created_at",
@@ -119,7 +151,11 @@ $(function () {
             var url = $(this).attr('href');
             $('#derma_modal div[class="modal-card"]').load(url, function () {
                 $('#derma_modal #salvar').on('click',function(){
-                    $('#indication_form').submit();
+                    $('#salvar').hide();
+                    $('button.is-loading').removeClass('is-hidden');
+                    setTimeout(function(){
+                        $('#indication_form').submit();
+                    },10)
                 })
                 $('#indication_form').on('submit', function (e) {
                     e.preventDefault();
@@ -133,6 +169,8 @@ $(function () {
                             .serializeArray(),
                         type: "post",
                         success: function (data) {
+                            $('button.is-loading').addClass('is-hidden');
+                            $('#salvar').show();
                             if (data.Success == true) {
                                 var table = $('#indications_table')
                                     .DataTable();
@@ -146,6 +184,8 @@ $(function () {
                             return;
                         }
                     }).fail(function (request, status, aa, a) {
+                        $('button.is-loading').addClass('is-hidden');
+                        $('#salvar').show();
                         try {
                             let keys = Object.keys(request
                                 .responseJSON)
@@ -159,6 +199,8 @@ $(function () {
                                 }
                             }
                         } catch {
+                            $('button.is-loading').addClass('is-hidden');
+                            $('#salvar').show();
                             console.log(aa);
                         }
                     });
@@ -179,12 +221,17 @@ $(function () {
             $('#derma_modal').addClass('is-active')
             $('#derma_modal div[class="modal-card"]').load(url, function () {
                 $('#derma_modal #salvar').on('click',function(){
-                    $('#indication_form').submit();
+                    $('#salvar').hide();
+                    $('button.is-loading').removeClass('is-hidden');
+                    setTimeout(function(){
+                        $('#indication_form').submit();
+                    },10)
                 })
                 $('#indication_form').on('submit', function (event) {
                     event.preventDefault();
                     var $form = $(this);
                     url2 = $(this).attr('action')
+
                     var formData = new FormData(document.getElementById('indication_form'))
                     $.ajax({
                         url: url2,
@@ -192,6 +239,8 @@ $(function () {
                         data: $('#indication_form').serializeArray(),
                         type: "post",
                         success: function (data) {
+                            $('button.is-loading').addClass('is-hidden');
+                            $('#salvar').show();
                             var table = $('#indications_table').DataTable();
                             $('#delete-modal').trigger('click');
                             table.ajax.reload();
@@ -201,7 +250,8 @@ $(function () {
                             return;
                         }
                     }).fail(function (request, status, aa, a) {
-
+                        $('button.is-loading').addClass('is-hidden');
+                        $('#salvar').show();
                     });
                     return false;
                 });

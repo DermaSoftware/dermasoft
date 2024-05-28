@@ -55,7 +55,7 @@
 @section('js')
     @parent
     <script>
-        $(document).ready(async function() {
+        $(document).ready(function() {
             $('#adjuntos').on('change', function(event) {
                 var tmppath = URL.createObjectURL(event.target.files[0]);
                 event.target.files.forEach(element => {

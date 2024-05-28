@@ -10,11 +10,12 @@
                             <div class="form-head-inner">
                                 <div class="left">
                                     <h3>HC. No. <?= $o->document_number ?></h3>
+                                    <h3>Consulta de {{$hc_type}}</h3>
                                 </div>
                                 <div class="right">
                                     <div class="buttons">
                                         <?php if($is_records){ ?>
-                                        <a href="<?= url($menu . '/listrecords/' . $o->uuid) ?>"
+                                        <a href="<?= url($menu . '/hcdermpdf/' . $appoint->uuid) ?>"
                                             class="button h-button is-primary is-dark-outlined">
                                             Resumen de consulta
                                         </a>
@@ -59,10 +60,13 @@
 
                                             @if ($hc_type === 'Dermatología general')
                                                 <li id="anamnesis_tab" data-tab="anam_tab"><a>Anamnesis</a></li>
+                                                @else
+                                                    @if ($hc_type == 'Dermatología general Control')
+                                                    <li id="anamnesis_tab" data-tab="anam_tab"><a>Anamnesis Conrtol</a></li>
+                                                    @endif
                                             @endif
                                             <li id="antecedentes" data-tab="history_tab"><a>Antecedentes</a></li>
                                             <li id="diag_tab" data-tab="diagnostics_tab"><a>Diagnósticos</a></li>
-
                                             @if ($hc_type === 'Biopsías y/o procedimientos')
                                                 <li id="biop_tab" data-tab="biopsies_tab"><a>Procedimientos</a></li>
                                             @endif
@@ -72,17 +76,19 @@
                                             @if ($hc_type === 'Procedimientos Estéticos')
                                                 <li id="aest_tab" data-tab="aesthtic_tab"><a>Procedimientos</a></li>
                                             @endif
+
                                             @if ($hc_type === 'Descripción Quirúrgica')
                                                 <li id="surgical_tab" data-tab="surg_tab"><a>Procedimientos</a></li>
                                             @endif
-                                            <li id="indic_tab" data-tab="indications_tab"><a>Indicaciones</a></li>
+                                            <li id="indic_tab" data-tab="indications_tab"><a>Indicaciones/Solicitudes</a></li>
+
                                         </ul>
                                     </div>
                                 </div>
                                 <div id="dermatology_tab" class="tab-content is-active">
                                     @include($v_name . '.form.form_dermatology', ['modo' => 'create'])
                                 </div>
-                                @if ($hc_type == 'Dermatología general')
+                                @if ($hc_type == 'Dermatología general' || $hc_type == 'Dermatología general Control')
                                     <div id="anam_tab" class="tab-content">
                                         @include($v_name . '.tab_anamnesis', ['modo' => 'create'])
                                     </div>
@@ -93,10 +99,6 @@
                                 <div id="diagnostics_tab" class="tab-content">
                                     {{-- @include($v_name . '.form.form_diagnostics', ['modo' => 'create']) --}}
                                     @include($v_name . '.tab_diagnostics', ['modo' => 'create'])
-                                </div>
-                                <div id="indications_tab" class="tab-content">
-                                    @include($v_name . '.tab_indications', ['modo' => 'create'])
-                                    {{-- @include($v_name . '.form.form_indications', ['modo' => 'create']) --}}
                                 </div>
                                 @if ($hc_type == 'Biopsías y/o procedimientos')
                                     <div id="biopsies_tab" class="tab-content">
@@ -122,7 +124,10 @@
                                         {{-- @include($v_name . '.form.form_indications', ['modo' => 'create']) --}}
                                     </div>
                                 @endif
-
+                                <div id="indications_tab" class="tab-content">
+                                    @include($v_name . '.tab_indications', ['modo' => 'create'])
+                                    {{-- @include($v_name . '.form.form_indications', ['modo' => 'create']) --}}
+                                </div>
                             </div>
                         </div>
                     </div>

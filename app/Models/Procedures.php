@@ -13,10 +13,7 @@ class Procedures extends Model
 
     protected $guarded = ['id'];
 
-    public function procedure_prequest(){
+    public function examsrequest(){
         return $this->belongsToMany(ProcedureRequest::class,'prequest_nprocedure','procedure_request_id','procedures_id');
-    }
-    public function procedures(){
-        return $this->belongsTo(Procedures::class,);
     }
 }

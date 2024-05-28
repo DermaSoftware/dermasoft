@@ -110,7 +110,7 @@
 								<div class="field">
 									<div class="control">
 										<?php $t_att = 'phone'; ?>
-										<?php $n_att = 'Teléfono celular'; ?>
+										<?php $n_att = 'Número de celular'; ?>
 										<label><?= $n_att ?></label>
 										<p><?= $o->fix_phone ?> <?= $o->$t_att ?></p>
 									</div>
@@ -151,7 +151,8 @@
 										<?php $t_att = 'photo'; ?>
 										<?php $n_att = 'Foto'; ?>
 										<label><?= $n_att ?></label>
-										<input name="{{$t_att}}" type="file" class="input" php/>
+                                        <input <?= $company->photo_active =='no' ? 'disabled' : ''?> <?= $company->photo_required =='si' ? 'required' : ''?>  name="{{$t_att}}" type="file" class="input" placeholder="<?= $n_att ?>" value="{{ isset($o->$t_att)?$o->$t_att:old($t_att) }}" />
+										{{-- <input name="{{$t_att}}" type="file" class="input" php/> --}}
 									</div>
 								</div>
 							</div>
@@ -185,7 +186,7 @@
 								</div>
 							</div>
 							<!--Field-->
-							<div class="column is-4">
+							{{-- <div class="column is-4">
 								<div class="field">
 									<div class="control">
 										<?php $t_att = 'civil_status'; ?>
@@ -200,13 +201,13 @@
 										</select>
 									</div>
 								</div>
-							</div>
+							</div> --}}
 							<!--Field-->
 							<div class="column is-4">
 								<div class="field">
 									<div class="control">
 										<?php $t_att = 'country'; ?>
-										<?php $n_att = 'País de residencia'; ?>
+										<?php $n_att = 'País'; ?>
 										<label><?= $n_att ?></label>
 										<select <?= $company->country_active =='no' ? 'disabled' : ''?> <?= $company->country_required =='si' ? 'required' : ''?> name="<?= $t_att ?>" class="countries_fn" style="width: 100%;" data-url="<?= url('patients/countries') ?>" data-select_id="<?= isset($o->$t_att)?$o->$t_att:'' ?>"></select>
 									</div>
@@ -228,9 +229,20 @@
 								<div class="field">
 									<div class="control">
 										<?php $t_att = 'city'; ?>
-										<?php $n_att = 'Ciudad'; ?>
+										<?php $n_att = 'Ciudad de residencia'; ?>
 										<label><?= $n_att ?></label>
 										<input <?= $company->city_active =='no' ? 'disabled' : ''?> <?= $company->city_required =='si' ? 'required' : ''?> name="{{$t_att}}" type="text" class="input" placeholder="<?= $n_att ?>" value="{{ isset($o->$t_att)?$o->$t_att:old($t_att) }}" />
+									</div>
+								</div>
+							</div>
+							<!--Field-->
+							<div class="column is-4">
+								<div class="field">
+									<div class="control">
+										<?php $t_att = 'main_address'; ?>
+										<?php $n_att = 'Dirección principal'; ?>
+										<label><?= $n_att ?></label>
+										<input <?= $company->main_address_active =='no' ? 'disabled' : ''?> <?= $company->main_address_required =='si' ? 'required' : ''?> name="{{$t_att}}" type="text" class="input" placeholder="<?= $n_att ?>" value="{{ isset($o->$t_att)?$o->$t_att:old($t_att) }}" />
 									</div>
 								</div>
 							</div>
@@ -241,7 +253,7 @@
 										<?php $t_att = 'regime'; ?>
 										<?php $n_att = 'Régimen'; ?>
 										<label><?= $n_att ?></label>
-										<select name="<?= $t_att ?>" class="input">
+										<select <?= $company->regime_active =='no' ? 'disabled' : ''?> <?= $company->regime_required =='si' ? 'required' : ''?> name="<?= $t_att ?>" class="input">
 											<option value="" selected disabled >--Seleccione--</option>
 											<?php $options = ['contributivo','subsidiado','vinculado','particular','otro','desplazado']; ?>
 											<?php foreach($options as $key => $row){ ?>
@@ -257,7 +269,7 @@
 								<div class="field">
 									<div class="control">
 										<?php $t_att = 'campus'; ?>
-										<?php $n_att = 'Sede'; ?>
+										<?php $n_att = 'Sede asignada al paciente'; ?>
 										<label><?= $n_att ?></label>
 										<select <?= $company->campus_active =='no' ? 'disabled' : ''?> <?= $company->campus_required =='si' ? 'required' : ''?> name="<?= $t_att ?>" class="input">
 											<option value="0" selected disabled >--Seleccione--</option>
@@ -287,12 +299,13 @@
 										<?php $t_att = 'stratum'; ?>
 										<?php $n_att = 'Estrato'; ?>
 										<label><?= $n_att ?></label>
-										<input name="{{$t_att}}" type="text" class="input" placeholder="<?= $n_att ?>" value="{{ isset($o->$t_att)?$o->$t_att:old($t_att) }}" required />
+										<input <?= $company->stratum_active =='no' ? 'disabled' : ''?> <?= $company->stratum_required =='si' ? 'required' : ''?>
+                                             name="{{$t_att}}" type="text" class="input" placeholder="<?= $n_att ?>" value="{{ isset($o->$t_att)?$o->$t_att:old($t_att) }}" required />
 									</div>
 								</div>
 							</div>
                             <!--Field-->
-							<div class="column is-4">
+							{{-- <div class="column is-4">
 								<div class="field">
 									<div class="control">
 										<?php $t_att = 'attendant'; ?>
@@ -301,7 +314,7 @@
 										<input <?= $company->attendant_active =='no' ? 'disabled' : ''?> <?= $company->attendant_required =='si' ? 'required' : ''?> name="{{$t_att}}" type="text" class="input" placeholder="<?= $n_att ?>" value="{{ isset($o->$t_att)?$o->$t_att:old($t_att) }}" />
 									</div>
 								</div>
-							</div>
+							</div> --}}
 							<!--Field-->
 							<div class="column is-4">
 								<div class="field">
@@ -318,7 +331,7 @@
 								<div class="field">
 									<div class="control">
 										<?php $t_att = 'relationship'; ?>
-										<?php $n_att = 'Parentesco'; ?>
+										<?php $n_att = 'Parentesco del acudiente'; ?>
 										<label><?= $n_att ?></label>
 										<input <?= $company->relationship_active =='no' ? 'disabled' : ''?> <?= $company->_required =='si' ? 'required' : ''?> name="{{$t_att}}" type="text" class="input" placeholder="<?= $n_att ?>" value="{{ isset($o->$t_att)?$o->$t_att:old($t_att) }}" />
 									</div>
@@ -340,7 +353,7 @@
 								<div class="field">
 									<div class="control">
 										<?php $t_att = 'phone_attendant'; ?>
-										<?php $n_att = 'Teléfono acudiente'; ?>
+										<?php $n_att = 'Teléfono del acudiente'; ?>
 										<label><?= $n_att ?></label>
 										<input <?= $company->phone_attendant_active =='no' ? 'disabled' : ''?> <?= $company->phone_attendant_required =='si' ? 'required' : ''?> name="{{$t_att}}" type="text" class="input" placeholder="<?= $n_att ?>" value="{{ isset($o->$t_att)?$o->$t_att:old($t_att) }}" />
 									</div>
@@ -353,12 +366,12 @@
 										<?php $t_att = 'signature'; ?>
 										<?php $n_att = 'Firma'; ?>
 										<label><?= $n_att ?></label>
-										<input name="{{$t_att}}" type="file" class="input" />
+										<input <?= $company->signature_active =='no' ? 'disabled' : ''?> <?= $company->signature_required =='si' ? 'required' : ''?> name="{{$t_att}}" type="file" class="input" />
 									</div>
 								</div>
 							</div>
                             <!--Field-->
-							<div class="column is-4">
+							{{-- <div class="column is-4">
 								<div class="field">
 									<div class="control">
 										<?php $t_att = 'affiliate_type'; ?>
@@ -378,7 +391,7 @@
 										<input <?= $company->affiliate_type_ssg_active =='no' ? 'disabled' : ''?> <?= $company->affiliate_type_ssg_required =='si' ? 'required' : ''?> name="{{$t_att}}" type="text" class="input" value="{{ isset($o->$t_att)?$o->$t_att:old($t_att) }}"/>
 									</div>
 								</div>
-							</div>
+							</div> --}}
                             <!--Field-->
 							<div class="column is-4">
 								<div class="field">
@@ -490,7 +503,7 @@
 									</div>
 								</div>
 							</div>
-                            <!--Field-->
+                            {{-- <!--Field-->
 							<div class="column is-4">
 								<div class="field">
 									<div class="control">
@@ -500,7 +513,7 @@
 										<input <?= $company->contract_number_active =='no' ? 'disabled' : ''?> <?= $company->_required =='si' ? 'required' : ''?> name="{{$t_att}}" type="text" class="input" value="{{ isset($o->$t_att)?$o->$t_att:old($t_att) }}"/>
 									</div>
 								</div>
-							</div>
+							</div> --}}
                             <!--Field-->
 							<div class="column is-4">
 								<div class="field">

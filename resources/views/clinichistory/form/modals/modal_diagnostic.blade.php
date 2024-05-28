@@ -56,7 +56,14 @@
 
                         @if ($derma->hc_type === 'Crioterapia')
                             <div class="column is-12">
-                                <div class="column is-12"><img src="<?= asset('assets/images/fototipos.png') ?>" style="max-width: 100%;width: 100%;height: auto;"></div>
+                                <div class="columns">
+                                    <div class="column is-2"><img src="<?= asset('assets/images/FOTOTIPOS/FOTOTIPO I.jpeg') ?>" style="max-width: 100%;width: 100%;height: 183px;"></div>
+                                <div class="column is-2"><img src="<?= asset('assets/images/FOTOTIPOS/FOTOTIPO II.jpeg') ?>" style="max-width: 100%;width: 100%;height: 183px;"></div>
+                                <div class="column is-2"><img src="<?= asset('assets/images/FOTOTIPOS/FOTOTIPO II.jpeg') ?>" style="max-width: 100%;width: 100%;height: 183px;"></div>
+                                <div class="column is-2"><img src="<?= asset('assets/images/FOTOTIPOS/FOTOTIPO IV.jpg') ?>" style="max-width: 100%;width: 100%;height: 183px;"></div>
+                                <div class="column is-2"><img src="<?= asset('assets/images/FOTOTIPOS/FOTOTIPO V.jpg') ?>" style="max-width: 100%;width: 100%;height: 183px;"></div>
+                                <div class="column is-2"><img src="<?= asset('assets/images/FOTOTIPOS/FOTOTIPO VI.jpg') ?>" style="max-width: 100%;width: 100%;height: 183px;"></div>
+                                </div>
                             </div>
                             <div class="column is-6">
                                 <div class="field">
@@ -87,6 +94,7 @@
 <div class="modal-card-foot is-end">
     <div class="buttons">
         <button id="salvar" type="submit" class="button is-success">Salvar</button>
+        <button class="button is-success is-loading is-hidden">Loading</button>
     </div>
 </div>
 <script>

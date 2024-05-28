@@ -24,6 +24,7 @@ use App\Models\Locks;
 use App\Models\Solicitude;
 use DateInterval;
 use DateTime;
+use Illuminate\Database\Query\Builder;
 use PDF;
 use Illuminate\Http\File;
 use Illuminate\Support\Facades\DB;
@@ -44,7 +45,7 @@ class PatientsController extends Controller
         'email' => 'Correo', 'phone' => 'Telefono'
     ];
     private $o_model = User::class;
-    private $hctype = ['Dermatología general', 'Biopsías y/o procedimientos', 'Procedimientos Estéticos', 'Descripción Quirúrgica'];
+    private $hctype = ['Dermatología general','Dermatología general Control', 'Biopsías y/o procedimientos', 'Procedimientos Estéticos', 'Descripción Quirúrgica','Crioterapia'];
 
     private function gdata($t = 'Historial de', $tfinal = true)
     {
@@ -324,6 +325,7 @@ class PatientsController extends Controller
             $path = 'storage/' . $path;
             $data['signature_pp'] = $path;
             $data['signature'] = asset($path);
+            $data['habeas'] = 'si';
         }
         $o->update($data);
         $request->session()->flash('msj_success', $this->tag_the . ' ' . $this->c_name . ' ' . $o->name . ' ha sido actualizad' . $this->tag_o . ' correctamente.');
@@ -537,9 +539,12 @@ class PatientsController extends Controller
             },
             'user_class' => function ($query) {
                 $query->select('id', 'name');
-            }
+            },
+            'latestVitalsign'
         ])->where('user', $user->id)
-            ->where('company', Auth::user()->company);
+            ->where('company', Auth::user()->company)
+        ->orderBy('created_at','DESC')
+        ->orderBy('updated_at','DESC');
 
         if (Auth::user()->role_class->name == 'Doctor') {
             $appointments = $appointments->where('doctor', Auth::user()->id);
@@ -613,7 +618,7 @@ class PatientsController extends Controller
                     $o_user = User::where(['id' => $o->user])->first();
                     Mail::to($o_user->email)->send(new Ntfs('Cita agendada', 'Hola ' . $o_user->name . ', su cita de ' . $o->query_type . ' ha sido agendada correctamente para el día ' . $o->date_quote . ' a la hora ' . $o->time_quote . ' en la modalidad ' . $o->modality . ', recuerde estar puntual y realizar el pago de forma precencial en el lugar de la cita.', $o_user->name, $o_user->email));
                 }
-                return redirect($this->r_name . '/appointments/' . $o->user); //finalized
+                return redirect($this->r_name . '/appointments/' . $o->user_class->uuid); //finalized
             }
             return redirect('/');
         }
@@ -688,8 +693,33 @@ class PatientsController extends Controller
                 return redirect('clndrsh/' . $o->id);
             } else if ($data['action_type'] == 'date_quote') {
                 if ($data['modality'] == 'Teleconsulta') {
+                    // $o->update(['status' => 'pending']);
+                    // return redirect('paymentsh/' . $o->id); //modality
+                    $o_qt = Querytypes::where(['id' => $o->qt_id])->first();
                     $o->update(['status' => 'pending']);
-                    return redirect('paymentsh/' . $o->id); //modality
+                    //creamos la cita
+                    $data_apt = [
+                        'modality' => $o->modality,
+                        'user' => $o->user,
+                        'company' => $o->company,
+                        'campus' => $o->campus,
+                        'qt_id' => $o->qt_id,
+                        'query_type' => $o->query_type,
+                        'doctor' => $o->doctor,
+                        'date_quote' => $o->date_quote,
+                        'time_quote' => $o->time_quote,
+                        'note' => $o->note,
+                        'invoice' => uniqid(),
+                        'amount' => $o_qt->price,
+                        'currency' => 'COP',
+                        'response' => 'Pendiente',
+                        'franchise' => 'Efectivo',
+                        'date_init' => date('Y-m-d'),
+                    ];
+                    $o_apt = Appointments::create($data_apt);
+                    //notificamos
+                    $o_user = User::where(['id' => $o->user])->first();
+                    Mail::to($o_user->email)->send(new Ntfs('Cita agendada', 'Hola ' . $o_user->name . ', su cita de ' . $o->query_type . ' ha sido agendada correctamente para el día ' . $o->date_quote . ' a la hora ' . $o->time_quote . ' en la modalidad ' . $o->modality . ', recuerde estar puntual y realizar el pago de forma precencial en el lugar de la cita.', $o_user->name, $o_user->email));
                 } else {
                     //crear cita en estado pendiente de pago
                     //cambiamos estado de solicitud
@@ -719,7 +749,8 @@ class PatientsController extends Controller
                     $o_user = User::where(['id' => $o->user])->first();
                     Mail::to($o_user->email)->send(new Ntfs('Cita agendada', 'Hola ' . $o_user->name . ', su cita de ' . $o->query_type . ' ha sido agendada correctamente para el día ' . $o->date_quote . ' a la hora ' . $o->time_quote . ' en la modalidad ' . $o->modality . ', recuerde estar puntual y realizar el pago de forma precencial en el lugar de la cita.', $o_user->name, $o_user->email));
                 }
-                return redirect('finalized'); //finalized
+                $request->session()->flash('msj_success', 'Cita agenda satisfactoriamente.');
+                return redirect('patients/appointments/'.$o_user->uuid); //finalized
             }
             return redirect('/');
         }
@@ -748,7 +779,9 @@ class PatientsController extends Controller
             $time_init = 'time_init' . $i;
             $time_end = 'time_end' . $i;
             $tag_campus = 'campus' . $i;
-            if ($o_diary->$tag == 'not' || $o_diary->$tag_campus != intval($data['campus'])) {
+            $tag_modality = 'modality' . $i;
+            if ($o_diary->$tag == 'not' || $o_diary->$tag_campus != intval($data['campus'])
+                || $o_diary->$tag_modality != $data['modality']) {
                 $str_days .= !empty($str_days) ? ', ' . $i : $i;
             } else {
                 // array_push(
@@ -805,40 +838,51 @@ class PatientsController extends Controller
             $locks_days = '[' . $locks_days . ']';
         }
 
-        $data['str_days'] = $str_days;
+        $data['str_days'] = $str_days != '' || !empty($str_days) ? $str_days : '[]';
         $data['locks_days'] = $locks_days;
         // $data['businessHours'] = $businessHours;
         return $data;
     }
 
-    public function appointments_calendar(Request $request)
+    public function appointments_calendar(Request $request,$modalidad = null)
     {
+        $doctor = Auth::user();
         $doctors = DB::table('users')
                 ->join('roles', function ($join) {
                     $join->on('users.role', '=', 'roles.id')
                         ->where('roles.name', '=', 'Medico');
                 })
+                ->where('company',$doctor->company_class->id)
                 ->get(['users.id', 'users.name']);
-        $campus = Headquarters::all();
+        $campus = Headquarters::where('company',$doctor->company_class->id)->get(['id','name']);
 
         $data = $this->gdata('Agenda de citas');
+        $data['modalidad'] = $modalidad;
         $data['doctors'] = $doctors;
         $data['campus'] = $campus;
         return view($this->v_name . '.appointments_calendar', $data);
     }
 
-    public function appointments_calendar_events(Request $request)
+    public function appointments_calendar_events(Request $request,$modalidad = null)
     {
         if ($request->method() === 'POST') {
             $data = request()->except(['_token', '_method']);
             $locks_days = ''; //
             //Agendas programadas
-            $pts_all = Appointments::whereNotIn('status', ['deleted'])->orderBy('id', 'asc');
+            $doct_company = Auth::user()->company_class->id;
+            $pts_all = Appointments::whereNotIn('status', ['deleted'])
+                ->whereHas('user_class',function ($query) use ($doct_company){
+                    $query->where('company',$doct_company);
+                })
+                ->orderBy('id', 'asc');
             if (!empty($data['doctor']) && $data['doctor'] !== '0') {
                 $pts_all = $pts_all->where(['doctor' => $data['doctor']]);
             }
             if(!empty($data['sede']) && $data['sede'] !== '0') {
                 $pts_all = $pts_all->where(['campus' => $data['sede']]);
+            }
+            if(!empty($modalidad)){
+                $pts_all = $pts_all->where(['modality' => $modalidad]);
             }
             $pts_all = $pts_all->get(['uuid','date_quote','time_quote','doctor','campus','query_type']);
             if (count($pts_all) > 0) {
@@ -868,25 +912,27 @@ class PatientsController extends Controller
 		$o_user = User::where(['id' => $o->user])->first();
 		$o_doctor = User::where(['id' => $o->doctor])->first();
 		$url = '';
-		//$today = date('Y-m-d');
-		//if($o->modality == 'Teleconsulta' AND $o->date_quote == $today){
-		if($o->modality == 'Teleconsulta'){
+		$today = date('Y-m-d');
+		if($o->modality == 'Teleconsulta' AND $o->date_quote == $today){
 			$url = '<a href="https://meet.jit.si/'.$o->uuid.'" target="_blank" class="button is-primary is-raised">Iniciar</a>';
 		}
+        $hc_type = !empty($o->hc_type) ? '<span class="tag is-rounded is-solid">'. $o->hc_type . '</span>' : '';
 		$resend = '<a href="'.url('dcitas/resend/'.$o->uuid).'" class="button is-info is-raised">Re-enviar</a>';
+		$vsigns = '<a href="'.url('patients/vitalsigns/' . $o_user->uuid. '/' .$o->uuid).'" class="button is-warning is-raised ml-2">Registrar signos vitales</a>';
 		$pfull_name = $o_user->name.' '.$o_user->scd_name.' '.$o_user->lastname.' '.$o_user->scd_lastname;
 		$dfull_name = $o_doctor->name.' '.$o_doctor->scd_name.' '.$o_doctor->lastname.' '.$o_doctor->scd_lastname;
 		$photo = !empty($o->photo)?$o->photo:asset('assets/images/user.png');
 		$img = '<img class="avatar" src="'.$photo.'" data-demo-src="'.$photo.'" alt="" data-user-popover="17">';
 		$out = '<div class="card-head">';
-		$out .= '<div class="left"><div class="tags"><span class="tag is-rounded is-solid">'.$o->query_type.'</span><span class="tag is-rounded is-success">'.$o->modality.'</span><span class="tag is-rounded is-solid">Costo: '.$o->amount.'</span></div></div>';
+		$out .= '<div class="left"><div class="tags"><span class="tag is-rounded is-solid">'.$o->query_type .'</span>'. $hc_type. '<span class="tag is-rounded is-success">'.$o->modality.'</span><span class="tag is-rounded is-solid">Costo: '.$o->amount.'</span></div></div>';
 		$out .= '<div class="right">'.$url.'</div>';
 		$out .= '</div>';
 		$out .= '<div class="card-body"><p>Cita del paciente <b>'.$pfull_name.'</b> para el día <b>'.$o->date_quote.'</b> a la hora <b>'.$o->time_quote.'</b></p></div>';
 		$out .= '<div class="card-foot"><div class="left">';
 		$out .= '<div class="media-flex-center no-margin">';
 		$out .= '<div class="h-avatar">'.$img.'</div>';
-		$out .= '<div class="flex-meta"><span>'.$dfull_name.'</span><span>Doctor(a)</span></div></div></div><div class="right">'.$resend.'</div></div>';
+		$out .= '<div class="flex-meta"><span>'.$dfull_name.'</span><span>Doctor(a)</span></div></div></div><div class="right">'.$resend.$vsigns.'</div></div>';
+		// $out .= '<div class="flex-meta"><span>'.$dfull_name.'</span><span>Doctor(a)</span></div></div></div><div class="right">'.$vsigns.'</div></div>';
 		echo $out;
     }
 }

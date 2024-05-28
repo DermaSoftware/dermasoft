@@ -15,7 +15,7 @@ class AppointmentReason extends Model
 
 
     public function appointments(){
-        return $this->belongsTo(Appointments::class,'appointments');
+        return $this->belongsTo(Appointments::class);
     }
     public function dermatology(){
         return $this->belongsTo(Dermatology::class);

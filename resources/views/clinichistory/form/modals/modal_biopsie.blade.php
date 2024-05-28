@@ -15,15 +15,19 @@
                         <div class="column is-12">
                             <div class="field">
                                 <div class="control">
-                                    <?php $t_att = 'diagnostic_id'; ?>
-                                    <?php $n_att = 'Diagnostico'; ?>
+                                    <?php $t_att = 'prequest_nprocedure_id'; ?>
+                                    <?php $n_att = 'Solicitud de procedimiento'; ?>
                                     <label><?= $n_att ?></label>
-                                    <select name="<?= $t_att ?>" class="input select2_fsc">
-                                        <option value="" selected disabled>Diagnostico</option>
-                                        <?php foreach($diagnoses as $key => $row){ ?>
-                                        <option value="<?= $row->id ?>">
-                                            <?= empty($row->skin_phototype) ? $row->diagnostic  : $row->diagnostic . ' - ' . $row->skin_phototype ?></option>
-                                        <?php } ?>
+                                    <select name="prequest_nprocedure_id" class="input select2_fsc">
+                                        {{-- <option value="" selected disabled>Diagnostico</option> --}}
+                                        @foreach ($procedures_requests as $item)
+                                            @foreach ($item->procedures as $procedure)
+                                            <option value="<?= $procedure->pivot->id ?>">
+                                                {{$procedure->name}} - {{$procedure->description}}
+                                            </option>
+                                            @endforeach
+                                        @endforeach
+
                                     </select>
                                 </div>
                             </div>
@@ -357,7 +361,6 @@
                                 </div>
                             </div>
                         </div>
-                        <!--Field-->
                         <div class="column is-6">
                             <div class="field">
                                 <div class="control">
@@ -370,7 +373,97 @@
                                 </div>
                             </div>
                         </div>
-
+                        <!--Field-->
+                        <div class="column is-12">
+                            <h4>Suturas</h4>
+                        </div>
+                        <!--Field-->
+                        @isset($obj)
+                            @foreach ($obj->hcsuture as $item)
+                                <div class="column is-6">
+                                    <div class="field">
+                                        <div class="control">
+                                            <?php $t_att = 'suture_type'; ?>
+                                            <?php $n_att = 'Tipo de sutura'; ?>
+                                            <label><?= $n_att ?></label>
+                                            <select name="<?= $t_att ?>[]" class="input">
+                                                <option value="" selected disabled>--Seleccione--</option>
+                                                <?php $options = ['Miralene', 'Prolene', 'Catgut', 'Seda', 'Vicryl', 'Mono-Nylon', 'Otro']; ?>
+                                                <?php foreach($options as $key => $row){ ?>
+                                                @isset($obj)
+                                                    <option <?= $item->$t_att === $row ? 'selected' : '' ?>
+                                                        value="<?= $row ?>"><?= $row ?></option>
+                                                @endisset
+                                                @empty($obj)
+                                                    <option value="<?= $row ?>"><?= $row ?></option>
+                                                @endempty
+                                                <?php } ?>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Field-->
+                                <div class="column is-6">
+                                    <div class="field has-addons">
+                                        <div class="control is-expanded">
+                                            <?php $t_att = 'caliber'; ?>
+                                            <?php $n_att = 'Calibre'; ?>
+                                            <label><?= $n_att ?></label>
+                                            <input name="<?= $t_att ?>[]" type="text" class="input"
+                                                placeholder="<?= $n_att ?>"
+                                                value="<?= isset($obj) ? $item->$t_att : '' ?>" required />
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        @endisset
+                        <div class="column is-5">
+                            <div class="field">
+                                <div class="control">
+                                    <?php $t_att = 'suture_type'; ?>
+                                    <?php $n_att = 'Tipo de sutura'; ?>
+                                    <label><?= $n_att ?></label>
+                                    <select name="<?= $t_att ?>[]" class="input fl_sel_parent_disb" data-xparent=".sel_hemostasis" data-option="Sutura">
+                                        <option value="" selected disabled>--Seleccione--</option>
+                                        <?php $options = ['Miralene', 'Prolene', 'Catgut', 'Seda', 'Vicryl', 'Mono-Nylon', 'Otro']; ?>
+                                        <?php foreach($options as $key => $row){ ?>
+                                        @isset($obj)
+                                            <option <?= $obj->$t_att === $row ? 'selected' : '' ?> value="<?= $row ?>">
+                                                <?= $row ?></option>
+                                        @endisset
+                                        @empty($obj)
+                                            <option value="<?= $row ?>"><?= $row ?></option>
+                                        @endempty
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Field-->
+                        <div class="column is-5">
+                            <div class="field has-addons">
+                                <div class="control is-expanded">
+                                    <?php $t_att = 'caliber'; ?>
+                                    <?php $n_att = 'Calibre'; ?>
+                                    <label><?= $n_att ?></label>
+                                    <input data-xparent=".sel_hemostasis" data-option="Sutura" name="<?= $t_att ?>[]" type="text" class="input fl_sel_parent_disb"
+                                        placeholder="<?= $n_att ?>" value="<?= isset($obj) ? $obj->$t_att : '' ?>"
+                                        required />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column is-2">
+                            <div class="field has-addons">
+                                <div class="control"><label>&nbsp;</label>
+                                    <a data-xparent=".sel_hemostasis" data-option="Sutura" class="button is-primary btn_add_suture_caliber fl_sel_parent_disb"
+                                        style="text-align: center;align-content: flex-end;display: flex;align-items: end;"><i
+                                            class="fa fa-plus"></i></a></div>
+                            </div>
+                        </div>
+                        <div class="column is-12 box_suture_caliber is-hidden">
+                            <div class="columns is-multiline box_suture_caliber_inner">
+                            </div>
+                        </div>
                         <!--Field-->
                         <div class="column is-3">
                             <div class="field">
@@ -443,97 +536,6 @@
                                 </div>
                             </div>
                         </div>
-
-                        <div class="column is-12">
-                            <h4>Suturas</h4>
-                        </div>
-                        <!--Field-->
-                        @isset($obj)
-                            @foreach ($obj->hcsuture as $item)
-                                <div class="column is-6">
-                                    <div class="field">
-                                        <div class="control">
-                                            <?php $t_att = 'suture_type'; ?>
-                                            <?php $n_att = 'Tipo de sutura'; ?>
-                                            <label><?= $n_att ?></label>
-                                            <select name="<?= $t_att ?>[]" class="input">
-                                                <option value="" selected disabled>--Seleccione--</option>
-                                                <?php $options = ['Miralene', 'Prolene', 'Catgut', 'Seda', 'Vicryl', 'Mono-Nylon', 'Otro']; ?>
-                                                <?php foreach($options as $key => $row){ ?>
-                                                @isset($obj)
-                                                    <option <?= $item->$t_att === $row ? 'selected' : '' ?>
-                                                        value="<?= $row ?>"><?= $row ?></option>
-                                                @endisset
-                                                @empty($obj)
-                                                    <option value="<?= $row ?>"><?= $row ?></option>
-                                                @endempty
-                                                <?php } ?>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--Field-->
-                                <div class="column is-6">
-                                    <div class="field has-addons">
-                                        <div class="control is-expanded">
-                                            <?php $t_att = 'caliber'; ?>
-                                            <?php $n_att = 'Calibre'; ?>
-                                            <label><?= $n_att ?></label>
-                                            <input name="<?= $t_att ?>[]" type="text" class="input"
-                                                placeholder="<?= $n_att ?>"
-                                                value="<?= isset($obj) ? $item->$t_att : '' ?>" required />
-                                        </div>
-                                    </div>
-                                </div>
-                            @endforeach
-                        @endisset
-                        <div class="column is-5">
-                            <div class="field">
-                                <div class="control">
-                                    <?php $t_att = 'suture_type'; ?>
-                                    <?php $n_att = 'Tipo de sutura'; ?>
-                                    <label><?= $n_att ?></label>
-                                    <select name="<?= $t_att ?>[]" class="input">
-                                        <option value="" selected disabled>--Seleccione--</option>
-                                        <?php $options = ['Miralene', 'Prolene', 'Catgut', 'Seda', 'Vicryl', 'Mono-Nylon', 'Otro']; ?>
-                                        <?php foreach($options as $key => $row){ ?>
-                                        @isset($obj)
-                                            <option <?= $obj->$t_att === $row ? 'selected' : '' ?> value="<?= $row ?>">
-                                                <?= $row ?></option>
-                                        @endisset
-                                        @empty($obj)
-                                            <option value="<?= $row ?>"><?= $row ?></option>
-                                        @endempty
-                                        <?php } ?>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <!--Field-->
-                        <div class="column is-5">
-                            <div class="field has-addons">
-                                <div class="control is-expanded">
-                                    <?php $t_att = 'caliber'; ?>
-                                    <?php $n_att = 'Calibre'; ?>
-                                    <label><?= $n_att ?></label>
-                                    <input name="<?= $t_att ?>[]" type="text" class="input"
-                                        placeholder="<?= $n_att ?>" value="<?= isset($obj) ? $obj->$t_att : '' ?>"
-                                        required />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="column is-2">
-                            <div class="field has-addons">
-                                <div class="control"><label>&nbsp;</label><a
-                                        class="button is-primary btn_add_suture_caliber"
-                                        style="text-align: center;align-content: flex-end;display: flex;align-items: end;"><i
-                                            class="fa fa-plus"></i></a></div>
-                            </div>
-                        </div>
-                        <div class="column is-12 box_suture_caliber is-hidden">
-                            <div class="columns is-multiline box_suture_caliber_inner">
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -541,8 +543,9 @@
     </form>
 </div>
 <div class="modal-card-foot is-end">
-    <div id="salvar" class="buttons">
-        <button type="submit" class="button is-success">Salvar</button>
+    <div  class="buttons">
+        <button id="salvar" type="submit" class="button is-success">Salvar</button>
+        <button class="button is-success is-loading is-hidden">Loading</button>
     </div>
 </div>
 
@@ -580,11 +583,18 @@
                 var option = item.data('option');
                 const opt = $(parent).val();
                 const p = opt != option;
+
                 item.prop('disabled', p);
+                if($(this).prop('localName') == 'a'){
+                    item.attr('disabled', p);
+                }
                 $(parent).on('change', function(e) {
                     const op = $(parent).val();
                     const pt = op != option;
                     item.prop('disabled', pt);
+                    if(item.prop('localName') == 'a'){
+                        item.attr('disabled', pt);
+                    }
                 });
             });
         }
