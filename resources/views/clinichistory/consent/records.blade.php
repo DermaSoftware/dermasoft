@@ -7,7 +7,9 @@
             <div class="demo-title">
 				<div class="form-head stuck-header">
 					<div class="form-head-inner">
-						<h3 class="title is-thin is-5">Historial de consentimientos <a target="_blank" href="<?= url($menu.'/'.$hc_view.'/records/'.$o->uuid) ?>" class="button h-button is-primary is-rounded is-elevated" style="float: right;"><span class="icon"><i class="fas fa-download"></i></span> <span>Descargar historial</span></a></h3>
+						<h3 class="title is-thin is-5">Historial de consentimientos
+                            {{-- <a target="_blank" href="<?= url($menu.'/'.$hc_view.'/records/'.$o->uuid) ?>" class="button h-button is-primary is-rounded is-elevated" style="float: right;"><span class="icon"><i class="fas fa-download"></i></span> <span>Descargar historial</span></a> --}}
+                        </h3>
 					</div>
 				</div>
             </div>

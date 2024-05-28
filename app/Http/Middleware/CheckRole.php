@@ -25,7 +25,7 @@ class CheckRole
             $permission[$key] = intval($value);
         }
 		$userRole = $request->user();
-		$checkRole = in_array($userRole->role,[2,3]);
+		$checkRole = in_array($userRole->role,[1,2,3,5]);
 		return $checkRole?$next($request):abort(403);
     }
 }

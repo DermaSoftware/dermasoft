@@ -696,7 +696,7 @@ class PatientsController extends Controller
                     // $o->update(['status' => 'pending']);
                     // return redirect('paymentsh/' . $o->id); //modality
                     $o_qt = Querytypes::where(['id' => $o->qt_id])->first();
-                    $o->update(['status' => 'finalized']);
+                    $o->update(['status' => 'pending']);
                     //creamos la cita
                     $data_apt = [
                         'modality' => $o->modality,
@@ -838,7 +838,7 @@ class PatientsController extends Controller
             $locks_days = '[' . $locks_days . ']';
         }
 
-        $data['str_days'] = $str_days;
+        $data['str_days'] = $str_days != '' || !empty($str_days) ? $str_days : '[]';
         $data['locks_days'] = $locks_days;
         // $data['businessHours'] = $businessHours;
         return $data;
@@ -912,9 +912,8 @@ class PatientsController extends Controller
 		$o_user = User::where(['id' => $o->user])->first();
 		$o_doctor = User::where(['id' => $o->doctor])->first();
 		$url = '';
-		//$today = date('Y-m-d');
-		//if($o->modality == 'Teleconsulta' AND $o->date_quote == $today){
-		if($o->modality == 'Teleconsulta'){
+		$today = date('Y-m-d');
+		if($o->modality == 'Teleconsulta' AND $o->date_quote == $today){
 			$url = '<a href="https://meet.jit.si/'.$o->uuid.'" target="_blank" class="button is-primary is-raised">Iniciar</a>';
 		}
         $hc_type = !empty($o->hc_type) ? '<span class="tag is-rounded is-solid">'. $o->hc_type . '</span>' : '';
