@@ -18,7 +18,7 @@ class DiagnosesController extends Controller
     private $c_names = 'Diagnósticos';
 	private $list_tbl_fsc = ['code' => 'Código','name' => 'Descripción'];
 	private $o_model = Diagnoses::class;
-	
+
 	private function gdata($t = 'Lista de')
     {
         $data['menu'] = $this->r_name;
@@ -41,7 +41,7 @@ class DiagnosesController extends Controller
 		$data['o_all'] = $this->o_model::whereNotIn('status',['deleted'])->orderBy('id', 'asc')->get();
 		return view($this->v_name.'.index',$data);
     }
-	
+
 	public function fileImport(Request $request) {
         Excel::import(new DiagnosesImport, $request->file('file')->store('temp'));
         $request->session()->flash('msj_success', 'La importación ha sido completada correctamente.');
