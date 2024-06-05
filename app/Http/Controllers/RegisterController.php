@@ -40,6 +40,7 @@ class RegisterController extends Controller
         $data = $request->except(['_token', '_method']);
         $photo = '';
         $logo = '';
+        $logo_pp = '';
         if (request()->hasFile('photo')) {
             $path = request()->file('photo')->store('uploads', 'public');
             $path = 'storage/' . $path;
