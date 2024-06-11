@@ -112,6 +112,28 @@ $(function(){
                     }
                 },
                 {
+                    "data": "skin_phototype",
+                    render: function(data, type, row) {
+
+                        if(data === 'Fototipo 1'){
+                            return  `<img src="/assets/images/FOTOTIPOS/FOTOTIPO I.jpeg" style="max-width: 100%;width: 50px;height: 50px;border-radius: 50%;"></img>`
+                        }
+                        if(data === 'Fototipo 2'){
+                            return `<img src="/assets/images/FOTOTIPOS/FOTOTIPO II.jpeg" style="max-width: 100%;width: 50px;height: 50px;border-radius: 50%;"></img>`
+                        }
+                        if(data === 'Fototipo 3'){
+                            return `<img src="/assets/images/FOTOTIPOS/FOTOTIPO II.jpeg" style="max-width: 100%;width: 50px;height: 50px;border-radius: 50%;"></img>`
+                        }
+                        if(data === 'Fototipo 4'){
+                            return `<img src="/assets/images/FOTOTIPOS/FOTOTIPO IV.jpg" style="max-width: 100%;width: 50px;height: 50px;border-radius: 50%;"></img>`
+                        }
+                        if(data === 'Fototipo 5'){
+                            return `<img src="/assets/images/FOTOTIPOS/FOTOTIPO V.jpg" style="max-width: 100%;width: 50px;height: 50px;border-radius: 50%;"></img>`
+                        }
+                        return data;
+                    }
+                },
+                {
                     "data": "created_at",
                     render: function(data, type, row) {
                         let fechaActual = new Date(data);

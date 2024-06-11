@@ -98,35 +98,41 @@ $(function () {
                 }
             },
             {
-                "data": "type_procedure_class",
+                "data": "comments",
                 render: function (data, type, row) {
-                    return data ? `${data.name}-${data.description}` : '';
+                    return data ? data : '';
                 }
             },
-            {
-                "data": "hcsuture",
-                render: function (data, type, row) {
-                    console.log(data)
-                    var html = '<ul>';
-                    data.forEach(element => {
-                        html += `<li>
-                                    <div style="display: flex;flex-direction: column;box-shadow: 0px 25px 20px -20px rgba(0, 0, 0, 0.45);
-                                    padding: 5px;
-                                    font-size: 12px;">
-                                        <span>
-                                            Sutura: ${element.suture_type}
-                                        </span>
-                                        <span>
-                                            Calibre: ${element.caliber}
-                                        </span>
-                                    </div>
-                                </li>
-                        `
-                    });
-                    html+= '</ul>';
-                    return html;
-                }
-            },
+            // {
+            //     "data": "type_procedure_class",
+            //     render: function (data, type, row) {
+            //         return data ? `${data.name}-${data.description}` : '';
+            //     }
+            // },
+            // {
+            //     "data": "hcsuture",
+            //     render: function (data, type, row) {
+            //         console.log(data)
+            //         var html = '<ul>';
+            //         data.forEach(element => {
+            //             html += `<li>
+            //                         <div style="display: flex;flex-direction: column;box-shadow: 0px 25px 20px -20px rgba(0, 0, 0, 0.45);
+            //                         padding: 5px;
+            //                         font-size: 12px;">
+            //                             <span>
+            //                                 Sutura: ${element.suture_type}
+            //                             </span>
+            //                             <span>
+            //                                 Calibre: ${element.caliber}
+            //                             </span>
+            //                         </div>
+            //                     </li>
+            //             `
+            //         });
+            //         html+= '</ul>';
+            //         return html;
+            //     }
+            // },
             {
                 "data": "created_at",
                 render: function (data, type, row) {

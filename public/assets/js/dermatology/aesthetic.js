@@ -96,35 +96,41 @@ $(function () {
                 }
             },
             {
-                "data": "htreatment",
+                "data": "comments",
                 render: function (data, type, row) {
-                    console.log(data)
-                    var html = '<ul>';
-                    data.forEach(element => {
-                        html += `<li>
-                                    <div style="display: flex;flex-direction: column;box-shadow: 0px 25px 20px -20px rgba(0, 0, 0, 0.45);
-                                    padding: 5px;
-                                    font-size: 12px;">
-                                        <span>
-                                            Producto: ${element.product_name}
-                                        </span>
-                                        <span>
-                                            Injectable: ${element.injectable}
-                                        </span>
-                                        <span>
-                                            Músculo: ${element.muscle}
-                                        </span>
-                                        <span>
-                                            Unidades: ${element.units}
-                                        </span>
-                                    </div>
-                                </li>
-                        `
-                    });
-                    html += '</ul>';
-                    return html;
+                    return data ? data : '';
                 }
             },
+            // {
+            //     "data": "htreatment",
+            //     render: function (data, type, row) {
+            //         console.log(data)
+            //         var html = '<ul>';
+            //         data.forEach(element => {
+            //             html += `<li>
+            //                         <div style="display: flex;flex-direction: column;box-shadow: 0px 25px 20px -20px rgba(0, 0, 0, 0.45);
+            //                         padding: 5px;
+            //                         font-size: 12px;">
+            //                             <span>
+            //                                 Producto: ${element.product_name}
+            //                             </span>
+            //                             <span>
+            //                                 Injectable: ${element.injectable}
+            //                             </span>
+            //                             <span>
+            //                                 Músculo: ${element.muscle}
+            //                             </span>
+            //                             <span>
+            //                                 Unidades: ${element.units}
+            //                             </span>
+            //                         </div>
+            //                     </li>
+            //             `
+            //         });
+            //         html += '</ul>';
+            //         return html;
+            //     }
+            // },
             {
                 "data": "created_at",
                 render: function (data, type, row) {
@@ -133,15 +139,6 @@ $(function () {
                     return fechaFormateada;
                 }
             },
-
-                // {
-                //     "data": "updated_at",
-                //     render: function (data, type, row) {
-                //         let fechaActual = new Date(data);
-                //         let fechaFormateada = fechaActual.toLocaleDateString()
-                //         return fechaFormateada;
-                //     }
-                // },
                 // {
                 //     "data": "buttons",
                 //     render: function (data, type, row) {

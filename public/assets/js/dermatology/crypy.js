@@ -96,11 +96,17 @@ $(function () {
                 }
             },
             {
-                "data": "type_procedure_class",
+                "data": "comments",
                 render: function (data, type, row) {
-                    return data ? data.description : '';
+                    return data ? data : '';
                 }
             },
+            // {
+            //     "data": "type_procedure_class",
+            //     render: function (data, type, row) {
+            //         return data ? data.description : '';
+            //     }
+            // },
             {
                 "data": "created_at",
                 render: function (data, type, row) {

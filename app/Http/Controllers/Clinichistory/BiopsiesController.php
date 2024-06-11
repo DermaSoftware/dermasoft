@@ -345,7 +345,9 @@ class BiopsiesController extends Controller
             "Otros antecedentes"=>[],
         ];
         foreach ($all_back as $key => $value) {
-            array_push($backgounds[$value->type_class->name],$value);
+            if(isset($value->type_class)){
+                array_push($backgounds[$value->type_class->name],$value);
+            }
         }
 		$all_dgs= Hcdermdiagnostics::where('appointments_id',$id)
         ->orderBy('created_at','DESC')

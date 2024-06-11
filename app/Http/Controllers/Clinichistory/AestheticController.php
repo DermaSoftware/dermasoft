@@ -432,7 +432,10 @@ class AestheticController extends Controller
             "Otros antecedentes" => [],
         ];
         foreach ($all_back as $key => $value) {
-            array_push($backgounds[$value->type_class->name], $value);
+            if(isset($value->type_class)){
+                array_push($backgounds[$value->type_class->name],$value);
+            }
+            // array_push($backgounds[$value->type_class->name], $value);
         }
         // $data['o_vitalsigns'] = Vitalsigns::where(['user' => $o_derm->user])->orderBy('id', 'DESC')->first();
         // $data['o_hcpro'] = Hcaesthetic::where(['hc' => $o_derm->id])->first();

@@ -38,7 +38,12 @@
                     <span class="light-text"><?= $row->doctor_class->name ?></span>
                 </div>
 				<div class="flex-table-cell" data-th="campus">
-                    <span class="light-text"><?= $row->campus_class->name ?></span>
+                    <span class="light-text">
+                        @isset($row->campus_class)
+                            <?= $row->campus_class->name ?>
+                        @endisset
+
+                    </span>
                 </div>
 				<div class="flex-table-cell cell-end" data-th="Actions">
                     <div class="dropdown is-spaced is-dots is-right dropdown-trigger is-pushed-mobile is-up">

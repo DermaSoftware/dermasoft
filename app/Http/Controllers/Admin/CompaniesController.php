@@ -55,6 +55,7 @@ class CompaniesController extends Controller
         $data = $this->gdata('Agregar');
         $data['o_charges'] = Charges::where(['status' => 'active'])->orderBy('id', 'asc')->get();
         $data['o_plans'] = Plans::where(['status' => 'active'])->orderBy('id', 'asc')->get();
+        $data['o'] = null;
 		return view($this->v_name.'.create',$data);
     }
 

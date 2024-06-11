@@ -21,6 +21,7 @@
                                 <th>Código</th>
                                 <th>Nombre</th>
                                 <th>Tipo</th>
+                                <th>FotoTipo Piel</th>
                                 <th>Creado</th>
                                 {{-- <th>Actualizado</th> --}}
                                 {{-- <th class="is-end">Acciones</th> --}}

@@ -409,7 +409,8 @@ Route::middleware(['auth'])->group(function () {
 		Route::group([
 			'prefix' => 'resume'
 		], function () {
-			Route::get('/{id}', [App\Http\Controllers\Clinichistory\ResumeController::class, 'index']);
+			Route::get('/{id}', [App\Http\Controllers\Clinichistory\General\HomeController::class, 'listrecords']);
+			// Route::get('/{id}', [App\Http\Controllers\Clinichistory\ResumeController::class, 'index']);
 			Route::get('/', [App\Http\Controllers\Clinichistory\ResumeController::class, 'show']);
 			Route::post('/search', [App\Http\Controllers\Clinichistory\ResumeController::class, 'search']);
 			Route::get('/records/{id}', [App\Http\Controllers\Clinichistory\ResumeController::class, 'records']);

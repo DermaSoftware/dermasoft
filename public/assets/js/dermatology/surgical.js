@@ -97,41 +97,47 @@ $(function () {
                 }
             },
             {
-                "data": "type_procedure_class",
+                "data": "comments",
                 render: function (data, type, row) {
-                    return data ? data.description : '';
+                    return data ? data : '';
                 }
             },
-            {
-                "data": "hctumors",
-                render: function (data, type, row) {
-                    console.log(data)
-                    var html = '<ul>';
-                    data.forEach(element => {
-                        html += `<li>
-                                    <div style="display: flex;flex-direction: column;box-shadow: 0px 25px 20px -20px rgba(0, 0, 0, 0.45);
-                                    padding: 5px;
-                                    font-size: 10px;">
-                                        <span>
-                                            Tamaño: ${element.size}
-                                        </span>
-                                        <span>
-                                            Margen: ${element.margin}
-                                        </span>
-                                        <span>
-                                            Patología: ${element.pathology}
-                                        </span>
-                                        <span>
-                                            Observaciones: ${element.observations}
-                                        </span>
-                                    </div>
-                                </li>
-                        `
-                    });
-                    html+= '</ul>';
-                    return html;
-                }
-            },
+            // {
+            //     "data": "type_procedure_class",
+            //     render: function (data, type, row) {
+            //         return data ? data.description : '';
+            //     }
+            // },
+            // {
+            //     "data": "hctumors",
+            //     render: function (data, type, row) {
+            //         console.log(data)
+            //         var html = '<ul>';
+            //         data.forEach(element => {
+            //             html += `<li>
+            //                         <div style="display: flex;flex-direction: column;box-shadow: 0px 25px 20px -20px rgba(0, 0, 0, 0.45);
+            //                         padding: 5px;
+            //                         font-size: 10px;">
+            //                             <span>
+            //                                 Tamaño: ${element.size}
+            //                             </span>
+            //                             <span>
+            //                                 Margen: ${element.margin}
+            //                             </span>
+            //                             <span>
+            //                                 Patología: ${element.pathology}
+            //                             </span>
+            //                             <span>
+            //                                 Observaciones: ${element.observations}
+            //                             </span>
+            //                         </div>
+            //                     </li>
+            //             `
+            //         });
+            //         html+= '</ul>';
+            //         return html;
+            //     }
+            // },
             {
                 "data": "created_at",
                 render: function (data, type, row) {

@@ -16,7 +16,7 @@
                                 <div class="field">
                                     <div class="control">
                                         <?php $t_att = 'prequest_nprocedure_id'; ?>
-                                        <?php $n_att = 'Solicitud de procedimiento'; ?>
+                                        <?php $n_att = 'Procedimiento Solicitado'; ?>
                                         <label><?= $n_att ?></label>
                                         <select name="prequest_nprocedure_id" class="input select2_fsc">
                                             {{-- <option value="" selected disabled>Diagnostico</option> --}}

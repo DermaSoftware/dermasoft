@@ -41,6 +41,7 @@ class RegisterController extends Controller
         $photo = '';
         $logo = '';
         $logo_pp = '';
+        $photo_pp = '';
         if (request()->hasFile('photo')) {
             $path = request()->file('photo')->store('uploads', 'public');
             $path = 'storage/' . $path;

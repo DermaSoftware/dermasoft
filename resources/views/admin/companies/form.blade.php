@@ -86,11 +86,11 @@
     <div class="field">
         <div class="control">
             <div id="attachment" class="file has-name is-fullwidth">
-                @if ($o->logo)
+                @isset($o)
                 <img src="{{ asset($o->logo) }}" alt="Imagen" style="width: 50px;
                 border-radius: 30px;
                 height: 50px;"/>
-            @endif
+                @endisset
             </div>
         </div>
     </div>

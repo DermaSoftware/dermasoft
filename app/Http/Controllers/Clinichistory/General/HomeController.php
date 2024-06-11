@@ -398,7 +398,9 @@ class HomeController extends Controller
             $crypyController = new CrypyController();
             return $crypyController->hcpdf($appointment_id);
         }
-
+        else{
+            return redirect('/clinichistory/listrecords/'.$appointment->user_class->uuid);
+        }
     }
 	//PDF
 	public function hcdermpdf($id)
@@ -482,7 +484,10 @@ class HomeController extends Controller
             "Otros antecedentes"=>[],
         ];
         foreach ($all_back as $key => $value) {
-            array_push($backgounds[$value->type_class->name],$value);
+            if(isset($value->type_class)){
+                array_push($backgounds[$value->type_class->name],$value);
+            }
+            // array_push($backgounds[$value->type_class->name],$value);
         }
 		$all_dgs= Hcdermdiagnostics::where('appointments_id',$appointment->id)
         ->orderBy('created_at','DESC')
@@ -739,7 +744,7 @@ class HomeController extends Controller
         where('hc',$hc)
         ->orderBy('created_at','DESC')
         ->orderBy('updated_at','DESC')
-        ->get(['id','uuid','code','diagnostic','type_diagnostic' ,'created_at','updated_at','appointments_id']);
+        ->get(['id','uuid','code','diagnostic','type_diagnostic' ,'created_at','updated_at','appointments_id','skin_phototype']);
 
          return DataTables::of($diagnostics)->make(true);
     }
@@ -749,6 +754,10 @@ class HomeController extends Controller
 
             $data = [];
             $derma= Dermatology::where('id',$hc)->first();
+            if(isset($appointment)){
+                $appointment_obj = Appointments::find($appointment);
+                $data['appointment'] = isset($appointment_obj) ? $appointment_obj : null;
+            }
             $data['post_url'] = $this->r_name . '/diagnostics/' . $hc .'/' . $appointment . '/add';
             $data['o_diagnoses'] = Diagnoses::where(['status' => 'active'])->orderBy('id', 'asc')->get(['name','id','code']);
             $data['o_diagnosesty'] = Diagnosestype::where(['status' => 'active'])->orderBy('id', 'asc')->get(['name','id']);
@@ -927,7 +936,7 @@ class HomeController extends Controller
             ->where('hc',$hc)
             ->orderBy('created_at', 'desc')
             ->orderBy('updated_at', 'desc')
-            ->get(['id','uuid','prequest_nprocedure_id','type_procedure','appointments_id','created_at','updated_at','appointments_id']);
+            ->get(['id','uuid','prequest_nprocedure_id','type_procedure','appointments_id','created_at','updated_at','appointments_id','comments']);
 
          return DataTables::of($biopsies)->make(true);
     }
@@ -1043,7 +1052,7 @@ class HomeController extends Controller
         ->where('hc',$hc)
         ->orderBy('created_at','DESC')
         ->orderBy('updated_at','DESC')
-        ->get(['id','uuid','type_procedure','prequest_nprocedure_id','created_at','updated_at','appointments_id']);
+        ->get(['id','uuid','type_procedure','prequest_nprocedure_id','created_at','updated_at','appointments_id','comments']);
 
          return DataTables::of($biopsies)->make(true);
     }
@@ -1107,7 +1116,7 @@ class HomeController extends Controller
         ->where('hc',$hc)
         ->orderBy('created_at','DESC')
         ->orderBy('updated_at','DESC')
-        ->get(['id','uuid','type_procedure','prequest_nprocedure_id','created_at','appointments_id']);
+        ->get(['id','uuid','type_procedure','prequest_nprocedure_id','created_at','appointments_id','comments']);
 
          return DataTables::of($biopsies)->make(true);
     }
@@ -1191,7 +1200,7 @@ class HomeController extends Controller
             ])
             ->where('hc',$hc)
             ->orderBy('created_at', 'desc')
-            ->get(['id','uuid','type_procedure','prequest_nprocedure_id','created_at','appointments_id']);
+            ->get(['id','uuid','type_procedure','prequest_nprocedure_id','created_at','appointments_id','comments']);
 
 
          return DataTables::of($biopsies)->make(true);

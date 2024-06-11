@@ -18,11 +18,8 @@
                                 <th>#</th>
                                 <th>UUID</th>
                                 <th>Consulta</th>
-                                <th>Tipo procedimiento</th>
-                                <th>Suturas</th>
+                                <th>Comenatrios</th>
                                 <th>Creado</th>
-                                {{-- <th>Actualizado</th> --}}
-                                {{-- <th class="is-end">Acciones</th> --}}
                             </tr>
                         </thead>
                         <tbody>

@@ -18,10 +18,8 @@
                                 <th>#</th>
                                 <th>UUID</th>
                                 <th>Consulta</th>
-                                <th>Tratameinto</th>
+                                <th>Comentarios</th>
                                 <th>Creado</th>
-                                {{-- <th>Actualizado</th> --}}
-                                {{-- <th class="is-end">Acciones</th> --}}
                             </tr>
                         </thead>
                         <tbody>

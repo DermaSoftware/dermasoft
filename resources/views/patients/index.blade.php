@@ -25,7 +25,7 @@
                 <span>Historial</span>
                 <h3>de pacientes</h3>
             </a>
-            <a href="<?= url('patients/search_vitalsigns') ?>" class="settings-box">
+            {{-- <a href="<?= url('patients/search_vitalsigns') ?>" class="settings-box">
                 <div class="edit-icon">
                     <i class="lnil lnil-pencil"></i>
                 </div>
@@ -34,7 +34,7 @@
                 </div>
                 <span>Registrar</span>
                 <h3>signos vitales</h3>
-            </a>
+            </a> --}}
             <a href="<?= url('patients/search_gallery') ?>" class="settings-box">
                 <div class="edit-icon">
                     <i class="lnil lnil-pencil"></i>
@@ -50,10 +50,10 @@
                     <i class="lnil lnil-pencil"></i>
                 </div>
                 <div class="icon-wrap">
-                    <img src="<?= asset('assets/img/landing/p/vitalsigns.jpg') ?>" alt="">
+                    <img src="<?= asset('assets/img/landing/d/diary.svg') ?>" alt="">
                 </div>
                 <span>Calendario</span>
-                <h3>Calenario de citas</h3>
+                <h3>de citas</h3>
             </a>
         </div>
     </div>

@@ -53,36 +53,38 @@
                                 </div>
                             </div>
                         </div>
-
-                        @if ($derma->hc_type === 'Crioterapia')
-                            <div class="column is-12">
-                                <div class="columns">
-                                    <div class="column is-2"><img src="<?= asset('assets/images/FOTOTIPOS/FOTOTIPO I.jpeg') ?>" style="max-width: 100%;width: 100%;height: 183px;"></div>
-                                <div class="column is-2"><img src="<?= asset('assets/images/FOTOTIPOS/FOTOTIPO II.jpeg') ?>" style="max-width: 100%;width: 100%;height: 183px;"></div>
-                                <div class="column is-2"><img src="<?= asset('assets/images/FOTOTIPOS/FOTOTIPO II.jpeg') ?>" style="max-width: 100%;width: 100%;height: 183px;"></div>
-                                <div class="column is-2"><img src="<?= asset('assets/images/FOTOTIPOS/FOTOTIPO IV.jpg') ?>" style="max-width: 100%;width: 100%;height: 183px;"></div>
-                                <div class="column is-2"><img src="<?= asset('assets/images/FOTOTIPOS/FOTOTIPO V.jpg') ?>" style="max-width: 100%;width: 100%;height: 183px;"></div>
-                                <div class="column is-2"><img src="<?= asset('assets/images/FOTOTIPOS/FOTOTIPO VI.jpg') ?>" style="max-width: 100%;width: 100%;height: 183px;"></div>
-                                </div>
-                            </div>
-                            <div class="column is-6">
-                                <div class="field">
-                                    <div class="control">
-                                        <?php $t_att = 'skin_phototype'; ?>
-                                        <?php $n_att = 'Fototipo de piel'; ?>
-                                        <label><?= $n_att ?></label>
-                                        <select name="<?= $t_att ?>" class="input">
-                                            <option value="" selected disabled >--Seleccione--</option>
-                                            <?php $options = ['1','2','3','4','5','6']; ?>
-                                            <?php $select_old = $is_records?$o_hcp->$t_att:''; ?>
-                                            <?php foreach($options as $key => $row){ ?>
-                                            <option value="Fototipo <?= $row ?>" <?= $select_old=='Fototipo '.$row?'selected':'' ?> >Fototipo <?= $row ?></option>
-                                            <?php } ?>
-                                        </select>
+                        @isset($appointment)
+                            @if ($appointment->hc_type === 'Crioterapia')
+                                <div class="column is-12">
+                                    <div class="columns">
+                                        <div class="column is-2"><img src="<?= asset('assets/images/FOTOTIPOS/FOTOTIPO I.jpeg') ?>" style="max-width: 100%;width: 100%;height: 183px;"></div>
+                                    <div class="column is-2"><img src="<?= asset('assets/images/FOTOTIPOS/FOTOTIPO II.jpeg') ?>" style="max-width: 100%;width: 100%;height: 183px;"></div>
+                                    <div class="column is-2"><img src="<?= asset('assets/images/FOTOTIPOS/FOTOTIPO II.jpeg') ?>" style="max-width: 100%;width: 100%;height: 183px;"></div>
+                                    <div class="column is-2"><img src="<?= asset('assets/images/FOTOTIPOS/FOTOTIPO IV.jpg') ?>" style="max-width: 100%;width: 100%;height: 183px;"></div>
+                                    <div class="column is-2"><img src="<?= asset('assets/images/FOTOTIPOS/FOTOTIPO V.jpg') ?>" style="max-width: 100%;width: 100%;height: 183px;"></div>
+                                    <div class="column is-2"><img src="<?= asset('assets/images/FOTOTIPOS/FOTOTIPO VI.jpg') ?>" style="max-width: 100%;width: 100%;height: 183px;"></div>
                                     </div>
                                 </div>
-                            </div>
-                        @endif
+                                <div class="column is-6">
+                                    <div class="field">
+                                        <div class="control">
+                                            <?php $t_att = 'skin_phototype'; ?>
+                                            <?php $n_att = 'Fototipo de piel'; ?>
+                                            <label><?= $n_att ?></label>
+                                            <select name="<?= $t_att ?>" class="input">
+                                                <option value="" selected disabled >--Seleccione--</option>
+                                                <?php $options = ['1','2','3','4','5','6']; ?>
+                                                <?php $select_old = $is_records?$o_hcp->$t_att:''; ?>
+                                                <?php foreach($options as $key => $row){ ?>
+                                                <option value="Fototipo <?= $row ?>" <?= $select_old=='Fototipo '.$row?'selected':'' ?> >Fototipo <?= $row ?></option>
+                                                <?php } ?>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+                        @endisset
+
                     </div>
                 </div>
             </div>
