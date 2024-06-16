@@ -41,4 +41,20 @@ class Appointments extends Model
     {
         return $this->hasMany(Vitalsigns::class,'appointment_id');
     }
+    public function checklist()
+    {
+        return $this->hasMany(Hcchecklist::class,'appointments_id');
+    }
+    public function lastCheckList()
+    {
+        return $this->hasOne(Hcchecklist::class,'appointments_id')->latestOfMany();
+    }
+    public function consents()
+    {
+        return $this->hasMany(Hcconsent::class,'appointments_id');
+    }
+    public function lastConsents()
+    {
+        return $this->hasOne(Hcconsent::class,'appointments_id')->latestOfMany();
+    }
 }

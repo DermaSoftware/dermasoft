@@ -3,7 +3,7 @@
 <div class="account-wrapper">
     <div class="columns">
         <div class="column is-12">
-            <form action="{{url($menu.'/'.$hc_view.'/create/'.$o->uuid)}}" method="post" enctype="multipart/form-data">
+            <form action="{{url($menu.'/'.$hc_view.'/create/'.$o->uuid . '/' . $appointment_id)}}" method="post" enctype="multipart/form-data">
 			{{csrf_field()}}
 			<div class="account-box is-form is-footerless">
                 <div class="form-head stuck-header">
@@ -14,7 +14,7 @@
                         <div class="right">
                             <div class="buttons">
                                 <?php if($is_records){ ?>
-								<a href="<?= url($menu.'/'.$hc_view.'/list/'.$o->uuid) ?>" class="button h-button is-primary is-dark-outlined">
+								<a href="<?= url($menu.'/'.$hc_view.'/list/'.$o->uuid.'/'.$appointment_id) ?>" class="button h-button is-primary is-dark-outlined">
                                     <span class="icon"><i class="fas fa-briefcase-medical"></i></span><span>Consentimientos <span class="tag is-rounded" style="height: 2em !important;"><?= $t_records ?></span> Ver Historial</span>
                                 </a>
 								<?php } ?>
@@ -42,24 +42,7 @@
 
 					<div class="columns is-multiline">
 						<!--Field-->
-						<div class="column is-6">
-							<div class="field">
-								<div class="control">
-									<?php $t_att = 'tag'; ?>
-									<?php $n_att = 'Tipo de procedimiento'; ?>
-									<label><?= $n_att ?></label>
-									<select name="<?= $t_att ?>" class="input" required>
-										<option value="" selected disabled >--Seleccione--</option>
-										<?php $options = ['dermatology' => 'Dermatología general','biopsies' => 'Biopsías y/o procedimientos','crypy' => 'Crioterapia','aesthetic' => 'Procedimientos Estéticos','surgical' => 'Descripción Quirúrgica']; ?>
-										<?php foreach($options as $key => $row){ ?>
-										<option value="<?= $key ?>"><?= $row ?></option>
-										<?php } ?>
-									</select>
-								</div>
-							</div>
-						</div>
-						<!--Field-->
-						<div class="column is-6">
+						<div class="column is-12">
 							<div class="field">
 								<div class="control">
 									<?php $t_att = 'doctor'; ?>

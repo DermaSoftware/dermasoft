@@ -3,7 +3,7 @@
 <div class="account-wrapper">
     <div class="columns">
         <div class="column is-12">
-            <form action="{{url($menu.'/'.$hc_view.'/create/'.$o->uuid)}}" method="post" enctype="multipart/form-data">
+            <form action="{{url($menu.'/'.$hc_view.'/create/'.$o->uuid. '/' . $appointment_id)}}" method="post" enctype="multipart/form-data">
 			{{csrf_field()}}
 			<div class="account-box is-form is-footerless">
                 <div class="form-head stuck-header">
@@ -14,7 +14,7 @@
                         <div class="right">
                             <div class="buttons">
                                 <?php if($is_records){ ?>
-								<a href="<?= url($menu.'/'.$hc_view.'/list/'.$o->uuid) ?>" class="button h-button is-primary is-dark-outlined">
+								<a href="<?= url($menu.'/'.$hc_view.'/list/'.$o->uuid.'/'.$appointment_id) ?>" class="button h-button is-primary is-dark-outlined">
                                     <span class="icon"><i class="fas fa-briefcase-medical"></i></span><span>Consentimientos <span class="tag is-rounded" style="height: 2em !important;"><?= $t_records ?></span> Ver Historial</span>
                                 </a>
 								<?php } ?>
@@ -26,7 +26,7 @@
                     </div>
                 </div>
                 <div class="form-body">
-                    
+
 					@if ($errors->any())
 					<div class="message is-danger">
 						<a class="delete"></a>
@@ -39,7 +39,7 @@
 						</div>
 					</div>
 					@endif
-					
+
 					<div class="columns is-multiline">
 						<!--Field-->
 						<div class="column is-12">
@@ -80,7 +80,7 @@
 							</div>
 						</div>
 						<!--Field-->
-						<div class="column is-6">
+						<div class="column is-12">
 							<div class="field">
 								<div class="control">
 									<?php $t_att = 'doctor'; ?>
@@ -95,23 +95,6 @@
 								</div>
 							</div>
 						</div>
-						<!--Field-->
-						<div class="column is-6">
-							<div class="field">
-								<div class="control">
-									<?php $t_att = 'tag'; ?>
-									<?php $n_att = 'Tipo de procedimiento'; ?>
-									<label><?= $n_att ?></label>
-									<select name="<?= $t_att ?>" class="input" required>
-										<option value="" selected disabled >--Seleccione--</option>
-										<?php $options = ['dermatology' => 'Dermatología general','biopsies' => 'Biopsías y/o procedimientos','crypy' => 'Crioterapia','aesthetic' => 'Procedimientos Estéticos','surgical' => 'Descripción Quirúrgica']; ?>
-										<?php foreach($options as $key => $row){ ?>
-										<option value="<?= $key ?>"><?= $row ?></option>
-										<?php } ?>
-									</select>
-								</div>
-							</div>
-						</div>
 						<div class="column is-12">
 							<div class="field"><div class="control"><label class="checkbox is-outlined is-circle is-primary"><input name="patient_authorization" type="radio" value="Autoriza" checked><span></span> Autoriza</label>  <label class="checkbox is-outlined is-circle is-primary"><input name="patient_authorization" type="radio" value="No autoriza"><span></span> No autoriza</label></div></div>
 						</div>
@@ -119,7 +102,7 @@
 							<h5 class="authorization_x_auto">Manifiesto que, habiendo recibido la información relacionada con el procedimiento, he decidido dar mi consentimiento</h5>
 							<h5 class="authorization_x_no_auto is-hidden">Manifiesto que habiendo recibido la información relacionada con el procedimiento, he decidido NO dar mi consentimiento</h5>
 						</div>
-						
+
 						<!--Field-->
 						<div class="column is-12">
 							<div class="field">
@@ -131,16 +114,16 @@
 								</div>
 							</div>
 						</div>
-						
+
 						<div class="column is-12">
 							<div class="field"><div class="control"><label class="checkbox is-outlined is-info"><input name="notification_email" type="checkbox" value="yes"><span></span> Enviar al correo del paciente</label></div></div>
 							<div class="field"><div class="control"><label class="checkbox is-outlined is-info"><input name="notification_whatsapp" type="checkbox" value="yes"><span></span> Enviar al whatsapp del paciente</label></div></div>
 						</div>
-						
+
 					</div>
 					<hr>
 					<div style="width: 100%;text-align: right;padding: 10px;"><button type="submit" class="button h-button is-primary is-raised">Guardar</button></div>
-					
+
                 </div>
             </div>
 			</form>

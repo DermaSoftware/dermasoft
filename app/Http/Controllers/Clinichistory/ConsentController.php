@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\Ntfs;
 use App\Mail\ConsentMail;
+use App\Models\Appointments;
+use App\Models\Roles;
 
 class ConsentController extends Controller
 {
@@ -28,7 +30,7 @@ class ConsentController extends Controller
 	private $o_model = User::class;
 	private $hc_view = 'consent';
 	private $hc_type = 'Consentimiento Informado';
-
+    private $o_hctype = ['Dermatología general','Dermatología general Control', 'Biopsías y/o procedimientos', 'Procedimientos Estéticos', 'Descripción Quirúrgica','Crioterapia'];
 	private function gdata($t = '')
     {
         $data['menu'] = $this->r_name;
@@ -47,7 +49,7 @@ class ConsentController extends Controller
         $this->middleware('checkRole:2_3');
     }
 
-	public function index($id)
+	public function index($id,$appointment_id)
     {
         if(empty($id)){
 			return redirect($this->r_name);
@@ -63,26 +65,26 @@ class ConsentController extends Controller
 		$data['o_dts'] = $this->o_model::where(['status' => 'active','role' => 3])->orderBy('id', 'asc')->get();
 
 		//Historial
-		$t = Hcconsent::where(['user' => $o->id])->count();
+        $hc = $o->lastHc;
+		$t = Hcconsent::where(['hc' => $hc->id])->count();
 		$is_records = !empty($t)?$t > 0:false;
 		$data['t_records'] = $t;
 		$data['is_records'] = $is_records;
+        $data['appointment_id'] = $appointment_id;
 		return view($this->v_name.'.'.$this->hc_view.'.index',$data);
     }
 
-	public function store(Request $request, $id)
+	public function store(Request $request, $id,$appointment_id)
     {
         $data = request()->except(['_token','_method']);
 		$validatedData = $request->validate([
 			'consent' => 'required',
 			'note' => 'required',
 			'doctor' => 'required',
-			'tag' => 'required',
 		],[
 			'consent.required' => 'El Consentimiento es requerido',
 			'note.required' => 'El Contenido es requerido',
-			'doctor.required' => 'El Doctor es requerido',
-			'tag.required' => 'El Tipo de procedimiento es requerido',
+			'doctor.required' => 'El Doctor es requerido'
 		]);
 		if(empty($id)){
 			return redirect($this->r_name);
@@ -93,17 +95,14 @@ class ConsentController extends Controller
 		}
 		//echo var_dump($data);exit();
 		//Creamos el HCCONSENT
+        $derma = $ox->lastHc;
 		$params = [];
-		$params['user'] = $ox->id;
-		$params['company'] = $ox->company;
-		$params['campus'] = $ox->campus;
 		$params['consent'] = !empty($data['consent'])?$data['consent']:'';//
 		$params['note'] = !empty($data['note'])?$data['note']:'';//
 		$params['comments'] = !empty($data['comments'])?$data['comments']:'';//
 		$params['doctor'] = !empty($data['doctor'])?$data['doctor']:'';//
 		$params['tag'] = !empty($data['tag'])?$data['tag']:'dermatology';//
 		$typ = ['dermatology' => 'Dermatología general','biopsies' => 'Biopsías y/o procedimientos','crypy' => 'Crioterapia','aesthetic' => 'Procedimientos Estéticos','surgical' => 'Descripción Quirúrgica'];
-		$params['hc_type'] = $typ[$params['tag']];//
 		$params['patient_authorization'] = !empty($data['patient_authorization'])?$data['patient_authorization']:'';//
 		$params['authorization'] = (!empty($params['patient_authorization']) AND $params['patient_authorization'] == 'Autoriza')?'Manifiesto que, habiendo recibido la información relacionada con el procedimiento, he decidido dar mi consentimiento':'Manifiesto que habiendo recibido la información relacionada con el procedimiento, he decidido NO dar mi consentimiento';//
 		if ($request->hasFile('signature')) {
@@ -112,7 +111,22 @@ class ConsentController extends Controller
 			$params['signature_pp'] = $path;
             $params['signature'] = asset($path);
 		}
+        $appoint = Appointments::
+            with(
+                ["consents"]
+            )
+            ->find($appointment_id);
+        // Busco los checklist de esta consulta
+        $lastconsent = $appoint->consents;
+        if(!empty($lastconsent)){
+            foreach ($lastconsent as $key => $value) {
+                $value->delete();
+            }
+        }
 		//path_pdf
+        $params['appointments_id'] = $appoint->id;
+        $params['hc_type'] = $appoint->hc_type;
+		$params['hc'] = $derma->id;//
 		$o = Hcconsent::create($params);
 
 		$pdfFilePath = $this->getpdfhc($o->uuid,true);
@@ -135,12 +149,24 @@ class ConsentController extends Controller
 
 		}
 		$request->session()->flash('msj_success', 'El '.$this->c_name.' ha sido registrado correctamente.');
-		return redirect($this->r_name.'/'.$this->hc_view.'/list/'.$id);
+		return redirect($this->r_name.'/'.$this->hc_view.'/list/'.$id. '/' . $appointment_id);
     }
 
 	public function show()
     {
 		$data = $this->gdata('Buscar paciente');
+        $user_authenticated = Auth::user();
+        $company = $user_authenticated->company_class;
+        $role = Roles::where('name','Paciente')->first();
+        $company_patients = User::with([
+            'role_class',
+            'company_class'
+        ])
+        ->whereBelongsTo($company,'company_class')
+        ->whereBelongsTo($role,'role_class')
+        ->get(['id','uuid','name','role','company','lastname','document_number']);
+        $data['o_hctype'] = $this->o_hctype;
+        $data['company_patients'] = $company_patients;
 		return view($this->v_name.'.'.$this->hc_view.'.search',$data);
     }
 
@@ -148,16 +174,17 @@ class ConsentController extends Controller
     {
 		$data = request()->except(['_token','_method']);
 		$validatedData = $request->validate([
-			'document_type' => 'required',
-			'document_number' => 'required',
+			'appointment' => 'required',
+			'patient' => 'required',
 		],[
-			'document_type.required' => 'El tipo de documento es requerido',
-			'document_number.required' => 'El Número de documento es requerido',
+			'appointment.required' => 'La consulta es requerido',
+			'patient.required' => 'El Número de documento es requerido'
 		]);
+        $appointment = $data['appointment'];
 		$data['company'] = Auth::user()->company;
-		$o = $this->o_model::where($data)->first();
+		$o = $this->o_model::where('id',$data['patient'])->first();
 		if(!empty($o->id)){
-			return redirect($this->r_name.'/'.$this->hc_view.'/'.$o->uuid);
+			return redirect($this->r_name.'/'.$this->hc_view.'/'.$o->uuid.'/'.$appointment);
 		}
 		$request->session()->flash('msj_error', 'No se han encontrado resultados');
 		return redirect($this->r_name.'/'.$this->hc_view);
@@ -165,7 +192,7 @@ class ConsentController extends Controller
 
 
 	//PDF
-	public function hcpdf($id)
+	public function hcpdf(Request $request,$id)
     {
         if(empty($id)){
 			return redirect($this->r_name);
@@ -185,9 +212,9 @@ class ConsentController extends Controller
 		if(empty($o_obj_item->id)){
 			return null;
 		}
-		$o = $this->o_model::where(['id' => $o_obj_item->user])->first();
+		$o = $this->o_model::where(['id' => $o_obj_item->dermatology_class->user_class->id])->first();
 		$o_doctor = $this->o_model::where(['id' => $o_obj_item->doctor])->first();
-		$o_company = Companies::where(['id' => $o_obj_item->company])->first();
+		$o_company = $o->company_class;
 		$logo = !empty($o_company->logo_pp)?public_path($o_company->logo_pp):public_path('assets/images/favicon.png');
 		$photo = !empty($o->photo_pp)?$o->photo_pp:public_path('assets/images/user.png');
 		$signature = !empty($o_doctor->signature_pp)?$o_doctor->signature_pp:public_path('assets/images/firma.png');
@@ -227,7 +254,8 @@ class ConsentController extends Controller
 		}
 		$data = $this->gdata();
         $data['o'] = $o;
-		$data['o_all'] = Hcconsent::where(['user' => $o->id])->orderBy('id', 'asc')->get();
+        $hc = $o->lastHc;
+		$data['o_all'] = Hcconsent::where(['hc' => $hc->id])->orderBy('id', 'asc')->get();
 		return view($this->v_name.'.'.$this->hc_view.'.records',$data);
     }
 	//PDF Historial de todos las consultas

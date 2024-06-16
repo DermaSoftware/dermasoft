@@ -5,10 +5,16 @@
         <div class="card">
             <header class="card-header">
                 <p class="card-header-title">Procedimientos</p>
+                @isset($checklist)
                 <a id="add_surgical" href="<?= url($menu . '/surgicals/' . $o_derm->id .'/'.$appointment. '/add') ?>"
                     data-toggle="modal" data-modal="derma_modal" class="h-modal-trigger btn card-header-icon">
                     <span class="fas fa-plus mr-2"></span>Adicionar
                 </a>
+                @endisset
+                @empty($checklist)
+                   <p style="color: orange">Nota: para pdoer agregar un procedimeinto debe de haber un checklist y un consentimiento informado</p>
+                @endempty
+
             </header>
             <div class="card-content">
                 <div class="content">

@@ -385,25 +385,27 @@ Route::middleware(['auth'])->group(function () {
 		Route::group([
 			'prefix' => 'checklist'
 		], function () {
-			Route::get('/{id}', [App\Http\Controllers\Clinichistory\ChecklistController::class, 'index']);
-			Route::post('create/{id}', [App\Http\Controllers\Clinichistory\ChecklistController::class, 'store']);
-			Route::get('/', [App\Http\Controllers\Clinichistory\ChecklistController::class, 'show']);
-			Route::post('/search', [App\Http\Controllers\Clinichistory\ChecklistController::class, 'search']);
-			Route::get('/list/{id}', [App\Http\Controllers\Clinichistory\ChecklistController::class, 'listrecords']);
-			Route::get('/records/{id}', [App\Http\Controllers\Clinichistory\ChecklistController::class, 'records']);
+            Route::get('/', [App\Http\Controllers\Clinichistory\ChecklistController::class, 'show']);
+            Route::get('/records/{id}', [App\Http\Controllers\Clinichistory\ChecklistController::class, 'records']);
 			Route::get('/hcpdf/{id}', [App\Http\Controllers\Clinichistory\ChecklistController::class, 'hcpdf']);
+			Route::get('/{id}/{appointment_id}', [App\Http\Controllers\Clinichistory\ChecklistController::class, 'index']);
+			Route::post('create/{id}/{appointment_id}', [App\Http\Controllers\Clinichistory\ChecklistController::class, 'store']);
+			Route::post('/search', [App\Http\Controllers\Clinichistory\ChecklistController::class, 'search']);
+			Route::get('/list/{id}/{appointment_id}', [App\Http\Controllers\Clinichistory\ChecklistController::class, 'listrecords']);
+
 		});
 		//Consent
 		Route::group([
 			'prefix' => 'consent'
 		], function () {
-			Route::get('/{id}', [App\Http\Controllers\Clinichistory\ConsentController::class, 'index']);
-			Route::post('create/{id}', [App\Http\Controllers\Clinichistory\ConsentController::class, 'store']);
-			Route::get('/', [App\Http\Controllers\Clinichistory\ConsentController::class, 'show']);
-			Route::post('/search', [App\Http\Controllers\Clinichistory\ConsentController::class, 'search']);
-			Route::get('/list/{id}', [App\Http\Controllers\Clinichistory\ConsentController::class, 'listrecords']);
-			Route::get('/records/{id}', [App\Http\Controllers\Clinichistory\ConsentController::class, 'records']);
+            Route::get('/', [App\Http\Controllers\Clinichistory\ConsentController::class, 'show']);
+            Route::get('/records/{id}', [App\Http\Controllers\Clinichistory\ConsentController::class, 'records']);
 			Route::get('/hcpdf/{id}', [App\Http\Controllers\Clinichistory\ConsentController::class, 'hcpdf']);
+			Route::get('/{id}/{appointment_id}', [App\Http\Controllers\Clinichistory\ConsentController::class, 'index']);
+			Route::post('create/{id}/{appointment_id}', [App\Http\Controllers\Clinichistory\ConsentController::class, 'store']);
+			Route::post('/search', [App\Http\Controllers\Clinichistory\ConsentController::class, 'search']);
+			Route::get('/list/{id}/{appointment_id}', [App\Http\Controllers\Clinichistory\ConsentController::class, 'listrecords']);
+
 		});
 		//Resume
 		Route::group([

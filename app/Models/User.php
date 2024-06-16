@@ -90,4 +90,8 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Headquarters::class,'solicitude','user','campus');
     }
+    public function lastHc()
+    {
+        return $this->hasOne(Dermatology::class,'user')->latestOfMany();
+    }
 }

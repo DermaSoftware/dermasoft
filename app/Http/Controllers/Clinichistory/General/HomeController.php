@@ -115,8 +115,12 @@ class HomeController extends Controller
 			return redirect($this->r_name);
 		}
 		$data = $this->gdata('HC - Dermatología general', false);
+        $checklist = $appoint->lastCheckList;
+        $lastConsents = $appoint->lastConsents;
         $data['o'] = $o;
         $data['appointment'] = $appointment;
+        $data['checklist'] = $checklist;
+        $data['lastConsents'] = $lastConsents;
         $data['appoint'] = $appoint;
 		$data['o_vitalsigns'] = $o_vitalsigns;
 		$data['o_diagnoses'] = Diagnoses::where(['status' => 'active'])->orderBy('id', 'asc')->get(['name','id','code']);
@@ -301,35 +305,37 @@ class HomeController extends Controller
     public function user_appointments(Request $request){
 
         $data = request()->except(['_token','_method']);
-
+        $appointments = Appointments::with([
+            'company_class' => function ($query) {
+                $query->select('id', 'name');
+            },
+            'doctor_class' => function ($query) {
+                $query->select('id', 'name');
+            },
+            'campus_class' => function ($query) {
+                $query->select('id', 'name');
+            },
+            'user_class' => function ($query) {
+                $query->select('id', 'name');
+            }
+        ]);
         if(isset($data['patient'])){
             $user = User::where('id', $data['patient'])->first();
 
-            $appointments = Appointments::with([
-                'company_class' => function ($query) {
-                    $query->select('id', 'name');
-                },
-                'doctor_class' => function ($query) {
-                    $query->select('id', 'name');
-                },
-                'campus_class' => function ($query) {
-                    $query->select('id', 'name');
-                },
-                'user_class' => function ($query) {
-                    $query->select('id', 'name');
-                }
-            ])
+            $appointments = $appointments
             ->has('vitalsigns')
             ->where('user', $user->id)
-                ->where('company', Auth::user()->company)
-            ->orderBy('created_at','DESC')
-            ->orderBy('updated_at','DESC');
+            ->where('company', Auth::user()->company);
 
-            // if (Auth::user()->role_class->name == 'Doctor') {
-            //     $appointments = $appointments->where('doctor', Auth::user()->id);
-            // }
-            $appointments = $appointments->get();
-            return ["data" => $appointments];
+            if(isset($data['only_types'])){
+                $appointments = $appointments
+                ->whereIn('hc_type', $data['only_types']);
+            }
+            $appointments = $appointments
+            ->orderBy('created_at','DESC')
+            ->orderBy('updated_at','DESC')
+            ->get();
+        return ["data" => $appointments];
         }
         return [];
 

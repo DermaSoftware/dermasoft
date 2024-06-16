@@ -14,6 +14,7 @@
                                 </div>
                                 <div class="right">
                                     <div class="buttons">
+
                                         <?php if($is_records){ ?>
                                         <a href="<?= url($menu . '/hcdermpdf/' . $appoint->uuid) ?>"
                                             class="button h-button is-primary is-dark-outlined">
@@ -83,6 +84,32 @@
                                             <li id="indic_tab" data-tab="indications_tab"><a>Indicaciones/Solicitudes</a></li>
 
                                         </ul>
+                                        @isset($checklist)
+                                            <a href="<?= url($menu . '/checklist/hcpdf/' . $checklist->uuid) ?>"
+                                                class="button h-button is-primary is-dark-outlined mb-2">
+                                                <span class="icon"><i class="fa-solid fa-prescription-bottle-medical"></i></span>
+                                                CheckList
+                                            </a>
+                                        @endisset
+                                        @empty($checklist)
+                                            <a href="<?= url($menu . '/checklist/' . $o->uuid . '/' . $appoint->id) ?>"
+                                                class="button h-button is-primary is-dark-outlined mb-2">
+                                                CheckList
+                                            </a>
+                                        @endempty
+                                        @isset($lastConsents)
+                                            <a href="<?= url($menu . '/consent/hcpdf/' . $lastConsents->uuid) ?>"
+                                                class="button h-button is-primary is-dark-outlined ml-2">
+                                                <span class="icon"><i class="fa-solid fa-prescription-bottle-medical"></i></span>
+                                                Consentimiento
+                                            </a>
+                                        @endisset
+                                        @empty($lastConsents)
+                                            <a href="<?= url($menu . '/consent/' . $o->uuid . '/' . $appoint->id) ?>"
+                                                class="button h-button is-primary is-dark-outlined ml-2">
+                                                Consentimiento
+                                            </a>
+                                        @endempty
                                     </div>
                                 </div>
                                 <div id="dermatology_tab" class="tab-content is-active">
