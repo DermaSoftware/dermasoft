@@ -289,9 +289,9 @@
                                     <?php $t_att = 'record_complications'; ?>
                                     <?php $n_att = 'Registro de complicaciones presentadas'; ?>
                                     <label><?= $n_att ?></label>
-                                    <input name="<?= $t_att ?>" type="text" class="input fl_sel_parent_disb"
-                                        data-xparent=".sel_complications" data-option="Si" placeholder="<?= $n_att ?>"
-                                        value="{{ old($t_att) }}" />
+                                    <textarea name="<?= $t_att ?>" type="text" class="input fl_sel_parent_disb"
+                                        data-xparent=".sel_complications" data-option="Si" rows="2"
+                                        placeholder="<?= $n_att ?>" value="<?= isset($obj) ? $obj->$t_att : '' ?>" ></textarea>
                                 </div>
                             </div>
                         </div>

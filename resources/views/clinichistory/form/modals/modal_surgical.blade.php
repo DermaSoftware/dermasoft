@@ -215,43 +215,42 @@
                                         </div>
                                     </div>
                                 </div>
-                                <!--Field-->
-                                <div class="column is-6">
-                                    <div class="field">
-                                        <div class="control">
-                                            <?php $t_att = 'body_area_other'; ?>
-                                            <?php $n_att = 'Área corporal'; ?>
-                                            <label><?= $n_att ?></label>
-                                            <select name="<?= $t_att ?>" class="input">
-                                                <option value="" selected disabled >--Seleccione--</option>
-                                                <?php $options = ['Cuerpo de frente', 'Cuerpo de espalda']; ?>
-                                                <?php $select_old = $is_records?$o_hcp->$t_att:''; ?>
-                                                <?php foreach($options as $key => $row){ ?>
-                                                <option value="<?= $row ?>" <?= $select_old==$row?'selected':'' ?> ><?= $row ?></option>
-                                                <?php } ?>
-                                            </select>
-                                        </div>
-                                    </div>
+                            </div>
+                        </div>
+                        <!--Field-->
+                        <div class="column is-6">
+                            <div class="field">
+                                <div class="control">
+                                    <?php $t_att = 'body_area_other'; ?>
+                                    <?php $n_att = 'Área corporal'; ?>
+                                    <label><?= $n_att ?></label>
+                                    <select name="<?= $t_att ?>" class="input">
+                                        <option value="" selected disabled >--Seleccione--</option>
+                                        <?php $options = ['Cuerpo de frente', 'Cuerpo de espalda']; ?>
+                                        <?php $select_old = $is_records?$o_hcp->$t_att:''; ?>
+                                        <?php foreach($options as $key => $row){ ?>
+                                        <option value="<?= $row ?>" <?= $select_old==$row?'selected':'' ?> ><?= $row ?></option>
+                                        <?php } ?>
+                                    </select>
                                 </div>
-                                <!--Field-->
-                                <div class="column is-6">
-                                    <div class="field">
-                                        <div class="control">
-                                            <?php $t_att = 'body_area'; ?>
-                                            <?php $n_att = 'Área'; ?>
-                                            <label><?= $n_att ?></label>
-                                            <select name="<?= $t_att ?>" class="input">
-                                                <option value="" selected disabled >--Seleccione--</option>
-                                                <?php $options = ['Cuero cabelludo', 'Frente', 'Parpado superior', 'Oreja derecha', 'Oreja izquierda', 'Ojo derecho', 'Parpado inferior ojo derecho', 'Parpado superior ojo izquierdo', 'Parpado inferior ojo izquierdo', 'Ceja derecha', 'Ceja izquierda', 'Mejilla derecha', 'Mejilla izquierda', 'Nariz', 'Mentón', 'Labios', 'Lengua', 'Cuello', 'Hombro derecho', 'Hombro izquierdo', 'Brazo izquierdo', 'Brazo derecho', 'Codo derecho', 'Codo izquierdo', 'Antebrazo derecho', 'Antebrazo izquierdo', 'Dorso mano derecha', 'Dorso mano izquierda', 'Palma mano derecha', 'Palma mano izquierda', 'Dedos mano derecha', 'Dedos mano izquierda', 'Tórax posterior', 'Tórax anterior', 'Abdomen', 'Región lumbar', 'Glúteos', 'Pubis', 'Genitales', 'Ano', 'Muslo izquierdo', 'Muslo derecho', 'Rodilla izquierda', 'Rodilla derecha', 'Pierna izquierda', 'Pierna derecha', 'Dorso del pie derecho', 'Dorso pie izquierdo', 'Palma pie derecho', 'Palma pie izquierdo', 'Dedos pie derecho', 'Dedos pie izquierdo']; ?>
-                                                <?php $select_old = $is_records?$o_hcp->$t_att:''; ?>
-                                                <?php foreach($options as $key => $row){ ?>
-                                                <option value="<?= $row ?>" <?= $select_old==$row?'selected':'' ?> ><?= $row ?></option>
-                                                <?php } ?>
-                                            </select>
-                                        </div>
-                                    </div>
+                            </div>
+                        </div>
+                        <!--Field-->
+                        <div class="column is-6">
+                            <div class="field">
+                                <div class="control">
+                                    <?php $t_att = 'body_area'; ?>
+                                    <?php $n_att = 'Área'; ?>
+                                    <label><?= $n_att ?></label>
+                                    <select name="<?= $t_att ?>" class="input">
+                                        <option value="" selected disabled >--Seleccione--</option>
+                                        <?php $options = ['Cuero cabelludo', 'Frente', 'Parpado superior', 'Oreja derecha', 'Oreja izquierda', 'Ojo derecho', 'Parpado inferior ojo derecho', 'Parpado superior ojo izquierdo', 'Parpado inferior ojo izquierdo', 'Ceja derecha', 'Ceja izquierda', 'Mejilla derecha', 'Mejilla izquierda', 'Nariz', 'Mentón', 'Labios', 'Lengua', 'Cuello', 'Hombro derecho', 'Hombro izquierdo', 'Brazo izquierdo', 'Brazo derecho', 'Codo derecho', 'Codo izquierdo', 'Antebrazo derecho', 'Antebrazo izquierdo', 'Dorso mano derecha', 'Dorso mano izquierda', 'Palma mano derecha', 'Palma mano izquierda', 'Dedos mano derecha', 'Dedos mano izquierda', 'Tórax posterior', 'Tórax anterior', 'Abdomen', 'Región lumbar', 'Glúteos', 'Pubis', 'Genitales', 'Ano', 'Muslo izquierdo', 'Muslo derecho', 'Rodilla izquierda', 'Rodilla derecha', 'Pierna izquierda', 'Pierna derecha', 'Dorso del pie derecho', 'Dorso pie izquierdo', 'Palma pie derecho', 'Palma pie izquierdo', 'Dedos pie derecho', 'Dedos pie izquierdo']; ?>
+                                        <?php $select_old = $is_records?$o_hcp->$t_att:''; ?>
+                                        <?php foreach($options as $key => $row){ ?>
+                                        <option value="<?= $row ?>" <?= $select_old==$row?'selected':'' ?> ><?= $row ?></option>
+                                        <?php } ?>
+                                    </select>
                                 </div>
-
                             </div>
                         </div>
                         <div class="column is-12">
@@ -371,7 +370,9 @@
                                     <?php $t_att = 'record_complications'; ?>
                                     <?php $n_att = 'Registro de complicaciones presentadas'; ?>
                                     <label><?= $n_att ?></label>
-                                    <input name="<?= $t_att ?>" type="text" class="input fl_sel_parent_disb" data-xparent=".sel_complications" data-option="Si" placeholder="<?= $n_att ?>" value="{{ old($t_att) }}" />
+                                    <textarea name="<?= $t_att ?>" type="text" class="input fl_sel_parent_disb"
+                                        data-xparent=".sel_complications" data-option="Si" rows="2"
+                                        placeholder="<?= $n_att ?>" value="<?= isset($obj) ? $obj->$t_att : '' ?>" ></textarea>
                                 </div>
                             </div>
                         </div>

@@ -7,7 +7,7 @@ if (Auth::user()->company != 0 && Auth::user()->company_class->plan && Auth::use
         echo "<script>window.location.href = '/sale_planes';</script>";
     }
     if (30-$days <= 15)
-        $test_text .= ' | le quedan ' . 30 - $days . ' dias para culminar la membresia de prueba';
+        $test_text .= ' | le quedan ' . strval(30 - $days) . ' dias para culminar la membresia de prueba';
 }
 ?>
     <!DOCTYPE html>
@@ -1534,7 +1534,7 @@ if (Auth::user()->company != 0 && Auth::user()->company_class->plan && Auth::use
                     }
                     var base = '<div class="columns is-multiline">';
                     base += '<div class="column is-12"><hr></div>';
-
+                    alert('as')
                     base += '<div class="column is-6">';
                     base += '<div class="field"><div class="control"><label>Área corporal</label>';
                     base += '<select name="body_area[]" class="input">';
