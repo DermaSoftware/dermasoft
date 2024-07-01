@@ -94,4 +94,8 @@ class User extends Authenticatable
     {
         return $this->hasOne(Dermatology::class,'user')->latestOfMany();
     }
+    public function diary()
+    {
+        return $this->hasOne(Diary::class,'user')->latestOfMany();
+    }
 }

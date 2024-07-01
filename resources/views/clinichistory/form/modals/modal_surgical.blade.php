@@ -256,9 +256,6 @@
                         <div class="column is-12">
                             <hr/>
                         </div>
-                        <div class="column is-12">
-                            <div class="control"><label>&nbsp;</label><a class="button is-primary btn_add_surgical"><i class="fa fa-plus"></i></a></div>
-                        </div>
                         <!--Field-->
                         <div class="column is-2">
                             <div class="field">
@@ -331,6 +328,9 @@
                             </div>
                         </div>
                         <div class="column is-12 box_surgical is-hidden"></div>
+                        <div class="column is-12">
+                            <div class="control"><label>&nbsp;</label><a class="button is-primary btn_add_surgical"><i class="fa fa-plus"></i></a></div>
+                        </div>
                         <!--Field-->
                         <div class="column is-12">
                             <hr/>
@@ -484,10 +484,13 @@
                     base += '<input name="margin[]" type="text" class="input" placeholder="Margen" />';
                     base += '</div></div></div>';
                     //
-                    base += '<div class="column is-2"><div class="field"><div class="control">';
-                    base += '<label>Patología</label>';
-                    base += '<input name="pathology[]" type="text" class="input" placeholder="Patología" />';
-                    base += '</div></div></div>';
+                    base += '<div class="column is-2">';
+                    base += '<div class="field"><div class="control"><label>Patoloía</label>';
+                    base += '<select name="pathology[]" class="input">';
+                    base += '<option value="" selected disabled >--Seleccione--</option>';
+                    base += '<option value="Si">Si</option>';
+                    base += '<option value="No">No</option>';
+                    base += '</select></div></div></div>';
                     //
                     base += '<div class="column is-4"><div class="field"><div class="control">';
                     base += '<label>Observaciones</label>';

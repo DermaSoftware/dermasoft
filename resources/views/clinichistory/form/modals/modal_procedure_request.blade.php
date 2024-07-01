@@ -32,14 +32,27 @@
 							<div class="field">
 								<div class="control">
 									<label>Procedimiento</label>
-									<select class="input prods_f1 select2_fsc">
+									<select class="input prods_f1 select2_fsc type_procedure_sel">
 										<?php foreach($o_procs as $key_sel => $row_sel){ ?>
-										<option value="<?= $row_sel->id ?>"><?= $row_sel->name ?> - <?= $row_sel->description ?></option>
+										<option data-val="<?= $row_sel->description ?>" value="<?= $row_sel->id ?>"><?= $row_sel->name ?> - <?= $row_sel->description ?></option>
 										<?php } ?>
 									</select>
 								</div>
 							</div>
 						</div>
+                        <div class="column is-4">
+                            <div class="field other_procedure_cll is-hidden">
+                                <div class="control">
+                                    <?php $t_att = 'otro'; ?>
+                                    <?php $n_att = 'Cual?'; ?>
+                                    <label><?= $n_att ?></label>
+                                    <input name="<?= $t_att ?>" type="text" class="input fl_sel_parent_valid prods_f3"
+                                        data-xparent=".type_procedure_sel" data-box=".other_procedure_cll"
+                                        data-option="Otro" placeholder="<?= $n_att ?>"
+                                        value="<?= isset($obj) ? $obj->$t_att : '' ?>" />
+                                </div>
+                            </div>
+                        </div>
 						<!--Field-->
 						<div class="column is-12">
 							<div class="field">
@@ -63,7 +76,9 @@
 									<tbody>
 										<tr>
 											<th>Procedimiento</th>
+                                            <th>Otro</th>
 											<th>Observaciones</th>
+
 											<th class="is-end">
 												<div class="dark-inverted">
 													Eliminar
@@ -126,6 +141,24 @@
                             btn.parent().parent().parent().remove();
                         });
         });
+        if ($('.fl_sel_parent_valid').length) {
+            $('.fl_sel_parent_valid').each(function(i, v) {
+                var item = $(this);
+                var parent = item.data('xparent');
+
+                var box = item.data('box');
+                var option = item.data('option');
+                $(parent).on('change', function(e) {
+                    const op = $(parent).find('option:selected');
+                    console.log(op)
+                    if (op.data('val') == option) {
+                        $(box).removeClass('is-hidden');
+                    } else {
+                        $(box).addClass('is-hidden');
+                    }
+                });
+            });
+        }
         if ($('.btn_add_procedure').length) {
                 $('.btn_add_procedure').on('click', function () {
                     if ($('.inner_table_prods').hasClass('is-hidden')) {
@@ -133,11 +166,13 @@
                     }
                     const x_f1 = '<td><input type="hidden" name="procedure[]" value="' + $('.prods_f1').val() + '">' + $('.prods_f1 option:selected').html() + '</td>';
                     const x_f2 = '<td><input type="hidden" name="note[]" value="' + $('.prods_f2').val() + '">' + $('.prods_f2').val() + '</td>';
+                    const x_f3 = '<td><input type="hidden" name="otro[]" value="' + $('.prods_f3').val() + '">' + $('.prods_f3').val() + '</td>';
                     const x_trash = '<td class="is-end"><div><button type="button" class="button is-danger is-circle is-elevated btn_rprod_trash"><span class="icon is-small"><i class="fas fa-trash"></i></span></button></div></td>';
-                    const item = '<tr>' + x_f1 + x_f2 + x_trash + '</tr>';
+                    const item = '<tr>' + x_f1 + x_f3 + x_f2 + x_trash + '</tr>';
                     $('.table_procedure tbody').append(item);
                     $('.prods_f1').val('');
                     $('.prods_f2').val('');
+                    $('.prods_f3').val('');
                     trash_prods_all();
                 });
 

@@ -126,6 +126,8 @@ class LandingController extends Controller
 			return redirect('/');
 		}
 		$o_sol = Solicitude::where(['uuid' => $id])->first();
+        $user = Auth::user();
+        $user_rol = $user->role_class;
 		if(empty($o_sol->id)){
 			return redirect('/');
 		}
@@ -139,7 +141,13 @@ class LandingController extends Controller
 		$data['logo'] = $logo;
 		$data['str_days'] = '';
 		$data['locks_days'] = '';
-		$data['o_all'] = Querytypes::where(['company' => $o_sol->company])->whereNotIn('status',['deleted'])->orderBy('id', 'asc')->get(['id','name']);
+        if($user_rol->name == 'Medico'){
+            $data['o_all'] = $user->diary->querytypes;
+        }
+        else{
+            $data['o_all'] = Querytypes::where(['company' => $o_sol->company])->whereNotIn('status',['deleted'])->orderBy('id', 'asc')->get(['id','name']);
+        }
+
 		$data['o_all_sede'] = Headquarters::where(['company' => $o_sol->company])->whereNotIn('status',['deleted'])->orderBy('id', 'asc')->get(['id','name']);
 		return view('agendar.solicitude',$data);
     }
@@ -278,6 +286,8 @@ class LandingController extends Controller
 			return redirect('/');
 		}
 		$o = Solicitude::where(['uuid' => $id])->first();
+        $user = Auth::user();
+        $user_rol = $user->role_class;
 		if(empty($o->id)){
 			return redirect('/');
 		}
@@ -339,6 +349,9 @@ class LandingController extends Controller
 				$o_user = User::where(['id' => $o->user])->first();
 				Mail::to($o_user->email)->send(new Ntfs('Cita agendada','Hola '.$o_user->name.', su cita de '.$o->query_type.' ha sido agendada correctamente para el día '.$o->date_quote.' a la hora '.$o->time_quote.' en la modalidad '.$o->modality.', recuerde estar puntual y realizar el pago de forma precencial en el lugar de la cita.',$o_user->name,$o_user->email));
 			}
+            if($user_rol->name == 'Medico'){
+                return redirect('dcitas');//finalized
+            }
 			return redirect('finalized');//finalized
 		}
 		return redirect('/');

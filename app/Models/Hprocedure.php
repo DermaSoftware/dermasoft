@@ -44,4 +44,7 @@ class Hprocedure extends Model
     public function Hctumors(){
         return $this->hasMany(Hctumors::class);
     }
+    public function hclesions(){
+        return $this->hasMany(Hclesion::class);
+    }
 }

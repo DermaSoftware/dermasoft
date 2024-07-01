@@ -120,7 +120,7 @@
             <b>{{ $key }}</b>
             <ul>
                 @foreach ($item as $obj)
-                    <li>{{ $obj->resumen }}</li>
+                    <li><small> {{ $obj->created_at }}</small> <strong>{{ $obj->resumen }}</strong></li>
                 @endforeach
             </ul>
         @endisset
@@ -132,7 +132,7 @@
 
     <h2>Descripción del procedimiento</h2>
 
-    <?php $strc_keys = ['skin_phototype' => 'Fototipo de piel', 'procedure_time' => 'Tiempo del procedimiento', 'complications' => 'Complicaciones', 'record_complications' => 'Registro de complicaciones', 'participants' => 'Participantes', 'comments' => 'Comentarios', 'lesion' => 'Ubicación de la lesión', 'body_area' => 'Área corporal', 'disinfection' => 'Desinfección', 'antiseptic' => 'Antiséptico', 'anesthesia' => 'Anestésia', 'type_anesthesia' => 'Tipo anestésia', 'other_anesthesia' => 'Otro', 'freeze_time_1' => 'Tiempo 1 de congelación', 'freeze_time_2' => 'Tiempo 2 de congelación', 'defrost_time_1' => 'Tiempo 1 de descongelación', 'defrost_time_2' => 'Tiempo 2 de descongelación', 'timex' => 'Tiempos', 'technique' => 'Técnica', 'other_technique' => 'Cual']; ?>
+    <?php $strc_keys = ['skin_phototype' => 'Fototipo de piel', 'procedure_time' => 'Tiempo del procedimiento', 'complications' => 'Complicaciones', 'record_complications' => 'Registro de complicaciones', 'participants' => 'Participantes', 'comments' => 'Comentarios']; ?>
 
     <?php $strc_item = ['lesion' => 'Ubicación de la lesión', 'body_area' => 'Área corporal', 'disinfection' => 'Desinfección', 'antiseptic' => 'Antiséptico', 'anesthesia' => 'Anestésia', 'type_anesthesia' => 'Tipo anestésia', 'other_anesthesia' => 'Otro', 'freeze_time_1' => 'Tiempo 1 de congelación', 'freeze_time_2' => 'Tiempo 2 de congelación', 'defrost_time_1' => 'Tiempo 1 de descongelación', 'defrost_time_2' => 'Tiempo 2 de descongelación', 'timex' => 'Tiempos', 'technique' => 'Técnica', 'other_technique' => 'Cual']; ?>
 
@@ -149,6 +149,22 @@
                             </div>
                         @endisset
                     @endforeach
+                    @if (count($item->hclesions) > 0)
+                        <p><b>Lesiones:</b>
+                        <ul>
+                            @foreach ($item->hclesions as $lesion)
+                                <li>
+                                    @foreach ($strc_item as $stkey => $strow)
+                                        @isset($lesion->{$stkey})
+                                            <div>
+                                                <b>{{ $strow }}:</b>{{ $lesion->{$stkey} }}
+                                            </div>
+                                        @endisset
+                                    @endforeach
+                                </li>
+                            @endforeach
+                        </ul>
+                    @endif
                 </li>
             @endforeach
         </ul>

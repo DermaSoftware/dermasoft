@@ -11,29 +11,30 @@
             <div class="field is-horizontal">
                 <div class="field-body">
                     <div class="columns is-multiline">
+                        <!--Field-->
+                        <div class="column is-12">
+                            <div class="field">
+                                <div class="control">
+                                    <?php $t_att = 'prequest_nprocedure_id'; ?>
+                                    <?php $n_att = 'Procedimiento Solicitado'; ?>
+                                    <label><?= $n_att ?></label>
+                                    <select name="prequest_nprocedure_id" class="input select2_fsc">
+                                        {{-- <option value="" selected disabled>Diagnostico</option> --}}
+                                        @foreach ($procedures_requests as $item)
+                                            @foreach ($item->procedures as $procedure)
+                                            <option value="<?= $procedure->pivot->id ?>">
+                                                {{$procedure->name}} - {{$procedure->description}}
+                                            </option>
+                                            @endforeach
+                                        @endforeach
+
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
                         <div class="column is-12">
                             <div class="columns is-multiline">
-                                <!--Field-->
-                                <div class="column is-12">
-                                    <div class="field">
-                                        <div class="control">
-                                            <?php $t_att = 'prequest_nprocedure_id'; ?>
-                                            <?php $n_att = 'Procedimiento Solicitado'; ?>
-                                            <label><?= $n_att ?></label>
-                                            <select name="prequest_nprocedure_id" class="input select2_fsc">
-                                                {{-- <option value="" selected disabled>Diagnostico</option> --}}
-                                                @foreach ($procedures_requests as $item)
-                                                    @foreach ($item->procedures as $procedure)
-                                                    <option value="<?= $procedure->pivot->id ?>">
-                                                        {{$procedure->name}} - {{$procedure->description}}
-                                                    </option>
-                                                    @endforeach
-                                                @endforeach
 
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
                                 <!--Field-->
                                 <div class="column is-6">
                                     <div class="field">
@@ -41,7 +42,7 @@
                                             <?php $t_att = 'body_area'; ?>
                                             <?php $n_att = 'Área corporal'; ?>
                                             <label><?= $n_att ?></label>
-                                            <select name="<?= $t_att ?>" class="input">
+                                            <select name="<?= $t_att ?>[]" class="input">
                                                 <option value="" selected disabled>--Seleccione--</option>
                                                 <?php $options = ['Cuerpo de frente', 'Cuerpo de espalda']; ?>
                                                 <?php foreach($options as $key => $row){ ?>
@@ -58,7 +59,7 @@
                                             <?php $t_att = 'lesion'; ?>
                                             <?php $n_att = 'Ubicación de la lesión'; ?>
                                             <label><?= $n_att ?></label>
-                                            <select name="<?= $t_att ?>" class="input">
+                                            <select name="<?= $t_att ?>[]" class="input">
                                                 <option value="" selected disabled>--Seleccione--</option>
                                                 <?php $options = ['Cuero cabelludo', 'Frente', 'Parpado superior', 'Oreja derecha', 'Oreja izquierda', 'Ojo derecho', 'Parpado inferior ojo derecho', 'Parpado superior ojo izquierdo', 'Parpado inferior ojo izquierdo', 'Ceja derecha', 'Ceja izquierda', 'Mejilla derecha', 'Mejilla izquierda', 'Nariz', 'Mentón', 'Labios', 'Lengua', 'Cuello', 'Hombro derecho', 'Hombro izquierdo', 'Brazo izquierdo', 'Brazo derecho', 'Codo derecho', 'Codo izquierdo', 'Antebrazo derecho', 'Antebrazo izquierdo', 'Dorso mano derecha', 'Dorso mano izquierda', 'Palma mano derecha', 'Palma mano izquierda', 'Dedos mano derecha', 'Dedos mano izquierda', 'Tórax posterior', 'Tórax anterior', 'Abdomen', 'Región lumbar', 'Glúteos', 'Pubis', 'Genitales', 'Ano', 'Muslo izquierdo', 'Muslo derecho', 'Rodilla izquierda', 'Rodilla derecha', 'Pierna izquierda', 'Pierna derecha', 'Dorso del pie derecho', 'Dorso pie izquierdo', 'Palma pie derecho', 'Palma pie izquierdo', 'Dedos pie derecho', 'Dedos pie izquierdo']; ?>
                                                 <?php foreach($options as $key => $row){ ?>
@@ -75,7 +76,7 @@
                                             <?php $t_att = 'disinfection'; ?>
                                             <?php $n_att = 'Desinfección'; ?>
                                             <label><?= $n_att ?></label>
-                                            <select name="<?= $t_att ?>" class="input sel_disinfection">
+                                            <select name="<?= $t_att ?>[]" class="input sel_disinfection">
                                                 <option value="" selected disabled>--Seleccione--</option>
                                                 <?php $options = ['SSN', 'Alcohol', 'Yodopovidona', 'Clorexidina', 'Otro antiséptico']; ?>
                                                 <?php foreach($options as $key => $row){ ?>
@@ -92,7 +93,7 @@
                                             <?php $t_att = 'antiseptic'; ?>
                                             <?php $n_att = 'Cual antiséptico?'; ?>
                                             <label><?= $n_att ?></label>
-                                            <input name="<?= $t_att ?>" type="text"
+                                            <input name="<?= $t_att ?>[]" type="text"
                                                 class="input fl_sel_parent_disb" data-xparent=".sel_disinfection"
                                                 data-option="Otro antiséptico" placeholder="<?= $n_att ?>"
                                                 value="{{ old($t_att) }}" />
@@ -106,7 +107,7 @@
                                             <?php $t_att = 'anesthesia'; ?>
                                             <?php $n_att = 'Anestésia'; ?>
                                             <label><?= $n_att ?></label>
-                                            <select name="<?= $t_att ?>" class="input sel_anesthesia">
+                                            <select name="<?= $t_att ?>[]" class="input sel_anesthesia">
                                                 <option value="" selected disabled>--Seleccione--</option>
                                                 <?php $options = ['Si', 'No']; ?>
                                                 <?php foreach($options as $key => $row){ ?>
@@ -123,7 +124,7 @@
                                             <?php $t_att = 'type_anesthesia'; ?>
                                             <?php $n_att = 'Tipo de anestésia'; ?>
                                             <label><?= $n_att ?></label>
-                                            <select name="<?= $t_att ?>"
+                                            <select name="<?= $t_att ?>[]"
                                                 class="input fl_sel_parent_disb sel_type_anesthesia"
                                                 data-xparent=".sel_anesthesia" data-option="Si">
                                                 <option value="" selected disabled>--Seleccione--</option>
@@ -142,7 +143,7 @@
                                             <?php $t_att = 'other_anesthesia'; ?>
                                             <?php $n_att = 'Cual?'; ?>
                                             <label><?= $n_att ?></label>
-                                            <input name="<?= $t_att ?>" type="text"
+                                            <input name="<?= $t_att ?>[]" type="text"
                                                 class="input fl_sel_parent_disb" data-xparent=".sel_type_anesthesia"
                                                 data-option="Otro" placeholder="<?= $n_att ?>"
                                                 value="{{ old($t_att) }}" />
@@ -156,7 +157,7 @@
                                             <?php $t_att = 'freeze_time_1'; ?>
                                             <?php $n_att = 'Tiempo 1 de congelación'; ?>
                                             <label><?= $n_att ?></label>
-                                            <input name="<?= $t_att ?>" type="text" class="input"
+                                            <input name="<?= $t_att ?>[]" type="text" class="input"
                                                 placeholder="<?= $n_att ?>" value="{{ old($t_att) }}" />
                                         </div>
                                     </div>
@@ -168,7 +169,7 @@
                                             <?php $t_att = 'defrost_time_1'; ?>
                                             <?php $n_att = 'Tiempo 1 de descongelación'; ?>
                                             <label><?= $n_att ?></label>
-                                            <input name="<?= $t_att ?>" type="text" class="input"
+                                            <input name="<?= $t_att ?>[]" type="text" class="input"
                                                 placeholder="<?= $n_att ?>" value="{{ old($t_att) }}" />
                                         </div>
                                     </div>
@@ -180,7 +181,7 @@
                                             <?php $t_att = 'freeze_time_2'; ?>
                                             <?php $n_att = 'Tiempo 2 de congelación'; ?>
                                             <label><?= $n_att ?></label>
-                                            <input name="<?= $t_att ?>" type="text" class="input"
+                                            <input name="<?= $t_att ?>[]" type="text" class="input"
                                                 placeholder="<?= $n_att ?>" value="{{ old($t_att) }}" />
                                         </div>
                                     </div>
@@ -192,7 +193,7 @@
                                             <?php $t_att = 'defrost_time_2'; ?>
                                             <?php $n_att = 'Tiempo 2 de descongelación'; ?>
                                             <label><?= $n_att ?></label>
-                                            <input name="<?= $t_att ?>" type="text" class="input"
+                                            <input name="<?= $t_att ?>[]" type="text" class="input"
                                                 placeholder="<?= $n_att ?>" value="{{ old($t_att) }}" />
                                         </div>
                                     </div>
@@ -204,7 +205,7 @@
                                             <?php $t_att = 'timex'; ?>
                                             <?php $n_att = 'Tiempos'; ?>
                                             <label><?= $n_att ?></label>
-                                            <select name="<?= $t_att ?>" class="input">
+                                            <select name="<?= $t_att ?>[]" class="input">
                                                 <option value="" selected disabled>--Seleccione--</option>
                                                 <?php $options = ['1 Ciclo', '2 Ciclo']; ?>
                                                 <?php foreach($options as $key => $row){ ?>
@@ -221,7 +222,7 @@
                                             <?php $t_att = 'technique'; ?>
                                             <?php $n_att = 'Técnica'; ?>
                                             <label><?= $n_att ?></label>
-                                            <select name="<?= $t_att ?>" class="input sel_technique">
+                                            <select name="<?= $t_att ?>[]" class="input sel_technique">
                                                 <option value="" selected disabled>--Seleccione--</option>
                                                 <?php $options = ['Spray', 'Probeta', 'Cono', 'Ninguna', 'Otra']; ?>
                                                 <?php foreach($options as $key => $row){ ?>
@@ -238,7 +239,7 @@
                                             <?php $t_att = 'other_technique'; ?>
                                             <?php $n_att = 'Cual?'; ?>
                                             <label><?= $n_att ?></label>
-                                            <input name="<?= $t_att ?>" type="text"
+                                            <input name="<?= $t_att ?>[]" type="text"
                                                 class="input fl_sel_parent_disb" data-xparent=".sel_technique" data-option="Otra" placeholder="<?= $n_att ?>"
                                                 value="{{ old($t_att) }}" />
                                         </div>
@@ -247,6 +248,10 @@
 
 
                             </div>
+                        </div>
+                        <div class="column is-12 box_lesion is-hidden"></div>
+                        <div class="column is-12">
+                            <a href="javascript:void(0)" class="button h-button is-primary is-dark-outlined btn_add_lesion_2">Agregar</a>
                         </div>
                         <div class="column is-12">
                             <hr>
@@ -335,6 +340,119 @@
 
 <script>
     $(function() {
+
+        if ($('.btn_add_lesion_2').length) {
+                $('.btn_add_lesion_2').on('click', function (e) {
+                    e.preventDefault();
+                    if ($('.box_lesion').hasClass('is-hidden')) {
+                        $('.box_lesion').removeClass('is-hidden');
+                    }
+                    var base = '<div class="columns is-multiline">';
+                    base += '<div class="column is-12"><hr></div>';
+                    base += '<div class="column is-6">';
+                    base += '<div class="field"><div class="control"><label>Área corporal</label>';
+                    base += '<select name="body_area[]" class="input">';
+                    base += '<option value="" selected disabled >--Seleccione--</option>';
+                    base += '<option value="Frente">Frente</option>';
+                    base += '<option value="Espalda">Espalda</option>';
+                    base += '</select></div></div></div>';
+
+                    base += '<div class="column is-6">';
+                    base += '<div class="field"><div class="control"><label>Ubicación de la lesión</label>';
+                    base += '<select name="lesion[]" class="input">';
+                    base += '<option value="" selected disabled >--Seleccione--</option>';
+                    var xoptions = ['Cuero cabelludo', 'Frente', 'Parpado superior', 'Oreja derecha', 'Oreja izquierda', 'Ojo derecho', 'Parpado inferior ojo derecho', 'Parpado superior ojo izquierdo', 'Parpado inferior ojo izquierdo', 'Ceja derecha', 'Ceja izquierda', 'Mejilla derecha', 'Mejilla izquierda', 'Nariz', 'Mentón', 'Labios', 'Lengua', 'Cuello', 'Hombro derecho', 'Hombro izquierdo', 'Brazo izquierdo', 'Brazo derecho', 'Codo derecho', 'Codo izquierdo', 'Antebrazo derecho', 'Antebrazo izquierdo', 'Dorso mano derecha', 'Dorso mano izquierda', 'Palma mano derecha', 'Palma mano izquierda', 'Dedos mano derecha', 'Dedos mano izquierda', 'Tórax posterior', 'Tórax anterior', 'Abdomen', 'Región lumbar', 'Glúteos', 'Pubis', 'Genitales', 'Ano', 'Muslo izquierdo', 'Muslo derecho', 'Rodilla izquierda', 'Rodilla derecha', 'Pierna izquierda', 'Pierna derecha', 'Dorso del pie derecho', 'Dorso pie izquierdo', 'Palma pie derecho', 'Palma pie izquierdo', 'Dedos pie derecho', 'Dedos pie izquierdo'];
+                    xoptions.forEach(function (item) {
+                        base += '<option value="' + item + '">' + item + '</option>';
+                    });
+                    base += '</select></div></div></div>';
+
+                    base += '<div class="column is-3">';
+                    base += '<div class="field"><div class="control"><label>Desinfección</label>';
+                    base += '<select name="disinfection[]" class="input">';
+                    base += '<option value="" selected disabled >--Seleccione--</option>';
+                    xoptions = ['SSN', 'Alcohol', 'Yodopovidona', 'Clorexidina', 'Otro antiséptico'];
+                    xoptions.forEach(function (item) {
+                        base += '<option value="' + item + '">' + item + '</option>';
+                    });
+                    base += '</select></div></div></div>';
+                    //
+                    base += '<div class="column is-3"><div class="field"><div class="control">';
+                    base += '<label>Cual antiséptico?</label>';
+                    base += '<input name="antiseptic[]" type="text" class="input" placeholder="Cual antiséptico?" />';
+                    base += '</div></div></div>';
+
+                    base += '<div class="column is-1">';
+                    base += '<div class="field"><div class="control"><label>Anestésia</label>';
+                    base += '<select name="anesthesia[]" class="input">';
+                    base += '<option value="" selected disabled >--Seleccione--</option>';
+                    base += '<option value="Si">Si</option>';
+                    base += '<option value="No">No</option>';
+                    base += '</select></div></div></div>';
+
+                    base += '<div class="column is-3">';
+                    base += '<div class="field"><div class="control"><label>Tipo de anestésia</label>';
+                    base += '<select name="type_anesthesia[]" class="input">';
+                    base += '<option value="" selected disabled >--Seleccione--</option>';
+                    xoptions = ['Lidocaina al 1% con epinefrina', 'Lidocaina al 1% sin epinefrina', 'Lidocaina al 2% con epinefrina', 'Lidocaina al 2% sin epinefrina', 'Tópica', 'Otro'];
+                    xoptions.forEach(function (item) {
+                        base += '<option value="' + item + '">' + item + '</option>';
+                    });
+                    base += '</select></div></div></div>';
+
+                    base += '<div class="column is-2"><div class="field"><div class="control">';
+                    base += '<label>Cual?</label>';
+                    base += '<input name="other_anesthesia[]" type="text" class="input" placeholder="Cual?" />';
+                    base += '</div></div></div>';
+
+                    base += '<div class="column is-3"><div class="field"><div class="control">';
+                    base += '<label>Tiempo 1 de congelación</label>';
+                    base += '<input name="freeze_time_1[]" type="text" class="input" placeholder="Tiempo 1 de congelación" />';
+                    base += '</div></div></div>';
+
+                    base += '<div class="column is-3"><div class="field"><div class="control">';
+                    base += '<label>Tiempo 2 de congelación</label>';
+                    base += '<input name="freeze_time_2[]" type="text" class="input" placeholder="Tiempo 2 de congelación" />';
+                    base += '</div></div></div>';
+
+                    base += '<div class="column is-3"><div class="field"><div class="control">';
+                    base += '<label>Tiempo 1 de descongelación</label>';
+                    base += '<input name="defrost_time_1[]" type="text" class="input" placeholder="Tiempo 1 de descongelación" />';
+                    base += '</div></div></div>';
+
+                    base += '<div class="column is-3"><div class="field"><div class="control">';
+                    base += '<label>Tiempo 2 de descongelación</label>';
+                    base += '<input name="defrost_time_2[]" type="text" class="input" placeholder="Tiempo 2 de descongelación" />';
+                    base += '</div></div></div>';
+
+                    base += '<div class="column is-3">';
+                    base += '<div class="field"><div class="control"><label>Tiempos</label>';
+                    base += '<select name="timex[]" class="input">';
+                    base += '<option value="" selected disabled >--Seleccione--</option>';
+                    base += '<option value="1 Ciclo">1 Ciclo</option>';
+                    base += '<option value="2 Ciclo">2 Ciclo</option>';
+                    base += '</select></div></div></div>';
+
+                    base += '<div class="column is-3">';
+                    base += '<div class="field"><div class="control"><label>Técnica</label>';
+                    base += '<select name="technique[]" class="input">';
+                    base += '<option value="" selected disabled >--Seleccione--</option>';
+                    xoptions = ['Spray', 'Probeta', 'Cono', 'Ninguna', 'Otra'];
+                    xoptions.forEach(function (item) {
+                        base += '<option value="' + item + '">' + item + '</option>';
+                    });
+                    base += '</select></div></div></div>';
+
+                    base += '<div class="column is-6"><div class="field"><div class="control">';
+                    base += '<label>Cual?</label>';
+                    base += '<input name="other_technique[]" type="text" class="input" placeholder="Cual?" />';
+                    base += '</div></div></div>';
+
+                    base += '</div>';
+
+                    $('.box_lesion').append(base);
+                });
+            }
         if ($(".select2_fsc").length) {
                 $('.select2_fsc').each(function () {
                     $(this).select2({

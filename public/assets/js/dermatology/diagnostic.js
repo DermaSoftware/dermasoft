@@ -43,6 +43,10 @@ $(function(){
                     "visible": false,
                     "targets": [0, 1,2]
                 },
+                {
+                    "visible": hc_type === 'Crioterapia' ? true : false ,
+                    "targets": [6]
+                },
                 // {
                 //     searchable: false,
                 //     "targets": [0, 2, 3, 4, 5]

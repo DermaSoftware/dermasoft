@@ -23,6 +23,7 @@
                                 <th>#</th>
                                 <th>UUID</th>
                                 <th>Consulta</th>
+                                <th>Procedimiento</th>
                                 <th>Comentarios</th>
                                 <th>Creado</th>
                             </tr>

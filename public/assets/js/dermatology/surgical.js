@@ -97,6 +97,9 @@ $(function () {
                 }
             },
             {
+                "data": "hc_type",
+            },
+            {
                 "data": "comments",
                 render: function (data, type, row) {
                     return data ? data : '';

@@ -50,14 +50,24 @@
                         </div>
                         <div class="dropdown-menu" role="menu">
                             <div class="dropdown-content">
+
                                 <?php if($row->state == 'COTIZACIÓN'){ ?>
+                                <a href="<?= url($hc_view.'/edit/'.$row->uuid) ?>" class="dropdown-item is-media">
+                                        <div class="icon">
+                                            <i class="lnil lnil-check-box"></i>
+                                        </div>
+                                        <div class="meta">
+                                            <span>Editar</span>
+                                            <span>Cotización</span>
+                                        </div>
+                                </a>
 								<a href="<?= url($hc_view.'/facend/'.$row->uuid) ?>" class="dropdown-item is-media">
                                     <div class="icon">
                                         <i class="lnil lnil-check-box"></i>
                                     </div>
                                     <div class="meta">
                                         <span>Aprobar</span>
-                                        <span>Factura</span>
+                                        <span>Cotización</span>
                                     </div>
                                 </a>
 								<?php } ?>

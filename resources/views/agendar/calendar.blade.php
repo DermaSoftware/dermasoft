@@ -171,7 +171,7 @@
 
 										<select name="modality" class="input" required>
 
-											<?php $options = ['Presencial','Teleconsulta','Domiciliaria']; ?>
+											<?php $options = ['Presencial','Teleconsulta']; ?>
 
 											<?php foreach($options as $key => $row){ ?>
 

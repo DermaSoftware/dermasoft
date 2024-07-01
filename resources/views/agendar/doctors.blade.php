@@ -127,7 +127,9 @@
 
 										<select name="action_value" class="input" required>
 
-											<option value="" selected disabled >--Seleccione--</option>
+                                            @if (count($o_all) > 1)
+                                            <option value="" selected disabled >--Seleccione--</option>
+                                            @endif
 
 											<?php foreach($o_all as $key => $row){ ?>
 

@@ -98,6 +98,7 @@ class DcitasController extends Controller
 	public function show(Request $request, $id)
     {
 		$o = Appointments::where(['uuid' => $id])->first();
+        $latestVitalsign = $o->latestVitalsign;
 		$o_user = User::where(['id' => $o->user])->first();
 		$o_doctor = User::where(['id' => $o->doctor])->first();
 		$url = '';
@@ -106,20 +107,24 @@ class DcitasController extends Controller
 		if($o->modality == 'Teleconsulta'){
 			$url = '<a href="https://meet.jit.si/'.$o->uuid.'" target="_blank" class="button is-primary is-raised">Iniciar</a>';
 		}
+        $hc_type = !empty($o->hc_type) ? '<span class="tag is-rounded is-solid">'. $o->hc_type . '</span>' : '';
 		$resend = '<a href="'.url('dcitas/resend/'.$o->uuid).'" class="button is-info is-raised">Re-enviar</a>';
+        $vsigns = '<a href="'.url('patients/vitalsigns/' . $o_user->uuid. '/' .$o->uuid).'" class="button is-warning is-raised ml-2">Signos vitales</a>';
+        $appoint_link = !empty($latestVitalsign) ? '<a href="'.url('clinichistory/dermatology/' . $o_user->uuid. '/' .$o->id).
+                '" class="button is-warning is-raised ml-2">Ir a consulta</a>' : '';
 		$pfull_name = $o_user->name.' '.$o_user->scd_name.' '.$o_user->lastname.' '.$o_user->scd_lastname;
 		$dfull_name = $o_doctor->name.' '.$o_doctor->scd_name.' '.$o_doctor->lastname.' '.$o_doctor->scd_lastname;
 		$photo = !empty($o->photo)?$o->photo:asset('assets/images/user.png');
 		$img = '<img class="avatar" src="'.$photo.'" data-demo-src="'.$photo.'" alt="" data-user-popover="17">';
 		$out = '<div class="card-head">';
-		$out .= '<div class="left"><div class="tags"><span class="tag is-rounded is-solid">'.$o->query_type.'</span><span class="tag is-rounded is-success">'.$o->modality.'</span><span class="tag is-rounded is-solid">Costo: '.$o->amount.'</span></div></div>';
+		$out .= '<div class="left"><div class="tags"><span class="tag is-rounded is-solid">'.$o->query_type.'</span>'. $hc_type .'<span class="tag is-rounded is-success">'.$o->modality.'</span><span class="tag is-rounded is-solid">Costo: '.$o->amount.'</span></div></div>';
 		$out .= '<div class="right">'.$url.'</div>';
 		$out .= '</div>';
 		$out .= '<div class="card-body"><p>Cita del paciente <b>'.$pfull_name.'</b> para el día <b>'.$o->date_quote.'</b> a la hora <b>'.$o->time_quote.'</b></p></div>';
 		$out .= '<div class="card-foot"><div class="left">';
 		$out .= '<div class="media-flex-center no-margin">';
 		$out .= '<div class="h-avatar">'.$img.'</div>';
-		$out .= '<div class="flex-meta"><span>'.$dfull_name.'</span><span>Doctor(a)</span></div></div></div><div class="right">'.$resend.'</div></div>';
+		$out .= '<div class="flex-meta"><span>'.$dfull_name.'</span><span>Doctor(a)</span></div></div></div><div class="right">'.$resend.$vsigns.$appoint_link.'</div></div>';
 		echo $out;
     }
 }

@@ -5,7 +5,7 @@
             <div class="column is-12">
                 <form action="{{ url($menu . '/dermatology/' . $o->uuid . '/' .$appointment) }}" method="post" enctype="multipart/form-data">
                     {{ csrf_field() }}
-                    <div class="account-box is-form is-footerless">
+                    <div class="account-box is-form is-footerless" data-hc_type="{{ $hc_type }}" id="account-box">
                         <div class="form-head stuck-header">
                             <div class="form-head-inner">
                                 <div class="left">
@@ -170,8 +170,9 @@
 @section('js')
     @parent
     <script>
-        var derma_id = <?= $o_derm->id ?>;
-        var appointment = <?= $appointment ?>;
+        var derma_id = <?= $o_derm->id; ?>;
+        var hc_type = document.getElementById('account-box').getAttribute('data-hc_type');
+        var appointment = <?= $appointment; ?>;
     </script>
     <script src="{{ asset('assets/js/dermatology/background.js') }}"></script>
     <script src="{{ asset('assets/js/dermatology/diagnostic.js') }}"></script>

@@ -54,7 +54,7 @@
                                     </div>
                                     <div class="meta">
                                         <span>Editar</span>
-                                        <span>Factura</span>
+                                        <span>Contizacion</span>
                                     </div>
                                 </a>
 								<?php } ?>

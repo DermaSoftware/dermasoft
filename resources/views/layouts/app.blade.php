@@ -407,10 +407,20 @@ if (Auth::user()->company != 0 && Auth::user()->company_class->plan && Auth::use
                     <a href="javascript:void(0);" id="close-search" class="is-hidden is-inactive"><i class="sidebar-svg" data-feather="x"></i></a>
                 </li>--> <!-- Wallet -->
                 <li>
-                    <a href="{{ Auth::user()->role == 1?url('admin/settings'):url('admon/settings') }}"
-                       id="open-settings" data-content="Settings">
-                        <i class="fa fa-solid fa-cog" style="color: #1866ec;"></i>
-                    </a>
+                    @if (Auth::user()->role_class->id == 1)
+                    <a href="{{ url('admin/settings') }}"
+                        id="open-settings" data-content="Settings">
+                         <i class="fa fa-solid fa-cog" style="color: #1866ec;"></i>
+                     </a>
+                    @else
+                     @if (Auth::user()->role_class->id == 2)
+                        <a href="{{ url('admon/settings') }}"
+                            id="open-settings" data-content="Settings">
+                            <i class="fa fa-solid fa-cog" style="color: #1866ec;"></i>
+                        </a>
+                     @endif
+                    @endif
+
                 </li> <!-- Profile -->
                 <li id="user-menu">
                     <div id="profile-menu" class="dropdown profile-dropdown dropdown-trigger is-spaced is-up">
@@ -1139,6 +1149,7 @@ if (Auth::user()->company != 0 && Auth::user()->company_class->plan && Auth::use
                             }
                             var total = amount * price;
                             $('.table_prods_svs tbody tr[data-trid="' + tr + '"] td.total_td').html(total);
+                            update_total();
                         });
                     });
                     $('.btn_trash_ppd_sv').each(function () {
@@ -1146,8 +1157,19 @@ if (Auth::user()->company != 0 && Auth::user()->company_class->plan && Auth::use
                         btnt.on('click', function () {
                             btnt.parent().parent().parent().remove();
                         });
+                        update_total();
                     });
                 }
+                function update_total(){
+                    var total = 0;
+                    $('.table_prods_svs .total_td').each(function(index,element){
+                        var value = element.innerHTML;
+                        var int_value = parseInt(value);
+                        total = total + int_value;
+                    });
+                    $('#table-total .total').html(total);
+                }
+
             }
 
             if ($('.filter_table_fsc').length) {

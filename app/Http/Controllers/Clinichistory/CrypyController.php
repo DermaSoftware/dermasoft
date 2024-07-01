@@ -407,7 +407,8 @@ class CrypyController extends Controller
             },
             'prequest_nprocedure' => function ($query) {
                 $query->select('id','procedures_id'); # Uno a muchos
-            }
+            },
+            'hclesions'
             ])
             ->where('appointments_id',$appointment->id)
             ->orderBy('created_at','DESC')

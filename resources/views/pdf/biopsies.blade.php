@@ -120,7 +120,7 @@
             <b>{{ $key }}</b>
             <ul>
                 @foreach ($item as $obj)
-                    <li>{{ $obj->resumen }}</li>
+                <li><small> {{ $obj->created_at }}</small> <strong>{{ $obj->resumen }}</strong></li>
                 @endforeach
             </ul>
         @endisset

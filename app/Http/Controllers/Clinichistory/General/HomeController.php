@@ -60,6 +60,7 @@ use App\Http\Controllers\Medical\PthsController;
 use App\Mail\ExamordersMail;
 use App\Mail\ProdsMail;
 use App\Mail\PthsMail;
+use App\Models\Hclesion;
 use App\Models\Roles;
 use Yajra\DataTables\DataTables;
 class HomeController extends Controller
@@ -942,7 +943,7 @@ class HomeController extends Controller
             ->where('hc',$hc)
             ->orderBy('created_at', 'desc')
             ->orderBy('updated_at', 'desc')
-            ->get(['id','uuid','prequest_nprocedure_id','type_procedure','appointments_id','created_at','updated_at','appointments_id','comments']);
+            ->get(['id','uuid','prequest_nprocedure_id','type_procedure','appointments_id','created_at','updated_at','appointments_id','comments','hc_type']);
 
          return DataTables::of($biopsies)->make(true);
     }
@@ -1058,7 +1059,7 @@ class HomeController extends Controller
         ->where('hc',$hc)
         ->orderBy('created_at','DESC')
         ->orderBy('updated_at','DESC')
-        ->get(['id','uuid','type_procedure','prequest_nprocedure_id','created_at','updated_at','appointments_id','comments']);
+        ->get(['id','uuid','type_procedure','prequest_nprocedure_id','created_at','updated_at','appointments_id','comments','hc_type']);
 
          return DataTables::of($biopsies)->make(true);
     }
@@ -1085,7 +1086,7 @@ class HomeController extends Controller
             $data = request()->except(['_token', '_method']);
             $derma= Dermatology::where('id',$hc)->first();
             $aux_params = ['hc' => $derma->id,'user' => $derma->user_class->id,'doctor' => Auth::user()->id];
-            $all_params = ['lesion','body_area','disinfection','antiseptic','anesthesia','type_anesthesia','other_anesthesia','freeze_time_1','freeze_time_2','defrost_time_1','defrost_time_2','timex','technique','other_technique','procedure_time','complications','record_complications','participants','comments'];
+            $all_params = ['procedure_time','complications','record_complications','participants','comments'];
             foreach($all_params as $key => $row){
                 $aux_params[$row] = !empty($data[$row])?$data[$row]:'';
             }
@@ -1095,6 +1096,18 @@ class HomeController extends Controller
             $aux_params['hc_type'] = $appoint->hc_type;
             $o_hcpro = Hprocedure::create($aux_params);
 
+            if(!empty($data['lesion'])){
+                foreach($data['lesion'] as $key => $row){
+                    $aux_params = [];
+                    $aux_params['hprocedure_id'] = $o_hcpro->id;
+                    $aux_params['lesion'] = !empty($row)?$row:'';
+                    $arr_keys = ['body_area','disinfection','antiseptic','anesthesia','type_anesthesia','other_anesthesia','freeze_time_1','freeze_time_2','defrost_time_1','defrost_time_2','timex','technique','other_technique'];
+                    foreach($arr_keys as $krow){
+                        $aux_params[$krow] = !empty($data[$krow][$key])?$data[$krow][$key]:'';
+                    }
+                    $o_x = Hclesion::create($aux_params);
+                }
+            }
             return [
                 "Success" => true,
                 "Message" => "Adición exitosa"
@@ -1122,7 +1135,7 @@ class HomeController extends Controller
         ->where('hc',$hc)
         ->orderBy('created_at','DESC')
         ->orderBy('updated_at','DESC')
-        ->get(['id','uuid','type_procedure','prequest_nprocedure_id','created_at','appointments_id','comments']);
+        ->get(['id','uuid','type_procedure','prequest_nprocedure_id','created_at','appointments_id','comments','hc_type']);
 
          return DataTables::of($biopsies)->make(true);
     }
@@ -1206,7 +1219,7 @@ class HomeController extends Controller
             ])
             ->where('hc',$hc)
             ->orderBy('created_at', 'desc')
-            ->get(['id','uuid','type_procedure','prequest_nprocedure_id','created_at','appointments_id','comments']);
+            ->get(['id','uuid','type_procedure','prequest_nprocedure_id','created_at','appointments_id','comments','hc_type']);
 
 
          return DataTables::of($biopsies)->make(true);
@@ -1605,6 +1618,7 @@ class HomeController extends Controller
                     $aux_params = ['procedure_request_id' => $rprocedure->id];
                     $aux_params['procedures_id'] = $proced->id;//
                     $aux_params['note'] = !empty($data['note'][$key])?$data['note'][$key]:'';//
+                    $aux_params['otro'] = !empty($data['otro'][$key])?$data['otro'][$key]:'';//
                     $o_x = PRequest_NProcedure::create($aux_params);
                 }
             }

@@ -101,7 +101,7 @@ class DiaryController extends Controller
 
 	private function async_dp($id, $ps){
 		//Eliminamos los que no esten
-		$o_all = Diaryqt::where(['diary_id' => $id])->whereNotIn('qt_id',$ps)->orderBy('id', 'asc')->get();
+		$o_all = Diaryqt::where(['diary_id' => $id])->whereIn('qt_id',$ps)->orderBy('id', 'asc')->get();
 		if($o_all->count() > 0){
 			foreach($o_all as $key => $row){
 				Diaryqt::destroy($row->id);

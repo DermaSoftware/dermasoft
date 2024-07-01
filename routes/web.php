@@ -500,6 +500,8 @@ Route::middleware(['auth'])->group(function () {
 		'prefix' => 'invoices'
 	], function () {
 		Route::get('/', [App\Http\Controllers\Medical\InvoicesController::class, 'index']);
+        Route::get('edit/{id}', [App\Http\Controllers\Medical\InvoicesController::class, 'edit']);
+		Route::post('edit/{id}', [App\Http\Controllers\Medical\InvoicesController::class, 'update']);
 		Route::get('/facend/{id}', [App\Http\Controllers\Medical\InvoicesController::class, 'facend']);
 		Route::get('/facpdf/{id}', [App\Http\Controllers\Medical\InvoicesController::class, 'facpdf']);
 	});

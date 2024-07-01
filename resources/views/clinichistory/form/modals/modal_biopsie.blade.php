@@ -23,7 +23,11 @@
                                         @foreach ($procedures_requests as $item)
                                             @foreach ($item->procedures as $procedure)
                                             <option value="<?= $procedure->pivot->id ?>">
+                                                @if ($procedure->description == 'Otro')
+                                                {{$procedure->pivot->otro}}
+                                                @else
                                                 {{$procedure->name}} - {{$procedure->description}}
+                                                @endif
                                             </option>
                                             @endforeach
                                         @endforeach
