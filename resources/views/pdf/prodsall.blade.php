@@ -66,7 +66,7 @@
 
 	<?php $date_hc = strftime('%d de %B del %Y', strtotime($fechaaux)); ?>
 
-	<h3 style="text-align: center;">Prescripción médica</h3>
+	<h3 style="text-align: center;">Solicitud de procedimiento</h3>
 
 	<h4 style="font-weight: normal;"><b><u>Fecha:</u></b> <?= $date_hc ?></h4>
 
@@ -79,16 +79,11 @@
 	<table class="table table-striped">
 
         <thead>
-
 			<tr>
-
 				<th>Procedimiento</th>
 				<th>Observaciones</th>
-
 			</tr>
-
 		</thead>
-
         <tbody>
 
 			<?php foreach($all_items as $hkey => $hrow){ ?>

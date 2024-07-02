@@ -10,7 +10,7 @@
                 </div>
 				<div class="right">
                     <div class="buttons">
-                        <a href="{{url('schedule/'.$o->cms)}}" target="_blank" class="button h-button is-light is-dark-outlined">
+                        <a href="{{url('schedule/'.$o->cms)}}" class="button h-button is-light is-dark-outlined">
                             <span>Agendar nueva cita</span>
                         </a>
                     </div>

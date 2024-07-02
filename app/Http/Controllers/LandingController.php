@@ -79,6 +79,14 @@ class LandingController extends Controller
 		}
 		$data = $this->gdata();
 		$o = Companies::where(['cms' => $id])->first();
+        $user = Auth::user();
+        $user_rol = $user->role_class;
+
+        if($user_rol->name == 'Paciente'){
+            $params = ['user' => $user->id,'company' => $o->id];
+			$o_x = Solicitude::create($params);
+			return redirect('solicitude/'.$o_x->uuid);
+        }
 		if(empty($o->id)){
 			return redirect('/');
 		}
@@ -120,7 +128,7 @@ class LandingController extends Controller
 		return redirect('schedule/'.$o->cms);
     }
 	//2 - Seleccionar tipo de consulta (Querytypes)
-	public function solicitude($id)
+    	public function solicitude($id)
     {
         if(empty($id)){
 			return redirect('/');

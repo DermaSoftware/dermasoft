@@ -112,7 +112,7 @@
 
 			<tr>
 
-				<td><?= $hrow->pivot->medicine ?></td>
+				<td><?= $hrow->pivot->medicine_name ?></td>
 
 				<td><?= $hrow->pivot->dose ?></td>
 

@@ -150,12 +150,26 @@ class PatalogiasController extends Controller
 		$data['company_name'] = $o_company->name;
 		$data['full_name'] = $full_name;
 		$arr = [];
-		$derm_all = Pths::where(['user' => $o->id])->orderBy('id', 'asc')->get();
+        $hc = $o->lastHc;
+        $derm_all = PathologyRequest::with([
+            'doctor_class',
+            'hcdermdiagnostics' => function ($query) {
+                $query->select('id','uuid','code','diagnostic'); # Uno a muchos
+            },
+            // 'annexes',
+            'dermatology',
+            'pathologies'
+            ]
+            )
+            ->where('dermatology_id',$hc->id)->orderBy('id','ASC')->get(['doctor','id','uuid','dermatology_id',
+                    'hcdermdiagnostics_id','annexes','created_at']);
+
+		// $derm_all = Pths::where(['user' => $o->id])->orderBy('id', 'asc')->get();
 		foreach($derm_all as $key => $o_obj_item){
-			$o_doctor = $this->o_model::where(['id' => $o_obj_item->doctor])->first();
+			$o_doctor = $o_obj_item->doctor_class;  //$this->o_model::where(['id' => $o_obj_item->doctor])->first();
 			$dfull_name = $o_doctor->name.' '.$o_doctor->scd_name.' '.$o_doctor->lastname.' '.$o_doctor->scd_lastname;
 			$signature = !empty($o_doctor->signature_pp)?$o_doctor->signature_pp:public_path('assets/images/firma.png');
-			$all_items = Pthsitem::where(['pt' => $o_obj_item->id])->orderBy('id', 'asc')->get();//Items
+			$all_items = $o_obj_item->pathologies;  //Pthsitem::where(['pt' => $o_obj_item->id])->orderBy('id', 'asc')->get();//Items
 			array_push($arr, ['o_obj_item' => $o_obj_item,'all_items' => $all_items,'o_doctor' => $o_doctor,'dfull_name' => $dfull_name,'signature' => $signature]);
 		}
 		$data['arr'] = $arr;

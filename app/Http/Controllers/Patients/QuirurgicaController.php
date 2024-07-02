@@ -37,93 +37,94 @@ use App\Models\ProcedureRequest;
 
 class QuirurgicaController extends Controller
 {
-	private $tag_the = 'El';
+    private $tag_the = 'El';
     private $tag_o = 'o';
     private $r_name = 'quirurgica';
     private $v_name = 'patients';
     private $c_name = 'Historia clínica';
     private $c_names = 'Historia clínica';
-	private $list_tbl_fsc = ['name' => 'Nombre'];
-	private $o_model = User::class;
-	private $hc_view = 'surgical';
-	private $hc_type = 'Descripción Quirúrgica';
+    private $list_tbl_fsc = ['name' => 'Nombre'];
+    private $o_model = User::class;
+    private $hc_view = 'surgical';
+    private $hc_type = 'Descripción Quirúrgica';
 
-	private function gdata($t = '')
+    private function gdata($t = '')
     {
         $data['menu'] = $this->r_name;
         $data['tag_o'] = $this->tag_o;
         $data['tag_the'] = $this->tag_the;
-        $data['v_name'] = $this->v_name.'.'.$this->hc_view;
+        $data['v_name'] = $this->v_name . '.' . $this->hc_view;
         $data['hc_view'] = $this->hc_view;
         $data['c_name'] = $this->c_name;
         $data['c_names'] = $this->c_names;
         $data['list_tbl_fsc'] = $this->list_tbl_fsc;
-        $data['title'] = $t.' - '.$this->c_names;
-		return $data;
+        $data['title'] = $t . ' - ' . $this->c_names;
+        return $data;
     }
 
-	public function __construct(){
+    public function __construct()
+    {
         $this->middleware('checkRole:5');
     }
 
-	//PDF Historial de todos las consultas
-	public function index()
+    //PDF Historial de todos las consultas
+    public function index()
     {
-		$o = $this->o_model::where(['id' => Auth::user()->id])->first();
-		if(empty($o->id)){
-			return redirect($this->r_name);
-		}
-		$data = $this->gdata('HC - Historial de consultas - '.$this->hc_type, false);
+        $o = $this->o_model::where(['id' => Auth::user()->id])->first();
+        if (empty($o->id)) {
+            return redirect($this->r_name);
+        }
+        $data = $this->gdata('HC - Historial de consultas - ' . $this->hc_type, false);
         $data['o'] = $o;
-		$data['o_all'] = Dermatology::where(['user' => $o->id,'hc_type' => $this->hc_type])->orderBy('id', 'asc')->get();
-		return view($this->v_name.'.'.$this->r_name.'.records',$data);
+        $data['o_all'] = Dermatology::where(['user' => $o->id, 'hc_type' => $this->hc_type])->orderBy('id', 'asc')->get();
+        return view($this->v_name . '.' . $this->r_name . '.records', $data);
     }
 
-	//PDF
-	public function hcpdf($id)
+    //PDF
+    public function hcpdf($id)
     {
-        if(empty($id)){
-			return redirect($this->r_name);
-		}
-		$procedure = Hprocedure::where(['uuid' => $id])->first();
-		$o_derm = Dermatology::where(['id' => $procedure->hc])->first();
-		if(empty($o_derm->id)){
-			return redirect($this->r_name);
-		}
-		//$o = $this->o_model::where(['uuid' => $id])->first();
-		$pdfFilePath = $this->getpdfhc($id,true);
-		$pdfFilePath = storage_path($pdfFilePath);
-		$path = Storage::disk('public')->putFile('temp', new File($pdfFilePath), 'public');
-		$pdfFilePathTemp = './storage/app/public/uploads/hc_derm_'.$id.'.pdf';
-		Storage::delete($pdfFilePathTemp);
-		unlink($pdfFilePath);
-		$attach_file = storage_path('app/public/' . $path);
-		$fullpath = asset('storage/'.$path);
-		$o_derm->update(['path_pdf' => $fullpath]);
-		//$full_name = $o->name.' '.$o->scd_name.' '.$o->lastname.' '.$o->scd_lastname;
-		//Mail::to($o->email)->send(new HabeasData($full_name,$attach_file));
-		return redirect($fullpath);
+        if (empty($id)) {
+            return redirect($this->r_name);
+        }
+        $procedure = Hprocedure::where(['uuid' => $id])->first();
+        $o_derm = Dermatology::where(['id' => $procedure->hc])->first();
+        if (empty($o_derm->id)) {
+            return redirect($this->r_name);
+        }
+        //$o = $this->o_model::where(['uuid' => $id])->first();
+        $pdfFilePath = $this->getpdfhc($id, true);
+        $pdfFilePath = storage_path($pdfFilePath);
+        $path = Storage::disk('public')->putFile('temp', new File($pdfFilePath), 'public');
+        $pdfFilePathTemp = './storage/app/public/uploads/hc_derm_' . $id . '.pdf';
+        Storage::delete($pdfFilePathTemp);
+        unlink($pdfFilePath);
+        $attach_file = storage_path('app/public/' . $path);
+        $fullpath = asset('storage/' . $path);
+        $o_derm->update(['path_pdf' => $fullpath]);
+        //$full_name = $o->name.' '.$o->scd_name.' '.$o->lastname.' '.$o->scd_lastname;
+        //Mail::to($o->email)->send(new HabeasData($full_name,$attach_file));
+        return redirect($fullpath);
     }
-	private function getpdfhc($id, $save = false)
+    private function getpdfhc($id, $save = false)
     {
-		if(empty($id)){
-			return null;
-		}
-		$procedure = Hprocedure::where(['uuid' => $id])->first();
+        if (empty($id)) {
+            return null;
+        }
+        $procedure = Hprocedure::where(['uuid' => $id])->first();
         $appointment = $procedure->appointments;
-		$o_derm = Dermatology::where(['id' => $procedure->hc])->first();
-		if(empty($o_derm->id)){
-			return null;
-		}
-		$o = $o_derm->user_class;
-		$o_doctor = $procedure->doctor_class;
-		$o_company = $procedure->doctor_class->company_class;
-		$logo = !empty($o_company->logo_pp)?public_path($o_company->logo_pp):public_path('assets/images/favicon.png');
-		$photo = !empty($o->photo_pp)?$o->photo_pp:public_path('assets/images/user.png');
-		$signature = !empty($o_doctor->signature_pp)?$o_doctor->signature_pp:public_path('assets/images/firma.png');
+        $o_derm = Dermatology::where(['id' => $procedure->hc])->first();
+        if (empty($o_derm->id)) {
+            return null;
+        }
+        $o = $o_derm->user_class;
+        $o_doctor = $procedure->doctor_class;
+        $o_company = $procedure->doctor_class->company_class;
+        $logo = !empty($o_company->logo_pp) ? public_path($o_company->logo_pp) : public_path('assets/images/favicon.png');
+        $photo = !empty($o->photo_pp) ? $o->photo_pp : public_path('assets/images/user.png');
+        $signature = !empty($o_doctor->signature_pp) ? $o_doctor->signature_pp : public_path('assets/images/firma.png');
 
-		$data['o_vitalsigns'] = Vitalsigns::where(['user' => $o_derm->user])->orderBy('id', 'DESC')->first();
-		$all_dgs = Hcdermdiagnostics::where('appointments_id', $appointment->id)
+        $data['o_vitalsigns'] = Vitalsigns::where(['user' => $o_derm->user])->orderBy('id', 'DESC')->first();
+        $all_dgs = Hcdermdiagnostics::where('appointments_id', $appointment->id)
             ->orderBy('created_at', 'DESC')
             ->orderBy('updated_at', 'DESC')
             ->get(['id', 'uuid', 'code', 'diagnostic', 'type_diagnostic', 'created_at', 'updated_at']);
@@ -225,75 +226,182 @@ class QuirurgicaController extends Controller
         foreach ($all_back as $key => $value) {
             array_push($backgounds[$value->type_class->name], $value);
         }
-		// $data['all_sut'] = $all_sut;
+        // $data['all_sut'] = $all_sut;
         $data['all_back'] = $backgounds;
-		$data['all_dgs'] = $all_dgs;
-		$data['all_ind'] = $all_ind;
-		$data['all_pre'] = $all_pre;
-		$data['all_sex'] = $all_sex;
-		$data['all_spr'] = $all_spr;
-		$data['all_spa'] = $all_spa;
-		$data['o'] = $o;
-		$data['o_derm'] = $o_derm;
-		$data['o_doctor'] = $o_doctor;
-		$data['logo'] = $logo;
-		$data['photo'] = $photo;
-		$data['signature'] = $signature;
-		$data['company_name'] = $o_company->name;
-		$full_name = $o->name.' '.$o->scd_name.' '.$o->lastname.' '.$o->scd_lastname;
-		$data['full_name'] = $full_name;
-		$dfull_name = $o_doctor->name.' '.$o_doctor->scd_name.' '.$o_doctor->lastname.' '.$o_doctor->scd_lastname;
-		$data['dfull_name'] = $dfull_name;
-		$pdf = PDF::loadView('pdf.'.$this->hc_view, $data);
-		return $pdf->stream('document.pdf');
-		exit();
+        $data['all_dgs'] = $all_dgs;
+        $data['all_ind'] = $all_ind;
+        $data['all_pre'] = $all_pre;
+        $data['all_sex'] = $all_sex;
+        $data['all_spr'] = $all_spr;
+        $data['all_spa'] = $all_spa;
+        $data['o'] = $o;
+        $data['o_derm'] = $o_derm;
+        $data['o_doctor'] = $o_doctor;
+        $data['logo'] = $logo;
+        $data['photo'] = $photo;
+        $data['signature'] = $signature;
+        $data['company_name'] = $o_company->name;
+        $full_name = $o->name . ' ' . $o->scd_name . ' ' . $o->lastname . ' ' . $o->scd_lastname;
+        $data['full_name'] = $full_name;
+        $dfull_name = $o_doctor->name . ' ' . $o_doctor->scd_name . ' ' . $o_doctor->lastname . ' ' . $o_doctor->scd_lastname;
+        $data['dfull_name'] = $dfull_name;
+        $pdf = PDF::loadView('pdf.' . $this->hc_view, $data);
+        return $pdf->stream('document.pdf');
+        exit();
     }
 
-	//PDF Historial de todos las consultas
-	public function records()
+    //PDF Historial de todos las consultas
+    public function records()
     {
-		$o = $this->o_model::where(['id' => Auth::user()->id])->first();//User
-		if(empty($o->id)){
-			return redirect($this->r_name);
-		}
-		$pdfFilePath = $this->allpdfhc($o->uuid);
+        $o = $this->o_model::where(['id' => Auth::user()->id])->first(); //User
+        if (empty($o->id)) {
+            return redirect($this->r_name);
+        }
+        $pdfFilePath = $this->allpdfhc($o->uuid);
     }
-	private function allpdfhc($id)
+    private function allpdfhc($id)
     {
-		if(empty($id)){
-			return null;
-		}
-		$o = $this->o_model::where(['uuid' => $id])->first();
-		$full_name = $o->name.' '.$o->scd_name.' '.$o->lastname.' '.$o->scd_lastname;
-		$o_company = Companies::where(['id' => $o->company])->first();
-		$logo = !empty($o_company->logo_pp)?public_path($o_company->logo_pp):public_path('assets/images/favicon.png');
-		$photo = !empty($o->photo_pp)?$o->photo_pp:public_path('assets/images/user.png');
-		$data['o'] = $o;
-		$data['logo'] = $logo;
-		$data['photo'] = $photo;
-		$data['company_name'] = $o_company->name;
-		$data['full_name'] = $full_name;
-		$data['o_vitalsigns'] = Vitalsigns::where(['user' => $o->id])->orderBy('id', 'DESC')->first();
+        if (empty($id)) {
+            return null;
+        }
+        $o = $this->o_model::where(['uuid' => $id])->first();
+        $full_name = $o->name . ' ' . $o->scd_name . ' ' . $o->lastname . ' ' . $o->scd_lastname;
+        $o_company = Companies::where(['id' => $o->company])->first();
+        $logo = !empty($o_company->logo_pp) ? public_path($o_company->logo_pp) : public_path('assets/images/favicon.png');
+        $photo = !empty($o->photo_pp) ? $o->photo_pp : public_path('assets/images/user.png');
+        $data['o'] = $o;
+        $data['logo'] = $logo;
+        $data['photo'] = $photo;
+        $data['company_name'] = $o_company->name;
+        $data['full_name'] = $full_name;
+        $data['o_vitalsigns'] = Vitalsigns::where(['user' => $o->id])->orderBy('id', 'DESC')->first();
 
-		$arr = [];
-		$derm_all = Dermatology::where(['user' => $o->id,'hc_type' => $this->hc_type])->orderBy('id', 'asc')->get();
-		foreach($derm_all as $key => $o_derm){
-			$o_doctor = $this->o_model::where(['id' => $o_derm->doctor])->first();
-			$dfull_name = $o_doctor->name.' '.$o_doctor->scd_name.' '.$o_doctor->lastname.' '.$o_doctor->scd_lastname;
-			$signature = !empty($o_doctor->signature_pp)?$o_doctor->signature_pp:public_path('assets/images/firma.png');
-			$o_hcpro = Hcsurgical::where(['hc' => $o_derm->id])->first();
-			$all_sut = Hctumors::where(['hc' => $o_derm->id])->orderBy('id', 'asc')->get();//Suture
-			$all_dgs = Hcdermdiagnostics::where(['hc' => $o_derm->id])->orderBy('id', 'asc')->get();//diagnosticos
-			$all_ind = Hcdermindications::where(['hc' => $o_derm->id])->orderBy('id', 'asc')->get();//indicaciones
-			$all_pre = Prescriptions::where(['hc' => $o_derm->id])->orderBy('id', 'asc')->get();//prescripción médica
-			$all_sex = Hcdermsolexams::where(['hc' => $o_derm->id])->orderBy('id', 'asc')->get();//Solicitudes de examenes
-			$all_spr = Hcdermsolproc::where(['hc' => $o_derm->id])->orderBy('id', 'asc')->get();//Solicitudes de procedimientos
-			$all_spa = Hcdermsolpath::where(['hc' => $o_derm->id])->orderBy('id', 'asc')->get();//Solicitudes de patalogías
-			array_push($arr, ['o_derm' => $o_derm,'o_doctor' => $o_doctor,'dfull_name' => $dfull_name,'signature' => $signature,'o_hcpro' => $o_hcpro,'all_sut' => $all_sut,'all_dgs' => $all_dgs,'all_ind' => $all_ind,'all_pre' => $all_pre,'all_sex' => $all_sex,'all_spr' => $all_spr,'all_spa' => $all_spa]);
-		}
-		$data['arr'] = $arr;
-		$pdf = PDF::loadView('pdf.'.$this->hc_view.'all', $data);
-		return $pdf->stream('document.pdf');
-		exit();
+        $arr = [];
+        $o_derm = $o->lastHc; //Dermatology::where(['user' => $o->id,'hc_type' => $this->hc_type])->orderBy('id', 'asc')->get();
+        // $o_doctor = $o_derm->doctor_class; //$this->o_model::where(['id' => $o_derm->doctor])->first();
+        // $dfull_name = $o_doctor->name . ' ' . $o_doctor->scd_name . ' ' . $o_doctor->lastname . ' ' . $o_doctor->scd_lastname;
+        // $signature = !empty($o_doctor->signature_pp) ? $o_doctor->signature_pp : public_path('assets/images/firma.png');
+        // $o_hcpro = Hcsurgical::where(['hc' => $o_derm->id])->first();
+        // $all_sut = Hctumors::where(['hc' => $o_derm->id])->orderBy('id', 'asc')->get();//Suture
+        // $all_dgs = Hcdermdiagnostics::where(['hc' => $o_derm->id])->orderBy('id', 'asc')->get();//diagnosticos
+        // $all_ind = Hcdermindications::where(['hc' => $o_derm->id])->orderBy('id', 'asc')->get();//indicaciones
+        // $all_pre = Prescriptions::where(['hc' => $o_derm->id])->orderBy('id', 'asc')->get();//prescripción médica
+        // $all_sex = Hcdermsolexams::where(['hc' => $o_derm->id])->orderBy('id', 'asc')->get();//Solicitudes de examenes
+        // $all_spr = Hcdermsolproc::where(['hc' => $o_derm->id])->orderBy('id', 'asc')->get();//Solicitudes de procedimientos
+        // $all_spa = Hcdermsolpath::where(['hc' => $o_derm->id])->orderBy('id', 'asc')->get();//Solicitudes de patalogías
+        $all_back = $o_derm->antecedentes;
+        $backgounds = [
+            "Antecedente medico" => [],
+            "Antecedentes médicos" => [],
+            "Antecedentes quirúrgicos" => [],
+            "Antecedentes alérgicos" => [],
+            "Antecedentes farmacológicos" => [],
+            "Antecedentes familiares" => [],
+            "Otros antecedentes" => [],
+        ];
+        foreach ($all_back as $key => $value) {
+            if(isset($value->type_class)){
+                array_push($backgounds[$value->type_class->name],$value);
+            }
+            //array_push($backgounds[$value->type_class->name], $value);
+        }
+        $all_dgs = Hcdermdiagnostics::where('hc', $o_derm->id)
+            ->orderBy('created_at', 'DESC')
+            ->orderBy('updated_at', 'DESC')
+            ->get(['id', 'uuid', 'code', 'diagnostic', 'type_diagnostic', 'created_at', 'updated_at']);
+
+        $all_ind = Hcdermindications::with([
+            'appointments' => function ($query) {
+                $query->select('id', 'uuid', 'date_quote', 'time_quote', 'created_at'); # Uno a muchos
+            },
+        ])
+            ->where('hc', $o_derm->id)
+            ->orderBy('created_at', 'DESC')
+            ->orderBy('updated_at', 'DESC')
+            ->get(['id', 'uuid', 'indication', 'created_at', 'updated_at', 'appointments_id', 'hc_type']);
+
+        $all_pre = Prescription::with(
+            [
+                'doctor_class' => function ($query) {
+                    $query->select('id', 'uuid', 'name', 'lastname', 'scd_name', 'scd_lastname', 'signature_pp'); # Uno a muchos
+                },
+                'medicines'
+            ]
+        )
+            ->where('dermatology_id', $o_derm->id)
+            ->orderBy('id', 'ASC')
+            ->get(['doctor', 'id', 'uuid', 'validity', 'created_at']);
+
+        $all_sex = ExamRequest::with(
+            [
+                'doctor_class' => function ($query) {
+                    $query->select('id', 'uuid', 'name', 'lastname', 'scd_name', 'scd_lastname', 'signature_pp'); # Uno a muchos
+                },
+                'hcdermdiagnostics' => function ($query) {
+                    $query->select('id', 'uuid', 'code', 'diagnostic'); # Uno a muchos
+                },
+                'laboratoryexams'
+            ]
+        )
+            ->where('dermatology_id', $o_derm->id)
+            ->orderBy('id', 'ASC')
+            ->get(['doctor', 'id', 'uuid', 'hcdermdiagnostics_id', 'total', 'created_at']);
+
+        $all_spr = ProcedureRequest::with(
+            [
+                'doctor_class' => function ($query) {
+                    $query->select('id', 'uuid', 'name', 'lastname', 'scd_name', 'scd_lastname', 'signature_pp'); # Uno a muchos
+                },
+                'procedures'
+            ]
+        )
+            ->where('dermatology_id', $o_derm->id)
+            ->orderBy('id', 'ASC')
+            ->get(['doctor', 'id', 'uuid', 'created_at']);
+
+        // $all_spr = Hcdermsolproc::where(['hc' => $o_derm->id])->orderBy('id', 'asc')->get();//Solicitudes de procedimientos
+        $all_spa = PathologyRequest::with(
+            [
+                'doctor_class' => function ($query) {
+                    $query->select('id', 'uuid', 'name', 'lastname', 'scd_name', 'scd_lastname', 'signature_pp'); # Uno a muchos
+                },
+                'hcdermdiagnostics' => function ($query) {
+                    $query->select('id', 'uuid', 'code', 'diagnostic'); # Uno a muchos
+                },
+                'pathologies'
+            ]
+        )
+            ->where('dermatology_id', $o_derm->id)
+            ->orderBy('id', 'ASC')
+            ->get(['doctor', 'id', 'uuid', 'hcdermdiagnostics_id', 'annexes', 'created_at']);
+
+        $o_hcpro = Hprocedure::with([
+            'type_procedure_class' => function ($query) {
+                $query->select('id', 'name', 'description'); # Uno a muchos
+            },
+            'hcsuture' => function ($query) {
+                $query->select('id', 'suture_type', 'caliber', 'hprocedure_id'); # Uno a muchos
+            }
+        ])
+            // ->whereHas('diagnostic',function($q) use ($appoint){
+            //     $q->where('hc_type',$appoint->hc_type);
+            // })
+            ->where('hc', $o_derm->id)
+            ->orderBy('created_at', 'desc')
+            ->orderBy('updated_at', 'desc')
+            ->get();
+            $data['all_back'] = $backgounds;
+            $data['o_derm'] = $o_derm;
+            $data['o_hcpro'] = $o_hcpro;
+            $data['all_dgs'] = $all_dgs;
+            $data['all_ind'] = $all_ind;
+            $data['all_pre'] = $all_pre;
+            $data['all_sex'] = $all_sex;
+            $data['all_spr'] = $all_spr;
+            $data['all_spa'] = $all_spa;
+
+        $pdf = PDF::loadView('pdf.' . $this->hc_view . 'all', $data);
+        return $pdf->stream('document.pdf');
+        exit();
     }
 }
