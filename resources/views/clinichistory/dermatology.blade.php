@@ -84,7 +84,7 @@
                                             <li id="indic_tab" data-tab="indications_tab"><a>Indicaciones/Solicitudes</a></li>
 
                                         </ul>
-                                        @isset($checklist)
+                                        {{-- @isset($checklist)
                                             <a href="<?= url($menu . '/checklist/hcpdf/' . $checklist->uuid) ?>"
                                                 class="button h-button is-primary is-dark-outlined mb-2">
                                                 <span class="icon"><i class="fa-solid fa-prescription-bottle-medical"></i></span>
@@ -109,7 +109,7 @@
                                                 class="button h-button is-primary is-dark-outlined ml-2">
                                                 Consentimiento
                                             </a>
-                                        @endempty
+                                        @endempty --}}
                                     </div>
                                 </div>
                                 <div id="dermatology_tab" class="tab-content is-active">

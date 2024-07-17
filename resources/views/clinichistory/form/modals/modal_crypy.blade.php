@@ -18,17 +18,17 @@
                                     <?php $t_att = 'prequest_nprocedure_id'; ?>
                                     <?php $n_att = 'Procedimiento Solicitado'; ?>
                                     <label><?= $n_att ?></label>
-                                    <select name="prequest_nprocedure_id" class="input select2_fsc">
-                                        {{-- <option value="" selected disabled>Diagnostico</option> --}}
-                                        @foreach ($procedures_requests as $item)
+                                    @foreach ($procedures_requests as $item)
                                             @foreach ($item->procedures as $procedure)
                                             <option value="<?= $procedure->pivot->id ?>">
+                                                @if ($procedure->description == 'Otro')
+                                                {{$procedure->pivot->otro}}
+                                                @else
                                                 {{$procedure->name}} - {{$procedure->description}}
+                                                @endif
                                             </option>
                                             @endforeach
-                                        @endforeach
-
-                                    </select>
+                                    @endforeach
                                 </div>
                             </div>
                         </div>
@@ -288,7 +288,7 @@
                             </div>
                         </div>
                         <!--Field-->
-                        <div class="column is-6">
+                        <div class="column is-12">
                             <div class="field">
                                 <div class="control">
                                     <?php $t_att = 'record_complications'; ?>

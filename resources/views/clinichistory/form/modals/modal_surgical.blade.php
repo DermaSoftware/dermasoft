@@ -22,7 +22,11 @@
                                         @foreach ($procedures_requests as $item)
                                             @foreach ($item->procedures as $procedure)
                                             <option value="<?= $procedure->pivot->id ?>">
+                                                @if ($procedure->description == 'Otro')
+                                                {{$procedure->pivot->otro}}
+                                                @else
                                                 {{$procedure->name}} - {{$procedure->description}}
+                                                @endif
                                             </option>
                                             @endforeach
                                         @endforeach
@@ -364,7 +368,7 @@
                             </div>
                         </div>
                         <!--Field-->
-                        <div class="column is-6">
+                        <div class="column is-12">
                             <div class="field">
                                 <div class="control">
                                     <?php $t_att = 'record_complications'; ?>

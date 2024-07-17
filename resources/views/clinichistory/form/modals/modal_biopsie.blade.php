@@ -504,7 +504,7 @@
                             </div>
                         </div>
                         <!--Field-->
-                        <div class="column is-6">
+                        <div class="column is-12">
                             <div class="field">
                                 <div class="control">
                                     <?php $t_att = 'record_complications'; ?>
