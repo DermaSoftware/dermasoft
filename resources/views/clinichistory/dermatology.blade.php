@@ -84,7 +84,7 @@
                                             <li id="indic_tab" data-tab="indications_tab"><a>Indicaciones/Solicitudes</a></li>
 
                                         </ul>
-                                        @if ($hc_type == 'Dermatología general' & $hc_type == 'Dermatología general Control')
+                                        @if ($hc_type != 'Dermatología general' & $hc_type != 'Dermatología general Control')
                                                 @isset($checklist)
                                                 <a href="<?= url($menu . '/checklist/hcpdf/' . $checklist->uuid) ?>"
                                                     class="button h-button is-primary is-dark-outlined mb-2">
