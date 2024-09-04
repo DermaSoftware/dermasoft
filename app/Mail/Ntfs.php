@@ -7,10 +7,10 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class Ntfs extends Mailable
+class Ntfs extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
-	
+
 	public $subject_fsc;
 	public $msj_fsc;
 	public $name_fsc;

@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\Ntfs;
 use App\Mail\MpMail;
+use App\Models\Prescription;
 
 class PrescripcionesController extends Controller
 {
@@ -29,7 +30,7 @@ class PrescripcionesController extends Controller
 	private $o_model = User::class;
 	private $hc_view = 'medicalp';
 	private $hc_type = 'Prescripción médica';
-	
+
 	private function gdata($t = '')
     {
         $data['menu'] = $this->r_name;
@@ -47,7 +48,7 @@ class PrescripcionesController extends Controller
 	public function __construct(){
         $this->middleware('checkRole:5');
     }
-	
+
 	//PDF Historial de todos las consultas
 	public function index()
     {
@@ -57,18 +58,18 @@ class PrescripcionesController extends Controller
 		}
 		$data = $this->gdata();
         $data['o'] = $o;
-		$data['o_all'] = Medicalp::where(['user' => $o->id])->orderBy('id', 'asc')->get();
+		// $data['o_all'] = Medicalp::where(['user' => $o->id])->orderBy('id', 'asc')->get();
 		return view($this->v_name.'.'.$this->r_name.'.records',$data);
     }
-	
+
 	//PDF
 	public function hcpdf($id)
     {
         if(empty($id)){
 			return redirect($this->r_name);
 		}
-		$o_obj_item = Medicalp::where(['uuid' => $id])->first();
-		if(empty($o_obj_item->id)){
+		$o_obj_item = Prescription::where(['uuid' => $id])->first();
+		if(empty($o_obj_item->uuid)){
 			return redirect($this->r_name);
 		}
 		$pdfFilePath = $this->getpdfhc($id,false);
@@ -78,18 +79,24 @@ class PrescripcionesController extends Controller
 		if(empty($id)){
 			return null;
 		}
-		$o_obj_item = Medicalp::where(['uuid' => $id])->first();
+		$o_obj_item = Prescription::with([
+            'dermatology',
+            'doctor_class',
+            'medicines'
+        ])
+        ->where(['uuid' => $id])->first(['uuid','id','dermatology_id','doctor','validity']);
 		if(empty($o_obj_item->id)){
 			return null;
 		}
-		$o = $this->o_model::where(['id' => $o_obj_item->user])->first();
-		$o_doctor = $this->o_model::where(['id' => $o_obj_item->doctor])->first();
-		$o_company = Companies::where(['id' => $o_obj_item->company])->first();
+
+		$o = $o_obj_item->dermatology->user_class;
+		$o_doctor = $o_obj_item->doctor_class;
+		$o_company = $o_doctor->company_class;
 		$logo = !empty($o_company->logo_pp)?public_path($o_company->logo_pp):public_path('assets/images/favicon.png');
 		$photo = !empty($o->photo_pp)?$o->photo_pp:public_path('assets/images/user.png');
 		$signature = !empty($o_doctor->signature_pp)?$o_doctor->signature_pp:public_path('assets/images/firma.png');
-		$all_items = Mprescriptions::where(['mp' => $o_obj_item->id])->orderBy('id', 'asc')->get();//Items
-		
+        $all_items = $o_obj_item->medicines;
+
 		$data['o'] = $o;
 		$data['o_obj_item'] = $o_obj_item;
 		$data['all_items'] = $all_items;

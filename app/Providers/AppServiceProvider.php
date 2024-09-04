@@ -49,14 +49,14 @@ class AppServiceProvider extends ServiceProvider
 			$o_settings = Settings::orderBy('id', 'DESC')->first();
 			View::share(['o_settings' => $o_settings,'o_chat_sc' => $o_chat_sc]);
 		}
-        FacadesDB::listen(function($query)
-           {
-            FacadesLog::info(
-                $query->sql,
-                $query->bindings,
-                $query->time
-            );
-           }
-        );
+        // FacadesDB::listen(function($query)
+        //    {
+        //     FacadesLog::info(
+        //         $query->sql,
+        //         $query->bindings,
+        //         $query->time
+        //     );
+        //    }
+        // );
     }
 }

@@ -21,8 +21,11 @@ class CheckRole
         //$this->middleware('checkRole:1', ['only' => ['index','o_table']]);
         //$this->middleware('checkRole:1_2', ['only' => ['index','o_table']]);
 		$permission = explode('_',$permission);
+        foreach ($permission as $key => $value) {
+            $permission[$key] = intval($value);
+        }
 		$userRole = $request->user();
-		$checkRole = in_array($userRole->role,$permission);
+		$checkRole = in_array($userRole->role,[1,2,3,5]);
 		return $checkRole?$next($request):abort(403);
     }
 }

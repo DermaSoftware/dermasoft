@@ -73,14 +73,21 @@
                                         </span>
                                     </label>
                                 </div>
-                                <div class="navbar-item">
-                                    <a href="<?= url('login') ?>" class="nav-link">Iniciar sesión</a>
-                                </div>
-								<div class="navbar-item">
-                                    <a href="<?= url('schedule/'.$o->cms) ?>" class="button h-button is-rounded is-primary is-raised">
-                                        <strong>Agenda tu cita</strong>
-                                    </a>
-                                </div>
+                                @if(!Auth::check())
+                                    <div class="navbar-item">
+                                        <a href="<?= url('login') ?>" class="nav-link">Iniciar sesión</a>
+                                    </div>
+                                    <div class="navbar-item">
+                                        <a href="<?= url('register',$o->uuid) ?>" class="nav-link">Registrarse</a>
+                                    </div>
+                                    @else
+                                        <div class="navbar-item">
+                                            <a href="<?= url('schedule/'.$o->cms) ?>" class="button h-button is-rounded is-primary is-raised">
+                                                <strong>Agenda tu cita</strong>
+                                            </a>
+                                        </div>
+                                @endif
+
                             </div>
                         </div>
                     </nav>

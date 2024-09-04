@@ -11,7 +11,12 @@
 </div>
 
 <div id="huro-signup" class="signup-wrapper">
+@if ($company)
+<form id="signup-form" class="signup-form is-mobile-spaced" method="POST" action="{{ url('register',$company->uuid) }}" enctype="multipart/form-data">
+@else
 <form id="signup-form" class="signup-form is-mobile-spaced" method="POST" action="{{ url('register') }}" enctype="multipart/form-data">
+@endif
+
 @csrf
     <div class="signup-steps is-hidden">
         <div class="steps-container">
@@ -206,7 +211,13 @@
                         <h2 class="subtitle signup-subtitle has-text-centered">Ingrese sus datos de su empresa.</h2>
                         <div class="signup-form">
                             <div class="columns is-multiline">
-                                @include('auth/company_form',['modo' => 'crear'])
+
+                                @isset($company)
+                                    @include('auth/patient_form',['modo' => 'crear'])
+                                @endisset
+                                 @empty($company)
+                                    @include('auth/company_form',['modo' => 'crear'])
+                                 @endempty
                                 {{-- <div class="column is-12">
                                     <div class="control has-validation">
                                         <input name="companies_name" type="text" class="input">

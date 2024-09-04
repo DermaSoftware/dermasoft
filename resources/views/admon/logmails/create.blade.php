@@ -56,6 +56,41 @@
                 var tmppath = URL.createObjectURL(event.target.files[0]);
                 $("#photo_profile_img").fadeIn("fast").attr('src', tmppath);
             });
+
+            /*const roles = document.querySelector('select[name="sel_users"]');
+            const user_id = document.querySelector('select[name="user_id"]');
+            roles.addEventListener('change', async function() {
+                op = roles.options[roles.selectedIndex];
+                var value = op.value;
+                if (value !== '0') {
+                    var data = {
+                        _token: $("meta[name='csrf-token']").attr("content"),
+                        "rol": value,
+                    }
+                    const response = await fetch('get_users', {
+                        method: "POST", // *GET, POST, PUT, DELETE, etc.
+                        mode: "cors", // no-cors, *cors, same-origin
+                        cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+                        credentials: "same-origin", // include, *same-origin, omit
+                        headers: {
+                            "Content-Type": "application/json",
+                            // 'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        redirect: "follow", // manual, *follow, error
+                        referrerPolicy: "no-referrer",
+                    });
+                    const resp = await response.json();
+                    console.log(resp);
+                    var html_options = '<option value="0">---Seleccione---</option>';
+                    resp.forEach(element => {
+                        html_options +=
+                            `<option value="${element.id}">${element.name}</option>`;
+                    });
+                    // doctor.removeAttribute('disabled');
+                    user_id.innerHTML = html_options;
+                    console.log(html_options);
+                }
+            });*/
         });
     </script>
 @endsection

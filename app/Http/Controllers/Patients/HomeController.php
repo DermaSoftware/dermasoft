@@ -3,7 +3,11 @@
 namespace App\Http\Controllers\Patients;
 
 use App\Http\Controllers\Controller;
+use App\Models\Dermatology;
+use App\Models\Prescription;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Yajra\DataTables\Facades\DataTables;
 
 class HomeController extends Controller
 {
@@ -15,7 +19,7 @@ class HomeController extends Controller
     private $c_names = 'Pacientes';
 	private $list_tbl_fsc = ['name' => 'Nombre'];
 	private $o_model = null;
-	
+
 	private function gdata($t = '')
     {
         $data['menu'] = $this->r_name;
@@ -63,5 +67,32 @@ class HomeController extends Controller
 			$out .= '<option value="'.$row['id'].'"'.$slc.'>'.$row['id'].'</option>';
 		}
 		echo $out;
+    }
+
+    /////////////// Medical Prescription /////////////////////////
+    public function medical_prescription(Request $request){
+
+        $data = request()->except(['_token', '_method']);
+        $user = Auth::user();
+        $hc = Dermatology::where('user',$user->id)->orderBy('created_at','desc')
+            ->first();
+        $prescriptions= Prescription::with([
+            'doctor_class' => function ($query) {
+                $query->select('id','uuid','name','lastname'); # Uno a muchos
+            },
+            'appointments' => function ($query) {
+                $query->select('id','uuid','date_quote','time_quote'); # Uno a muchos
+            },
+            'prescriptionmedicines' => function ($query) {
+                $query->select('id','uuid','medicine_name','prescription_id','dose','frequency',
+                'route_administration','duration','indications'); # Uno a muchos
+            }
+            ])
+        ->where('dermatology_id',$hc)
+        ->orderBy('created_at','DESC')
+        ->orderBy('updated_at','DESC')
+        ->get(['id','doctor','appointments_id','validity','uuid','created_at']);
+
+         return DataTables::of($prescriptions)->make(true);
     }
 }

@@ -18,6 +18,7 @@
                             <tr>
                                 <th>#</th>
                                 <th>UUID</th>
+                                <th>Consulta</th>
                                 <th>Resumen</th>
                                 <th>Tipo</th>
                                 <th>Creado</th>

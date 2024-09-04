@@ -9,6 +9,11 @@
                         <h3 class="title is-thin is-5"><?= $title ?> (<?= $o->name ?> - <?= $o->email ?>)</h3>
                     </div>
                     <div class="right">
+                        {{-- <div class="buttons"> --}}
+                            <a href="{{url($menu)}}" class="button h-button is-light is-rounded is-elevated m-r-10">
+                                <span class="icon"><i class="lnir lnir-arrow-left rem-100"></i></span><span>Regresar</span>
+                            </a>
+                        {{-- </div> --}}
                         <a href="<?= url($menu . '/' . $o->uuid) ?>"
                             class="button h-button is-success is-rounded is-elevated m-r-10"><span class="icon"><i
                                     class="fas fa-plus"></i></span> <span>Crear bloqueo</span></a>

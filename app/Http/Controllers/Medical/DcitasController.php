@@ -24,7 +24,7 @@ class DcitasController extends Controller
 	private $list_tbl_fsc = ['name' => 'Nombre'];
 	private $o_model = User::class;
 	private $hc_view = 'dcitas';
-	
+
 	private function gdata($t = '')
     {
         $data['menu'] = $this->r_name;
@@ -42,7 +42,7 @@ class DcitasController extends Controller
 	public function __construct(){
         $this->middleware('checkRole:3');
     }
-	
+
 	public function index()
     {
 		$data = $this->gdata();
@@ -78,15 +78,15 @@ class DcitasController extends Controller
 		if(!empty($locks_days)){
 			$locks_days = 'events: [ '.$locks_days.' ],';
 		}
-		
+
 		$data['o'] = $o;
 		$data['o_diary'] = $o_diary;
 		$data['str_days'] = $str_days;
 		$data['locks_days'] = $locks_days;
 		return view($this->v_name.'.'.$this->hc_view.'.index',$data);
     }
-	
-	public function resend($id)
+
+	public function resend(Request $request,$id)
     {
 		$o = Appointments::where(['uuid' => $id])->first();
 		$o_user = User::where(['id' => $o->user])->first();
@@ -94,7 +94,7 @@ class DcitasController extends Controller
 		$request->session()->flash('msj_success', 'La notificación ha sido re-enviada correctamente.');
 		return redirect($this->hc_view);
     }
-	
+
 	public function show(Request $request, $id)
     {
 		$o = Appointments::where(['uuid' => $id])->first();

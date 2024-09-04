@@ -4,8 +4,11 @@ $(function () {
         $('#appointments_reason_table').DataTable().destroy();
     }
     var table = $('#appointments_reason_table').DataTable({
-        ordering: true,
+        ordering: false,
+        "order": [[1, 'desc']],
         paging: true,
+        scrollCollapse: true,
+        scrollY: '200px',
         oLanguage: {
             oAria: {
                 sSortAscending: ": activate to sort column ascending",
@@ -38,31 +41,38 @@ $(function () {
         columnDefs: [{
             "visible": false,
             "targets": [0]
-        },
-        // {
-        //     searchable: false,
-        //     "targets": [0, 2, 3, 4, 5]
-        // },
-        // {
-        //     orderable: false,
-        //     targets: [5]
-        // }
-        // {
-        //     className: 'is-end',
-        //     targets: 3
-        // },
-            //{className: 'text-center', targets: [3, 4, 8, 10, 11, 19]},
-            //{searchable: false, targets: [0,4]},
-            //{orderable: false, targets: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]}
-            //{responsivePriority: 1, targets: [0,15]},
-            //{responsivePriority: 2, targets: [0,1,2, 4,7,8,10,15]},
+        }
         ],
+        "drawCallback": function (settings) {
+            var api = this.api();
+            var rows = api.rows({page: 'current'}).nodes();
+            var last = null;
+
+            api.column(1, {page: 'current'}).data().each(function (group, i) {
+                if (group !==null) {
+                    if (last !== `${group.date_quote} ${group.time_quote}`) {
+                        console.log(group)
+                        $(rows).eq(i).before(
+                            '<tr class="group" style="background:grey"><td style="color:white !important;" colspan="6">' + `${group.date_quote} ${group.time_quote}` + '</td></tr>'
+                        );
+
+                        last = `${group.date_quote} ${group.time_quote}`;
+                    }
+                }
+            });
+        },
         "ajax": {
             "url": `/clinichistory/appointments_reason/${derma_id}/${appointment}`,
             "type": 'GET',
         },
         "columns": [{
             "data": "id"
+        },
+        {
+            "data": "appointments",
+            render: function (data, type, row) {
+                return data ? `${data.date_quote} ${data.time_quote}` : '';
+            }
         },
         {
             "data": "external_cause",
@@ -125,11 +135,17 @@ $(function () {
         var url = $(this).attr('href');
         $('#derma_modal div[class="modal-card"]').load(url, function () {
             $('#derma_modal #salvar').on('click',function(){
-                $('#appointments_reason_form').submit();
+                $('#salvar').hide();
+                $('button.is-loading').removeClass('is-hidden');
+                setTimeout(function(){
+                    $('#appointments_reason_form').submit();
+                },10)
+
             })
             $('#appointments_reason_form').on('submit', function (e) {
                 e.preventDefault();
-                url2 = $(this).attr('action')
+                url2 = $(this).attr('action');
+
                 var formData = new FormData(document.getElementById(
                     'appointments_reason_form'));
                 $.ajax({
@@ -139,6 +155,8 @@ $(function () {
                         .serializeArray(),
                     type: "post",
                     success: function (data) {
+                        $('button.is-loading').addClass('is-hidden');
+                        $('#salvar').show();
                         if (data.Success == true) {
                             var table = $('#appointments_reason_table')
                                 .DataTable();
@@ -152,6 +170,8 @@ $(function () {
                         return;
                     }
                 }).fail(function (request, status, aa, a) {
+                    $('button.is-loading').addClass('is-hidden');
+                    $('#salvar').show();
                     try {
                         let keys = Object.keys(request
                             .responseJSON)
@@ -165,6 +185,8 @@ $(function () {
                             }
                         }
                     } catch {
+                        $('button.is-loading').addClass('is-hidden');
+                        $('#salvar').show();
                         console.log(aa);
                     }
                 });
@@ -185,7 +207,11 @@ $(function () {
         $('#derma_modal').addClass('is-active')
         $('#derma_modal div[class="modal-card"]').load(url, function () {
             $('#derma_modal #salvar').on('click',function(){
-                $('#appointments_reason').submit();
+                $('#salvar').hide();
+                $('button.is-loading').removeClass('is-hidden');
+                setTimeout(function(){
+                    $('#appointments_reason_form').submit();
+                },10)
             })
             $('#appointments_reason').on('submit', function (event) {
                 event.preventDefault();
@@ -198,6 +224,8 @@ $(function () {
                     data: $('#appointments_reason').serializeArray(),
                     type: "post",
                     success: function (data) {
+                        $('button.is-loading').addClass('is-hidden');
+                        $('#salvar').show();
                         var table = $('#appointments_reason_table').DataTable();
                         $('#delete-modal').trigger('click');
                         table.ajax.reload();
@@ -207,7 +235,8 @@ $(function () {
                         return;
                     }
                 }).fail(function (request, status, aa, a) {
-
+                    $('button.is-loading').addClass('is-hidden');
+                    $('#salvar').show();
                 });
                 return false;
             });

@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\Ntfs;
 use App\Mail\ExamordersMail;
+use App\Models\ExamRequest;
 
 class ExamenesController extends Controller
 {
@@ -32,7 +33,7 @@ class ExamenesController extends Controller
 	private $o_model = User::class;
 	private $hc_view = 'examorders';
 	private $hc_type = 'Órden de exámenes';
-	
+
 	private function gdata($t = '')
     {
         $data['menu'] = $this->r_name;
@@ -50,7 +51,7 @@ class ExamenesController extends Controller
 	public function __construct(){
         $this->middleware('checkRole:5');
     }
-	
+
 	//PDF Historial de todos las consultas
 	public function index()
     {
@@ -63,14 +64,14 @@ class ExamenesController extends Controller
 		$data['o_all'] = Examorders::where(['user' => $o->id])->orderBy('id', 'asc')->get();
 		return view($this->v_name.'.'.$this->r_name.'.records',$data);
     }
-	
+
 	//PDF
 	public function hcpdf($id)
     {
         if(empty($id)){
 			return redirect($this->r_name);
 		}
-		$o_obj_item = Examorders::where(['uuid' => $id])->first();
+		$o_obj_item = ExamRequest::where(['uuid' => $id])->first();
 		if(empty($o_obj_item->id)){
 			return redirect($this->r_name);
 		}
@@ -81,19 +82,27 @@ class ExamenesController extends Controller
 		if(empty($id)){
 			return null;
 		}
-		$o_obj_item = Examorders::where(['uuid' => $id])->first();
+		$o_obj_item = ExamRequest::with([
+            'dermatology',
+            'doctor_class',
+            'laboratoryexams',
+            'hcdermdiagnostics' => function ($query) {
+                $query->select('id','uuid','code','diagnostic'); # Uno a muchos
+            },
+        ])
+        ->where(['uuid' => $id])->first(['uuid','id','dermatology_id','doctor','total','hcdermdiagnostics_id']);
 		if(empty($o_obj_item->id)){
 			return null;
 		}
-		$o = $this->o_model::where(['id' => $o_obj_item->user])->first();
-		$o_doctor = $this->o_model::where(['id' => $o_obj_item->doctor])->first();
-		$o_company = Companies::where(['id' => $o_obj_item->company])->first();
+		$o = $o_obj_item->dermatology->user_class;
+		$o_doctor = $o_obj_item->doctor_class;
+		$o_company = $o_doctor->company_class;
 		$logo = !empty($o_company->logo_pp)?public_path($o_company->logo_pp):public_path('assets/images/favicon.png');
 		$photo = !empty($o->photo_pp)?$o->photo_pp:public_path('assets/images/user.png');
 		$signature = !empty($o_doctor->signature_pp)?$o_doctor->signature_pp:public_path('assets/images/firma.png');
 		$all_items = Eodiagnostics::where(['eo' => $o_obj_item->id])->orderBy('id', 'asc')->get();//Items
-		$all_exams = Eoexams::where(['eo' => $o_obj_item->id])->orderBy('id', 'asc')->get();//Items
-		
+		$all_exams = $o_obj_item->laboratoryexams;
+
 		$data['o'] = $o;
 		$data['o_obj_item'] = $o_obj_item;
 		$data['all_items'] = $all_items;
@@ -116,7 +125,7 @@ class ExamenesController extends Controller
 		return $pdf->stream('document.pdf');
 		exit();
     }
-	
+
 	//PDF Historial de todos las consultas
 	public function records()
     {

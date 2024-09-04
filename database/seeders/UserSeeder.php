@@ -10,6 +10,7 @@ use App\Models\Roles;
 use App\Models\Habeas;
 use App\Models\Settings;
 use App\Models\Procedures;
+use App\Models\TipoAntecedente;
 
 class UserSeeder extends Seeder
 {
@@ -20,14 +21,45 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
+        $tipant = TipoAntecedente::create(
+            [
+                "name"=>"Antecedentes médicos",
+            ]
+            );
+        $tipant = TipoAntecedente::create(
+            [
+                "name"=>"Antecedentes quirúrgicos",
+            ]
+            );
+        $tipant = TipoAntecedente::create(
+            [
+                "name"=>"Antecedentes alérgicos",
+            ]
+            );
+        $tipant = TipoAntecedente::create(
+            [
+                "name"=>"Antecedentes farmacológicos",
+            ]
+            );
+        $tipant = TipoAntecedente::create(
+            [
+                "name"=>"Antecedentes familiares",
+            ]
+            );
+        $tipant = TipoAntecedente::create(
+            [
+                "name"=>"Otros antecedentes",
+            ]
+            );
+
         //$data_test = TRUE;
         //ADMINISTRADOR
-        $userlist= User::query()->get()->all();
-        foreach ($userlist as $user){
-            $this->command->getOutput()->success("Changing password user: ".$user->email);
-            $user->password=Hash::make("1234");
-            $user->save();
-        }
+        // $userlist= User::query()->get()->all();
+        // foreach ($userlist as $user){
+        //     $this->command->getOutput()->success("Changing password user: ".$user->email);
+        //     $user->password=Hash::make("1234");
+        //     $user->save();
+        // }
 
 //		$role = Roles::create(['name' => 'Super Administrador']);//1
 //        //$role->permissions()->createMany($permissions);//roles_permissions

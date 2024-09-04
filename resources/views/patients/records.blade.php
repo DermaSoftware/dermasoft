@@ -81,6 +81,7 @@
                                             <span>Datos secundarios</span>
                                         </div>
                                     </a>
+                                    @if ($row->habeas == 'si')
                                     <a target="_blank" href="<?= url($menu.'/hdpdf/'.$row->uuid) ?>" class="dropdown-item is-media">
                                         <div class="icon">
                                             <i class="lnil lnil-file-protection"></i>
@@ -90,6 +91,7 @@
                                             <span>Data del paciente</span>
                                         </div>
                                     </a>
+                                    @endif
                                     <!--<a href=" //url($menu.'/vitalsigns/'.$row->uuid) ?>" class="dropdown-item is-media">
                                         <div class="icon">
                                             <i class="lnil lnil-hospital-sign"></i>

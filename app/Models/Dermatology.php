@@ -61,4 +61,22 @@ class Dermatology extends Model
 		return $url;
     }
 
+    public function anamnesis(){
+
+        return $this->hasMany(Anamnesis::class);
+    }
+    public function antecedentes(){
+
+        return $this->hasMany(Antecedente::class,'hc');
+    }
+    public function appointment_reason(){
+
+        return $this->hasMany(AppointmentReason::class);
+    }
+    public function latestAppointmentReason()
+    {
+        return $this->hasOne(AppointmentReason::class,'dermatology_id')->latestOfMany();
+    }
+
+
 }

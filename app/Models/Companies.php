@@ -22,5 +22,9 @@ class Companies extends Model
     {
         return $this->hasMany(Headquarters::class, 'company');
     }
+    public function users()
+    {
+        return $this->hasMany(User::class, 'company');
+    }
 
 }

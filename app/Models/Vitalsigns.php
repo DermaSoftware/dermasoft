@@ -17,8 +17,8 @@ class Vitalsigns extends Model
     {
         return $this->belongsTo(User::class,'user');
     }
-    public function appointment()
+    public function appointment_class()
     {
-        return $this->belongsTo(Appointments::class);
+        return $this->belongsTo(Appointments::class,'appointment_id');
     }
 }

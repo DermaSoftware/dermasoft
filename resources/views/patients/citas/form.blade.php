@@ -78,7 +78,8 @@
                 <?php $n_att = 'Modalidad'; ?>
                 <label><?= $n_att ?></label>
                 <select name="modality" class="input" required>
-                    <?php $options = ['Presencial', 'Teleconsulta', 'Domiciliaria']; ?>
+                    <?php $options = ['Presencial', 'Teleconsulta']; ?>
+                    <option value="0">---Seleccione---</option>
                     <?php foreach($options as $key => $row){ ?>
                     <option value="<?= $row ?>"><?= $row ?></option>
                     <?php } ?>
@@ -99,11 +100,20 @@
             </div>
         </div>
     </div>
+    <!--Field-->
+    <div class="column is-6">
+        <div class="field">
+            <div class="control" style="display: flex;flex-direction: row">
+                <?php $n_att = 'Fecha seleccionada'; ?>
+                <label><?= $n_att ?></label>
+                <div class="info-calendar" style="margin-left: 5px">
+
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="column is-12">
 
-        <div class="info-calendar">
-
-        </div>
         <div id='calendar'></div>
 
     </div>

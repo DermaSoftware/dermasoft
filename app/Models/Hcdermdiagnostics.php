@@ -8,9 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class Hcdermdiagnostics extends Model
 {
     use HasFactory,Uuids;
-	
+
 	protected $table = 'hcdermdiagnostics';
 
     protected $guarded = ['id'];
-	
+
+    public function appointments(){
+        return $this->belongsTo(Appointments::class);
+    }
+
 }

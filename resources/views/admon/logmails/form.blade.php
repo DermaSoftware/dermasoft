@@ -97,7 +97,7 @@
         <div class="control">
 			<?php $t_att = 'sel_users'; ?>
 			<?php $n_att = 'Seleccione rol'; ?>
-			<?php $optionsr = ['Todos','Administradores','Medicos','Administrativo','Pacientes']; ?>
+			<?php $optionsr = ['Todos','Administrador','Medico','Administrativo','Paciente']; ?>
 			<label><?= $n_att ?></label>
 			<select name="<?= $t_att ?>" id="roles_uss_fsc" class="input" data-url="<?= url('admon/logmails') ?>" required>
 				{{-- <option value="Todos" >--Todos--</option> --}}
@@ -216,7 +216,7 @@
     </div>
 </div>
 <!--Field-->
-<div class="column is-12 inner-attach "<?= isset($mattachs) ? '' : 'is-hidden'?> ">
+<div class="column is-12 inner-attach <?= !isset($mattachs) ? '' : 'is-hidden'?> ">
 	<div class="filepond-uploader is-three-grid">
         @isset($mattachs)
         <div class="files" style="display: flex;flex-direction: column; margin-bottom: 10px">
@@ -232,6 +232,7 @@
                 <label class="file-label">
                     <input id="adjuntos" class="file-input" type="file" multiple name="files[]">
                     {{-- <img id="photo_profile_img" src="<?= asset('assets/img/avatars/svg/huro-1.svg') ?>" alt="" > --}}
+
                     <span class="file-cta">
                         <span class="file-icon">
                             <i class="fas fa-upload"></i>

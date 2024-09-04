@@ -59,6 +59,11 @@ class User extends Authenticatable
         return $this->belongsTo(Charges::class,'charge');
     }
 
+	public function diagnotics()
+    {
+        return $this->hasMany(Hcdermdiagnostics::class,'user');
+    }
+
     public function company_class()
     {
         return $this->belongsTo(Companies::class, 'company');

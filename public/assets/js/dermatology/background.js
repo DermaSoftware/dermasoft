@@ -5,8 +5,11 @@ $(function () {
             $('#backgrouns').DataTable().destroy();
         }
         var table = $('#backgrouns').DataTable({
-            ordering: true,
+            ordering: false,
+            "order": [[2, 'desc']],
             paging: true,
+            scrollCollapse: true,
+            scrollY: '200px',
             oLanguage: {
                 oAria: {
                     sSortAscending: ": activate to sort column ascending",
@@ -38,7 +41,7 @@ $(function () {
             "serverSide": true,
             columnDefs: [{
                 "visible": false,
-                "targets": [0, 1]
+                "targets": [0, 1,2]
             },
             // {
             //     searchable: false,
@@ -58,6 +61,24 @@ $(function () {
                 //{responsivePriority: 1, targets: [0,15]},
                 //{responsivePriority: 2, targets: [0,1,2, 4,7,8,10,15]},
             ],
+            "drawCallback": function (settings) {
+                var api = this.api();
+                var rows = api.rows({page: 'current'}).nodes();
+                var last = null;
+
+                api.column(2, {page: 'current'}).data().each(function (group, i) {
+                    if (group !==null) {
+                        if (last !== `${group.date_quote} ${group.time_quote}`) {
+                            console.log(group)
+                            $(rows).eq(i).before(
+                                '<tr class="group" style="background:grey"><td style="color:white !important;" colspan="6">' + `${group.date_quote} ${group.time_quote}` + '</td></tr>'
+                            );
+
+                            last = `${group.date_quote} ${group.time_quote}`;
+                        }
+                    }
+                });
+            },
             "ajax": {
                 "url": `/clinichistory/backgrounds/${derma_id}/${appointment}`,
                 "type": 'GET',
@@ -69,12 +90,18 @@ $(function () {
                 "data": "uuid",
             },
             {
+                "data": "appointments",
+                render: function (data, type, row) {
+                    return data ? `${data.date_quote} ${data.time_quote}` : '';
+                }
+            },
+            {
                 "data": "resumen",
             },
             {
                 "data": "type_class",
                 render: function (data, type, row) {
-                    return data.name;
+                    return data ? data.name : '';
                 }
             },
             {
@@ -122,15 +149,20 @@ $(function () {
         })
         $('#add_anexo').on('click', function (e) {
             e.preventDefault();
-            alert('asas')
             var url = $(this).attr('href');
             $('#derma_modal div[class="modal-card"]').load(url, function () {
                 $('#derma_modal #salvar').on('click',function(){
-                    $('#backgrouns_form').submit();
+                    $('#salvar').hide();
+                    $('button.is-loading').removeClass('is-hidden');
+                    setTimeout(function(){
+                        $('#backgrouns_form').submit();
+                    },10)
+
                 })
                 $('#backgrouns_form').on('submit', function (e) {
                     e.preventDefault();
-                    url2 = $(this).attr('action')
+                    url2 = $(this).attr('action');
+
                     var formData = new FormData(document.getElementById(
                         'backgrouns_form'));
                     $.ajax({
@@ -140,6 +172,8 @@ $(function () {
                             .serializeArray(),
                         type: "post",
                         success: function (data) {
+                            $('button.is-loading').addClass('is-hidden');
+                            $('#salvar').show();
                             if (data.Success == true) {
                                 var table = $('#backgrouns')
                                     .DataTable();
@@ -153,6 +187,8 @@ $(function () {
                             return;
                         }
                     }).fail(function (request, status, aa, a) {
+                        $('button.is-loading').addClass('is-hidden');
+                        $('#salvar').show();
                         try {
                             let keys = Object.keys(request
                                 .responseJSON)
@@ -166,6 +202,8 @@ $(function () {
                                 }
                             }
                         } catch {
+                            $('button.is-loading').addClass('is-hidden');
+                            $('#salvar').show();
                             console.log(aa);
                         }
                     });
@@ -186,7 +224,11 @@ $(function () {
             $('#derma_modal').addClass('is-active')
             $('#derma_modal div[class="modal-card"]').load(url, function () {
                 $('#derma_modal #salvar').on('click',function(){
-                    $('#backgrouns_form').submit();
+                    $('#salvar').hide();
+                    $('button.is-loading').removeClass('is-hidden');
+                    setTimeout(function(){
+                        $('#backgrouns_form').submit();
+                    },10)
                 })
                 $('#backgrouns_form').on('submit', function (event) {
                     event.preventDefault();
@@ -199,6 +241,8 @@ $(function () {
                         data: $('#backgrouns_form').serializeArray(),
                         type: "post",
                         success: function (data) {
+                            $('button.is-loading').addClass('is-hidden');
+                            $('#salvar').show();
                             var table = $('#backgrouns').DataTable();
                             $('#delete-modal').trigger('click');
                             table.ajax.reload();
@@ -208,7 +252,8 @@ $(function () {
                             return;
                         }
                     }).fail(function (request, status, aa, a) {
-
+                        $('button.is-loading').addClass('is-hidden');
+                        $('#salvar').show();
                     });
                     return false;
                 });

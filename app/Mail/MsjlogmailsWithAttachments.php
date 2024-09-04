@@ -7,10 +7,10 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class MsjlogmailsWithAttachments extends Mailable
+class MsjlogmailsWithAttachments extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
-	
+
 	public $subject_fsc;
 	public $msj_fsc;
 	public $fattachments;
@@ -46,7 +46,7 @@ class MsjlogmailsWithAttachments extends Mailable
         }
 		return $email;
     }
-	
+
 	public function attachments()
 	{
 		$attachments = [];

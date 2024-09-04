@@ -27,12 +27,6 @@ class CreateCompanyRequest extends FormRequest
                 'name' => 'required',
                 'email' => 'required|string|email|max:255|unique:users',
                 'password' => 'required',
-                'company_phone' => 'required',
-                'nit' => 'required',
-                'kind_person' => 'required',
-                'location' => 'required',
-                'city' => 'required|string',
-                'logo' => 'required'
         ];
     }
 

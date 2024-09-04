@@ -26,7 +26,7 @@
                     </div>
                 </div>
                 <div class="form-body">
-                    
+
 					@if ($errors->any())
 					<div class="message is-danger">
 						<a class="delete"></a>
@@ -39,7 +39,7 @@
 						</div>
 					</div>
 					@endif
-					
+
 					<div class="columns is-multiline">
 						<!--Field-->
 						<div class="column is-6">
@@ -74,23 +74,23 @@
 								</div>
 							</div>
 						</div>
-						
+
 						<div class="column is-12">
 							<div class="s-card" style="margin-top: 20px;max-height: 400px;overflow: auto;">
 								<h4 class="title is-5 is-narrow">Lista de chequeo</h4>
 								<table class="table is-hoverable is-fullwidth table_ad_indications" style="">
 									<tbody>
 										<tr>
-											<th>No. item</th>
-											<th>Descripción</th>
-											<th>Aplicabilidad</th>
-											<th>Observaciones</th>
+											<th style="width: 10%">No. item</th>
+											<th style="width: 40%;height: auto;">Descripción</th>
+											<th style="width: 10%">Aplicabilidad</th>
+											<th style="width: 40%;height: auto;">Observaciones</th>
 										</tr>
 										<?php foreach($o_cts as $key => $row){ ?>
 										<tr>
 											<td><?= $key+1 ?></td>
 											<td>
-												<div class="field"><div class="control"><input name="description[]" type="text" class="input" value="<?= $row->description ?>" required></div></div>
+												<div class="field"><div class="control"><textarea rows="15" name="description[]" type="text" class="input" value="<?= $row->description ?>" required ><?= $row->description ?></textarea></div></div>
 											</td>
 											<td>
 												<div class="field">
@@ -104,7 +104,7 @@
 												</div>
 											</td>
 											<td>
-												<div class="field"><div class="control"><input name="comments[]" type="text" class="input"></div></div>
+												<div class="field"><div class="control"><textarea rows="15" name="comments[]" type="text" class="input"></textarea></div></div>
 											</td>
 										</tr>
 										<?php } ?>
@@ -112,17 +112,17 @@
 								</table>
 							</div>
 						</div>
-						
-						
+
+
 						<div class="column is-12">
 							<div class="field"><div class="control"><label class="checkbox is-outlined is-info"><input name="notification_email" type="checkbox" value="yes"><span></span> Enviar al correo del paciente</label></div></div>
 							<div class="field"><div class="control"><label class="checkbox is-outlined is-info"><input name="notification_whatsapp" type="checkbox" value="yes"><span></span> Enviar al whatsapp del paciente</label></div></div>
 						</div>
-						
+
 					</div>
 					<hr>
 					<div style="width: 100%;text-align: right;padding: 10px;"><button type="submit" class="button h-button is-primary is-raised">Guardar</button></div>
-					
+
                 </div>
             </div>
 			</form>

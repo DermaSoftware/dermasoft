@@ -29,6 +29,11 @@ use Illuminate\Http\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\Ntfs;
+use App\Models\ExamRequest;
+use App\Models\Hprocedure;
+use App\Models\PathologyRequest;
+use App\Models\Prescription;
+use App\Models\ProcedureRequest;
 
 class QuirurgicaController extends Controller
 {
@@ -42,7 +47,7 @@ class QuirurgicaController extends Controller
 	private $o_model = User::class;
 	private $hc_view = 'surgical';
 	private $hc_type = 'Descripción Quirúrgica';
-	
+
 	private function gdata($t = '')
     {
         $data['menu'] = $this->r_name;
@@ -60,7 +65,7 @@ class QuirurgicaController extends Controller
 	public function __construct(){
         $this->middleware('checkRole:5');
     }
-	
+
 	//PDF Historial de todos las consultas
 	public function index()
     {
@@ -73,14 +78,15 @@ class QuirurgicaController extends Controller
 		$data['o_all'] = Dermatology::where(['user' => $o->id,'hc_type' => $this->hc_type])->orderBy('id', 'asc')->get();
 		return view($this->v_name.'.'.$this->r_name.'.records',$data);
     }
-	
+
 	//PDF
 	public function hcpdf($id)
     {
         if(empty($id)){
 			return redirect($this->r_name);
 		}
-		$o_derm = Dermatology::where(['uuid' => $id])->first();
+		$procedure = Hprocedure::where(['uuid' => $id])->first();
+		$o_derm = Dermatology::where(['id' => $procedure->hc])->first();
 		if(empty($o_derm->id)){
 			return redirect($this->r_name);
 		}
@@ -103,28 +109,124 @@ class QuirurgicaController extends Controller
 		if(empty($id)){
 			return null;
 		}
-		$o_derm = Dermatology::where(['uuid' => $id])->first();
+		$procedure = Hprocedure::where(['uuid' => $id])->first();
+        $appointment = $procedure->appointments;
+		$o_derm = Dermatology::where(['id' => $procedure->hc])->first();
 		if(empty($o_derm->id)){
 			return null;
 		}
-		$o = $this->o_model::where(['id' => $o_derm->user])->first();
-		$o_doctor = $this->o_model::where(['id' => $o_derm->doctor])->first();
-		$o_company = Companies::where(['id' => $o_derm->company])->first();
+		$o = $o_derm->user_class;
+		$o_doctor = $procedure->doctor_class;
+		$o_company = $procedure->doctor_class->company_class;
 		$logo = !empty($o_company->logo_pp)?public_path($o_company->logo_pp):public_path('assets/images/favicon.png');
 		$photo = !empty($o->photo_pp)?$o->photo_pp:public_path('assets/images/user.png');
 		$signature = !empty($o_doctor->signature_pp)?$o_doctor->signature_pp:public_path('assets/images/firma.png');
-		
+
 		$data['o_vitalsigns'] = Vitalsigns::where(['user' => $o_derm->user])->orderBy('id', 'DESC')->first();
-		$data['o_hcpro'] = Hcsurgical::where(['hc' => $o_derm->id])->first();
-		$all_sut = Hctumors::where(['hc' => $o_derm->id])->orderBy('id', 'asc')->get();//Suture
-		$all_dgs = Hcdermdiagnostics::where(['hc' => $o_derm->id])->orderBy('id', 'asc')->get();//diagnosticos
-		$all_ind = Hcdermindications::where(['hc' => $o_derm->id])->orderBy('id', 'asc')->get();//indicaciones
-		$all_pre = Prescriptions::where(['hc' => $o_derm->id])->orderBy('id', 'asc')->get();//prescripción médica
-		$all_sex = Hcdermsolexams::where(['hc' => $o_derm->id])->orderBy('id', 'asc')->get();//Solicitudes de examenes
-		$all_spr = Hcdermsolproc::where(['hc' => $o_derm->id])->orderBy('id', 'asc')->get();//Solicitudes de procedimientos
-		$all_spa = Hcdermsolpath::where(['hc' => $o_derm->id])->orderBy('id', 'asc')->get();//Solicitudes de patalogías
-		
-		$data['all_sut'] = $all_sut;
+		$all_dgs = Hcdermdiagnostics::where('appointments_id', $appointment->id)
+            ->orderBy('created_at', 'DESC')
+            ->orderBy('updated_at', 'DESC')
+            ->get(['id', 'uuid', 'code', 'diagnostic', 'type_diagnostic', 'created_at', 'updated_at']);
+
+        $all_ind = Hcdermindications::with([
+            'appointments' => function ($query) {
+                $query->select('id', 'uuid', 'date_quote', 'time_quote', 'created_at'); # Uno a muchos
+            },
+        ])
+            ->where('appointments_id', $appointment->id)
+            ->orderBy('created_at', 'DESC')
+            ->orderBy('updated_at', 'DESC')
+            ->get(['id', 'uuid', 'indication', 'created_at', 'updated_at', 'appointments_id', 'hc_type']);
+
+        $all_pre = Prescription::with(
+            [
+                'doctor_class' => function ($query) {
+                    $query->select('id', 'uuid', 'name', 'lastname', 'scd_name', 'scd_lastname', 'signature_pp'); # Uno a muchos
+                },
+                'medicines'
+            ]
+        )
+            ->where('appointments_id', $appointment->id)
+            ->orderBy('id', 'ASC')
+            ->get(['doctor', 'id', 'uuid', 'validity', 'created_at']);
+
+        $all_sex = ExamRequest::with(
+            [
+                'doctor_class' => function ($query) {
+                    $query->select('id', 'uuid', 'name', 'lastname', 'scd_name', 'scd_lastname', 'signature_pp'); # Uno a muchos
+                },
+                'hcdermdiagnostics' => function ($query) {
+                    $query->select('id', 'uuid', 'code', 'diagnostic'); # Uno a muchos
+                },
+                'laboratoryexams'
+            ]
+        )
+            ->where('appointments_id', $appointment->id)
+            ->orderBy('id', 'ASC')
+            ->get(['doctor', 'id', 'uuid', 'hcdermdiagnostics_id', 'total', 'created_at']);
+
+        $all_spr = ProcedureRequest::with(
+            [
+                'doctor_class' => function ($query) {
+                    $query->select('id', 'uuid', 'name', 'lastname', 'scd_name', 'scd_lastname', 'signature_pp'); # Uno a muchos
+                },
+                'procedures'
+            ]
+        )
+            ->where('appointments_id', $appointment->id)
+            ->orderBy('id', 'ASC')
+            ->get(['doctor', 'id', 'uuid', 'created_at']);
+
+        // $all_spr = Hcdermsolproc::where(['hc' => $o_derm->id])->orderBy('id', 'asc')->get();//Solicitudes de procedimientos
+        $all_spa = PathologyRequest::with(
+            [
+                'doctor_class' => function ($query) {
+                    $query->select('id', 'uuid', 'name', 'lastname', 'scd_name', 'scd_lastname', 'signature_pp'); # Uno a muchos
+                },
+                'hcdermdiagnostics' => function ($query) {
+                    $query->select('id', 'uuid', 'code', 'diagnostic'); # Uno a muchos
+                },
+                'pathologies'
+            ]
+        )
+            ->where('appointments_id', $appointment->id)
+            ->orderBy('id', 'ASC')
+            ->get(['doctor', 'id', 'uuid', 'hcdermdiagnostics_id', 'annexes', 'created_at']);
+
+        $data['o_hcpro'] = Hprocedure::with([
+            'type_procedure_class' => function ($query) {
+                $query->select('id', 'name', 'description'); # Uno a muchos
+            },
+            'prequest_nprocedure' => function ($query) {
+                $query->select('id', 'procedures_id'); # Uno a muchos
+            },
+            'hctumors' => function ($query) {
+                $query->select('id', 'tumors', 'size', 'margin', 'pathology', 'observations', 'hprocedure_id'); # Uno a muchos
+            },
+            'appointments' => function ($query) {
+                $query->select('id', 'uuid', 'date_quote', 'time_quote', 'created_at'); # Uno a muchos
+            },
+        ])
+            ->where('appointments_id', $appointment->id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $data['o_vitalsigns'] = $appointment->latestVitalsign;
+        $all_back = $o_derm->antecedentes;
+        $backgounds = [
+            "Antecedente medico" => [],
+            "Antecedentes médicos" => [],
+            "Antecedentes quirúrgicos" => [],
+            "Antecedentes alérgicos" => [],
+            "Antecedentes farmacológicos" => [],
+            "Antecedentes familiares" => [],
+            "Otros antecedentes" => [],
+        ];
+        foreach ($all_back as $key => $value) {
+            array_push($backgounds[$value->type_class->name], $value);
+        }
+		// $data['all_sut'] = $all_sut;
+        $data['all_back'] = $backgounds;
 		$data['all_dgs'] = $all_dgs;
 		$data['all_ind'] = $all_ind;
 		$data['all_pre'] = $all_pre;
@@ -146,7 +248,7 @@ class QuirurgicaController extends Controller
 		return $pdf->stream('document.pdf');
 		exit();
     }
-	
+
 	//PDF Historial de todos las consultas
 	public function records()
     {
@@ -172,7 +274,7 @@ class QuirurgicaController extends Controller
 		$data['company_name'] = $o_company->name;
 		$data['full_name'] = $full_name;
 		$data['o_vitalsigns'] = Vitalsigns::where(['user' => $o->id])->orderBy('id', 'DESC')->first();
-		
+
 		$arr = [];
 		$derm_all = Dermatology::where(['user' => $o->id,'hc_type' => $this->hc_type])->orderBy('id', 'asc')->get();
 		foreach($derm_all as $key => $o_derm){
